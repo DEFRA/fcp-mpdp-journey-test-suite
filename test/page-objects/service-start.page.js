@@ -1,9 +1,9 @@
 import { Page } from 'page-objects/page'
 
-class HomePage extends Page {
+class ServiceStartPage extends Page {
   open() {
     return super.open('/')
   }
 }
 
-export default new HomePage()
+export default new ServiceStartPage()
