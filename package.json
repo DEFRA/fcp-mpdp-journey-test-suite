@@ -7,6 +7,9 @@
     "node": ">=22.13.1"
   },
   "author": "Defra DDTS",
+  "contributors": [
+    "Rana Salem <rana.salem@defra.gov.uk>"
+  ],
   "license": "OGL-UK-3.0",
   "aliases": {
     "~": ".",
