@@ -1,5 +1,5 @@
 import { browser, expect } from '@wdio/globals'
-import ServiceStartPage from '../page-objects/service-start.page'
+import ServiceStartPage from '../page-objects/start.page'
 
 describe('Service start page', () => {
   it('Should be on the "Service start" page', async () => {
