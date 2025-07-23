@@ -1,6 +1,18 @@
 import { defineConfig } from '@playwright/test'
 import baseConfig from './playwright.config.js'
 
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
+import { bootstrap } from 'global-agent'
+
+if (process.env.HTTP_PROXY) {
+  const dispatcher = new ProxyAgent({
+    uri: process.env.HTTP_PROXY
+  })
+  setGlobalDispatcher(dispatcher)
+  bootstrap()
+  global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
+}
+
 /**
  * BrowserStack configuration for Playwright
  * Note: BrowserStack support for Playwright requires additional setup
