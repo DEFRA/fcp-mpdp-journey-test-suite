@@ -50,14 +50,6 @@ npm run test:local
 npm run test:local:debug
 ```
 
-### Additional test commands
-
-```bash
-npm test                    # Run all tests
-npm run test:headed         # Run tests with visible browser
-npm run report              # Generate Allure HTML report
-```
-
 ### Reporting
 
 This test suite uses **Allure** for generating test reports that are compatible with the CDP Portal infrastructure. Allure provides:
