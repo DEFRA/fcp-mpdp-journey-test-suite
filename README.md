@@ -1,6 +1,6 @@
 fcp-mpdp-journey-test-suite
 
-The template to create a service that runs WDIO tests against an environment.
+The template to create a service that runs Playwright tests against an environment.
 
 - [Local](#local)
   - [Requirements](#requirements)
@@ -19,7 +19,7 @@ The template to create a service that runs WDIO tests against an environment.
 
 #### Node.js
 
-Please install [Node.js](http://nodejs.org/) `>= v20` and [npm](https://nodejs.org/) `>= v9`. You will find it
+Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v10`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
@@ -38,7 +38,7 @@ npm install
 
 ### Running local tests
 
-Start application you are testing on the url specified in `baseUrl` [wdio.local.conf.js](wdio.local.conf.js)
+Start application you are testing on the url specified in `baseUrl` [playwright.local.config.js](playwright.local.config.js)
 
 ```bash
 npm run test:local
@@ -49,6 +49,17 @@ npm run test:local
 ```bash
 npm run test:local:debug
 ```
+
+### Reporting
+
+This test suite uses **Allure** for generating test reports that are compatible with the CDP Portal infrastructure. Allure provides:
+
+- CDP Portal integration
+- Historical test trends  
+- S3 publishing pipeline
+- Enterprise reporting standards
+
+The test configuration generates Allure reports in `allure-results/` (raw data) and `allure-report/` (HTML report).
 
 ## Production
 
@@ -67,7 +78,7 @@ The results of the test run are made available in the portal.
 
 2. The Dockerfile's entrypoint script should return exit code of 0 if the test suite passes or 1/>0 if it fails
 
-3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh`
+3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format
 
 ## Running on GitHub
 
@@ -88,8 +99,8 @@ If you want to use the repository exclusively for running docker composed based 
 
 ## BrowserStack
 
-Two wdio configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`wdio.github.browserstack.conf.js`) and from the CDP Portal (`wdio.browserstack.conf.js`).
-They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHib runner).
+Two Playwright configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`playwright.github.browserstack.config.js`) and from the CDP Portal (`playwright.browserstack.config.js`).
+They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
 
 ## Licence
@@ -101,11 +112,3 @@ THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE
 The following attribution statement MUST be cited in your products and applications when using this information.
 
 > Contains public sector information licensed under the Open Government licence v3
-
-### About the licence
-
-The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable
-information providers in the public sector to license the use and re-use of their information under a common open
-licence.
-
-It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.

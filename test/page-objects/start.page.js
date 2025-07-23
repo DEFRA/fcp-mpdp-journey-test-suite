@@ -1,9 +1,9 @@
-import { Page } from 'page-objects/page'
+import { Page } from './page.js'
 
 class StartPage extends Page {
-  open() {
-    return super.open('/')
+  async open () {
+    await super.open('/')
   }
 }
 
-export default new StartPage()
+export { StartPage }
