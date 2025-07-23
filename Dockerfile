@@ -14,6 +14,8 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && unzip awscliv2.zip \
     && ./aws/install
 
+RUN npx playwright install --with-deps
+
 WORKDIR /app
 
 COPY . .

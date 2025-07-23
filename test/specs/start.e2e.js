@@ -1,11 +1,10 @@
-import { browser, expect } from '@wdio/globals'
-import StartPage from '../page-objects/start.page'
+import { test, expect } from '@playwright/test'
+import { StartPage } from '../page-objects/start.page.js'
 
-describe('Service start page', () => {
-  it('Should be on the "Service start" page', async () => {
-    await StartPage.open()
-    await expect(browser).toHaveTitle(
-      'Find farm and land payment data - GOV.UK'
-    )
+test.describe('Service start page', () => {
+  test('Should be on the "Service start" page', async ({ page }) => {
+    const startPage = new StartPage(page)
+    await startPage.open()
+    await expect(page).toHaveTitle('Find farm and land payment data - GOV.UK')
   })
 })

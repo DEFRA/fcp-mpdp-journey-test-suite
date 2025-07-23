@@ -25,7 +25,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run format:check
       - run: npm run lint
 
 # Uncomment this to run the tests in your test suite
