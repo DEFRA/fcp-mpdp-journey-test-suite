@@ -1,8 +1,7 @@
 import { defineConfig } from '@playwright/test'
-import baseConfig from './playwright.config.js'
-
 import { ProxyAgent, setGlobalDispatcher } from 'undici'
 import { bootstrap } from 'global-agent'
+import baseConfig from './playwright.config.js'
 
 if (process.env.HTTP_PROXY) {
   const dispatcher = new ProxyAgent({
@@ -15,28 +14,46 @@ if (process.env.HTTP_PROXY) {
 
 /**
  * BrowserStack configuration for Playwright
- * Note: BrowserStack support for Playwright requires additional setup
- * See: https://www.browserstack.com/docs/automate/playwright
+ * Tests public URLs through proxy if configured
  */
 export default defineConfig({
   ...baseConfig,
 
+  /* Global test settings for BrowserStack */
+  timeout: 120 * 1000, // 2 minutes for BrowserStack
+  expect: { timeout: 30 * 1000 },
+
   /* Use BrowserStack for cross-browser testing */
   use: {
     ...baseConfig.use,
-    /* BrowserStack requires these settings */
-    headless: true,
+    headless: false,
     trace: 'retain-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure'
   },
 
   projects: [
     {
       name: 'chrome-browserstack',
       use: {
-        browserName: 'chromium'
-        /* BrowserStack specific configuration would go here */
-        /* You'll need to configure BrowserStack credentials and capabilities */
+        ...baseConfig.use,
+        connectOptions: {
+          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
+            browser: 'chrome',
+            browser_version: 'latest',
+            os: 'Windows',
+            os_version: '11',
+            'browserstack.username': process.env.BROWSERSTACK_USER,
+            'browserstack.accessKey': process.env.BROWSERSTACK_KEY,
+            build: process.env.BROWSERSTACK_BUILD_NAME || 'MPDP Journey Tests',
+            name: 'Chrome Windows 11 Test',
+            'browserstack.debug': true,
+            'browserstack.local': false,
+            'browserstack.networkLogs': true,
+            'browserstack.console': 'verbose',
+            'browserstack.idleTimeout': 300
+          }))}`
+        }
       }
     }
   ]

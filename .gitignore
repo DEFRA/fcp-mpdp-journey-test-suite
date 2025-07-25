@@ -12,3 +12,6 @@ allure-report/
 allure-results/
 test-results/
 FAILED
+.env
+BrowserStackLocal
+*.log

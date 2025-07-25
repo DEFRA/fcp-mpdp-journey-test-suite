@@ -1,0 +1,13 @@
+async function globalTeardown () {
+  if (global.bsLocal) {
+    console.log('Stopping BrowserStack Local...')
+    return new Promise((resolve) => {
+      global.bsLocal.stop(() => {
+        console.log('BrowserStack Local stopped')
+        resolve()
+      })
+    })
+  }
+}
+
+export default globalTeardown

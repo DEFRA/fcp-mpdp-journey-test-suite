@@ -19,11 +19,10 @@
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && playwright test",
+    "test:browserstack": "npm run clean && playwright test --config=playwright.browserstack.config.js",
     "test:local": "npm run clean && playwright test --config=playwright.local.config.js",
     "test:local:debug": "npm run clean && playwright test --config=playwright.local.config.js --debug",
-    "test:github": "npm run clean && playwright test --config=playwright.github.config.js",
-    "test:browserstack": "npm run clean && playwright test --config=playwright.browserstack.config.js",
-    "test:github:browserstack": "npm run clean && playwright test --config=playwright.github.browserstack.config.js",
+    "test:local:browserstack": "npm run clean && playwright test --config=playwright.local.browserstack.config.js",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
@@ -40,6 +39,7 @@
     "undici": "7.12.0"
   },
   "devDependencies": {
+    "browserstack-local": "1.5.8",
     "eslint": "9.31.0",
     "husky": "9.1.7",
     "neostandard": "0.12.2"
