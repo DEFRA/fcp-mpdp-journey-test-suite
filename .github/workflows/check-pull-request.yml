@@ -26,10 +26,3 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-
-# Uncomment this to run the tests in your test suite
-#  tests:
-#    name: Run Journey Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: DEFRA/cdp-node-journey-test-suite-template/run-journey-tests@main

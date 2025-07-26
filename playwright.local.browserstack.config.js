@@ -1,35 +1,47 @@
 import { defineConfig } from '@playwright/test'
-import { ProxyAgent, setGlobalDispatcher } from 'undici'
-import { bootstrap } from 'global-agent'
-import baseConfig from './playwright.config.js'
 import cp from 'child_process'
 
 const clientPlaywrightVersion = cp.execSync('npx playwright --version').toString().trim().split(' ')[1]
 
-if (process.env.HTTP_PROXY) {
-  const dispatcher = new ProxyAgent({
-    uri: process.env.HTTP_PROXY
-  })
-  setGlobalDispatcher(dispatcher)
-  bootstrap()
-  global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
-}
-
 /**
- * BrowserStack configuration for Playwright
- * Tests public URLs through proxy if configured
+ * BrowserStack Local configuration for Playwright
+ * Tests localhost:3000 through BrowserStack Local tunnel
  * Covers all GOV.UK required browsers and devices (September 2024)
+ * Automatically starts and stops BrowserStack Local
  */
 export default defineConfig({
-  ...baseConfig,
+  testDir: './test/specs',
+  /* Match test files */
+  testMatch: '**/*.e2e.js',
+  /* Reduce workers for BrowserStack to avoid connection issues */
+  workers: 1,
+  timeout: 120000, // Increased timeout for BrowserStack
+  /* Retry failed tests */
+  retries: 2,
 
-  /* Global test settings for BrowserStack */
-  timeout: 120 * 1000, // 2 minutes for BrowserStack
-  expect: { timeout: 30 * 1000 },
-  workers: 1, // Reduce workers for BrowserStack stability
+  /* Reporter configuration */
+  reporter: [
+    [
+      'allure-playwright',
+      {
+        outputFolder: 'allure-results',
+        resultsDir: 'allure-results'
+      }
+    ]
+  ],
 
-  /* Use baseURL from environment or default */
+  /* Global setup and teardown files */
+  globalSetup: './global-setup.js',
+  globalTeardown: './global-teardown.js',
+
+  /* Expect timeout */
+  expect: {
+    timeout: 10000
+  },
+
+  /* Use localhost for local testing */
   use: {
+    baseURL: 'http://localhost:3000',
     headless: false,
     trace: 'off', // Disable tracing for mobile compatibility
     video: 'off', // Disable video for mobile compatibility
@@ -45,7 +57,7 @@ export default defineConfig({
     {
       name: 'windows-chrome',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'chrome',
@@ -54,19 +66,22 @@ export default defineConfig({
             os_version: '11',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Chrome',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - Windows Chrome',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
-        }
+        },
+        actionTimeout: 20000,
+        navigationTimeout: 60000
       }
     },
     {
       name: 'windows-edge',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'edge',
@@ -75,19 +90,22 @@ export default defineConfig({
             os_version: '11',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Edge',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - Windows Edge',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
-        }
+        },
+        actionTimeout: 20000,
+        navigationTimeout: 60000
       }
     },
     {
       name: 'windows-firefox',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'playwright-firefox',
@@ -96,13 +114,16 @@ export default defineConfig({
             os_version: '11',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Firefox',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - Windows Firefox',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
         },
+        actionTimeout: 20000,
+        navigationTimeout: 60000,
         trace: 'off',
         video: 'off'
       }
@@ -111,7 +132,7 @@ export default defineConfig({
     {
       name: 'macos-safari',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'playwright-webkit',
@@ -120,13 +141,16 @@ export default defineConfig({
             os_version: 'Monterey',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Safari 15.6',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - macOS Safari 15.6',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
         },
+        actionTimeout: 20000,
+        navigationTimeout: 60000,
         trace: 'off',
         video: 'off'
       }
@@ -134,7 +158,7 @@ export default defineConfig({
     {
       name: 'macos-chrome',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'chrome',
@@ -143,19 +167,22 @@ export default defineConfig({
             os_version: 'Monterey',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Chrome',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - macOS Chrome',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
-        }
+        },
+        actionTimeout: 20000,
+        navigationTimeout: 60000
       }
     },
     {
       name: 'macos-firefox',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'playwright-firefox',
@@ -164,26 +191,30 @@ export default defineConfig({
             os_version: 'Monterey',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Firefox',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - macOS Firefox',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
         },
+        actionTimeout: 20000,
+        navigationTimeout: 60000,
         trace: 'off',
         video: 'off'
       }
     }
-    // Note: iOS browsers temporarily disabled due to BrowserStack connectivity issues
-    // Playwright 1.50.0 adds iOS support, but network routing through BrowserStack has problems
+    // Note: iOS browsers temporarily disabled due to BrowserStack Local connectivity issues
+    // Playwright 1.50.0 adds iOS support, but BrowserStack Local tunnel has network routing problems
+    // iOS configurations available but commented out until BrowserStack resolves connectivity
     // Desktop browsers provide comprehensive cross-browser coverage for GOV.UK testing
 
     /* iOS Browsers - Ready for Playwright 1.50.0 when BrowserStack fixes connectivity
     {
       name: 'ios-safari',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'playwright-webkit',
@@ -191,9 +222,10 @@ export default defineConfig({
             os_version: '16',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - iOS Safari 16',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - iOS Safari 16',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -208,7 +240,7 @@ export default defineConfig({
     {
       name: 'ios-chrome',
       use: {
-        ...baseConfig.use,
+        baseURL: 'http://localhost:3000',
         connectOptions: {
           wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
             browser: 'playwright-chromium',
@@ -216,9 +248,10 @@ export default defineConfig({
             os_version: '16',
             'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - iOS Chrome',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            'browserstack.localIdentifier': 'playwright-local-test',
+            'browserstack.local': 'true',
+            name: 'GOV.UK Local - iOS Chrome',
+            build: 'govuk-local-browser-tests',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000

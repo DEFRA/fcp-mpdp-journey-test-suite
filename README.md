@@ -80,28 +80,51 @@ The results of the test run are made available in the portal.
 
 3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format
 
-## Running on GitHub
-
-Alternatively you can run the test suite as a GitHub workflow.
-Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests agains a version of the services running in docker.
-A docker compose `compose.yml` is included as a starting point, which includes the databases (mongodb, redis) and infrastructure (localstack) pre-setup.
-
-Steps:
-
-1. Edit the compose.yml to include your services.
-2. Modify the scripts in docker/scripts to pre-populate the database, if required and create any localstack resources.
-3. Test the setup locally with `docker compose up` and `npm run test:github`
-4. Set up the workflow trigger in `.github/workflows/journey-tests`.
-
-By default, the provided workflow will run when triggered manually from GitHub or when triggered by another workflow.
-
-If you want to use the repository exclusively for running docker composed based test suites consider displaying the publish.yml workflow.
-
 ## BrowserStack
 
 Two Playwright configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`playwright.github.browserstack.config.js`) and from the CDP Portal (`playwright.browserstack.config.js`).
 They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
+
+### GOV.UK Browser Requirements Coverage
+
+The table below shows which GOV.UK required browsers and devices (as of September 2024) are tested by our BrowserStack configuration:
+
+| Platform | Browser | Version | Device | BrowserStack Test | Status | Notes |
+|----------|---------|---------|---------|-------------------|--------|-------|
+| **Windows** | Chrome | Latest | Desktop | ✅ `windows-chrome` | **Tested** | Full compatibility |
+| **Windows** | Edge | Latest | Desktop | ✅ `windows-edge` | **Tested** | Full compatibility |
+| **Windows** | Firefox | Latest | Desktop | ✅ `windows-firefox` | **Tested** | Full compatibility |
+| **macOS** | Safari | 15.6+ | Desktop | ✅ `macos-safari` | **Tested** | Uses WebKit engine |
+| **macOS** | Chrome | Latest | Desktop | ✅ `macos-chrome` | **Tested** | Full compatibility |
+| **macOS** | Firefox | Latest | Desktop | ✅ `macos-firefox` | **Tested** | Full compatibility |
+| **iOS** | Safari | 16+ | iPhone 14 | 🔄 `ios-safari` | **Ready** | Playwright 1.50.0 support added, awaiting BrowserStack connectivity fix |
+| **iOS** | Chrome | Latest | iPhone 14 | 🔄 `ios-chrome` | **Ready** | Playwright 1.50.0 support added, awaiting BrowserStack connectivity fix |
+| **Android** | Chrome | Latest | Galaxy S23 | ❌ | **Not Tested** | WebSocket endpoint format issues |
+| **Android** | Samsung Internet | Latest | Galaxy S23 | ❌ | **Not Tested** | Browser name mapping conflicts |
+
+#### Coverage Summary
+- **✅ Tested Platforms**: 6/10 browser combinations (60%)
+- **� Ready Platforms**: 2/10 browser combinations (iOS with Playwright 1.50.0)
+- **�🖥️ Desktop Coverage**: 100% (6/6 desktop browsers)
+- **📱 Mobile Coverage**: 0% active, 50% ready (2/4 mobile browsers ready when BrowserStack resolves connectivity)
+
+#### Playwright 1.50.0 Upgrade
+**✅ Completed**: Upgraded from Playwright 1.46.0 to 1.50.0
+- **iOS Support**: Added `playwright-webkit` and `playwright-chromium` configurations for iOS
+- **Configurations Available**: iOS browser configurations ready in commented code
+- **Waiting On**: BrowserStack to fix network routing for iOS devices through Local tunnel
+
+#### Testing Commands
+```bash
+# Test all working browsers against localhost
+npm run test:local:browserstack
+
+# Test all working browsers against production/staging
+npm run test:browserstack
+```
+
+**Note**: Desktop browser testing provides comprehensive cross-browser coverage for most GOV.UK services. Mobile browsers are excluded due to BrowserStack Playwright compatibility limitations, but desktop testing covers the core browser engines (Chromium, WebKit, Gecko) used across all platforms.
 
 ## Licence
 
