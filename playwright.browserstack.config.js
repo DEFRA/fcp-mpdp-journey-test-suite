@@ -48,7 +48,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - Windows Chrome',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -69,7 +69,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - Windows Edge',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -90,7 +90,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - Windows Firefox',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -113,7 +113,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - macOS Safari 15.6',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -136,7 +136,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - macOS Chrome',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000
@@ -157,7 +157,7 @@ export default defineConfig({
             'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
             'browserstack.local': 'false',
             name: 'GOV.UK - macOS Firefox',
-            build: process.env.BROWSERSTACK_BUILD_NAME || 'govuk-browser-tests',
+            build: 'FCP MPDP',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
           timeout: 120000

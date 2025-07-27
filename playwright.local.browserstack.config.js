@@ -59,7 +59,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - Windows Chrome',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
@@ -83,7 +83,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - Windows Edge',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
@@ -107,7 +107,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - Windows Firefox',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
@@ -133,7 +133,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - macOS Safari 15.6',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
@@ -159,7 +159,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - macOS Chrome',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
@@ -183,7 +183,7 @@ export default defineConfig({
             'browserstack.localIdentifier': 'playwright-local-test',
             'browserstack.local': 'true',
             name: 'GOV.UK Local - macOS Firefox',
-            build: 'govuk-local-browser-tests',
+            build: 'FCP MPDP Local',
             'client.playwrightVersion': clientPlaywrightVersion
           }))}`,
         timeout: 120000
