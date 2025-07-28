@@ -1,0 +1,38 @@
+userName: ${BROWSERSTACK_USER}
+accessKey: ${BROWSERSTACK_KEY}
+
+projectName: FCP MPDP Journey Test Suite
+buildName: FCP MPDP Tests
+buildIdentifier: '#${BUILD_NUMBER}'
+
+platforms:
+  - os: Windows
+    osVersion: 11
+    browserName: chrome
+    browserVersion: latest
+  - os: Windows
+    osVersion: 11
+    browserName: edge
+    browserVersion: latest
+  - os: Windows
+    osVersion: 11
+    browserName: playwright-firefox
+    browserVersion: latest
+  - os: OS X
+    osVersion: Monterey
+    browserName: chrome
+    browserVersion: latest
+  - os: OS X
+    osVersion: Monterey
+    browserName: playwright-webkit
+    browserVersion: latest
+  - os: OS X
+    osVersion: Monterey
+    browserName: playwright-firefox
+    browserVersion: latest
+
+browserstackLocal: true
+browserStackLocalOptions:
+  localIdentifier: fcp-mpdp-journey-test-suite
+  forceLocal: true
+  onlyAutomate: true

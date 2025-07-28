@@ -1,6 +1,10 @@
 fcp-mpdp-journey-test-suite
 
-The template to create a service that runs Playwright tests against an environment.
+The template to create a service that runs Playwright tests against an environ#### Coverage Summary
+- **✅ Fully Tested**: 6/10 browser combinations (60%)
+- **⚠️ Beta Testing**: 1/10 browser combinations (iOS Safari)
+- **🖥️ Desktop Coverage**: 100% (6/6 desktop browsers)
+- **📱 Mobile Coverage**: 10% (1/4 mobile browsers in beta)
 
 - [Local](#local)
   - [Requirements](#requirements)
@@ -80,28 +84,48 @@ The results of the test run are made available in the portal.
 
 3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format
 
-## Running on GitHub
-
-Alternatively you can run the test suite as a GitHub workflow.
-Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests agains a version of the services running in docker.
-A docker compose `compose.yml` is included as a starting point, which includes the databases (mongodb, redis) and infrastructure (localstack) pre-setup.
-
-Steps:
-
-1. Edit the compose.yml to include your services.
-2. Modify the scripts in docker/scripts to pre-populate the database, if required and create any localstack resources.
-3. Test the setup locally with `docker compose up` and `npm run test:github`
-4. Set up the workflow trigger in `.github/workflows/journey-tests`.
-
-By default, the provided workflow will run when triggered manually from GitHub or when triggered by another workflow.
-
-If you want to use the repository exclusively for running docker composed based test suites consider displaying the publish.yml workflow.
-
 ## BrowserStack
 
 Two Playwright configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`playwright.github.browserstack.config.js`) and from the CDP Portal (`playwright.browserstack.config.js`).
 They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
+
+### Environment Variables
+
+Before running BrowserStack tests, you need to set up the following environment variables:
+
+```bash
+export BROWSERSTACK_USER=<your_browserstack_username>
+export BROWSERSTACK_KEY=<your_browserstack_access_key>
+```
+
+### GOV.UK Browser Requirements Coverage
+
+For the complete list of browsers that GOV.UK services should support, see: [GOV.UK Service Manual - Designing for different browsers and devices](https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices)
+
+The table below shows which required browsers are tested by our BrowserStack configuration:
+
+| Platform | Browser | BrowserStack Test | Notes |
+|----------|---------|-------------------|-------|
+| **Windows** | Chrome | ✅ |  |
+| **Windows** | Edge | ✅ |  |
+| **Windows** | Firefox | ✅ |  |
+| **macOS** | Safari | ✅ |  |
+| **macOS** | Chrome | ✅ |  |
+| **macOS** | Firefox | ✅ |  |
+| **iOS** | Safari | ⚠️ | In Beta |
+| **iOS** | Chrome | ❌ | Not supported |
+| **Android** | Chrome | ❌ | Not supported |
+| **Android** | Samsung Internet | ❌ | Not supported |
+
+### Testing Commands
+```bash
+# Test all working browsers against localhost
+npm run test:local:browserstack
+
+# Test all working browsers against deployed service
+npm run test:browserstack
+```
 
 ## Licence
 

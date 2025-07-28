@@ -46,13 +46,11 @@ export default defineConfig({
     navigationTimeout: 30000
   },
 
-  /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // Chrome-specific options equivalent to WebDriverIO setup
         launchOptions: {
           args: [
             '--no-sandbox',
