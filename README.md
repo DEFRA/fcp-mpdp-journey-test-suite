@@ -90,6 +90,15 @@ Two Playwright configuration files are provided to help run the tests using Brow
 They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
 
+### Environment Variables
+
+Before running BrowserStack tests, you need to set up the following environment variables:
+
+```bash
+export BROWSERSTACK_USER=<your_browserstack_username>
+export BROWSERSTACK_KEY=<your_browserstack_access_key>
+```
+
 ### GOV.UK Browser Requirements Coverage
 
 For the complete list of browsers that GOV.UK services should support, see: [GOV.UK Service Manual - Designing for different browsers and devices](https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices)
@@ -109,7 +118,7 @@ The table below shows which required browsers are tested by our BrowserStack con
 | **Android** | Chrome | ❌ | Not supported |
 | **Android** | Samsung Internet | ❌ | Not supported |
 
-#### Testing Commands
+### Testing Commands
 ```bash
 # Test all working browsers against localhost
 npm run test:local:browserstack
