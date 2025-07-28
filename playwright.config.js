@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -46,33 +46,31 @@ export default defineConfig({
     navigationTimeout: 30000
   },
 
-  /* Configure projects for major browsers */
-  // projects: [
-  //   {
-  //     name: 'chromium',
-  //     use: {
-  //       ...devices['Desktop Chrome'],
-  //       // Chrome-specific options equivalent to WebDriverIO setup
-  //       launchOptions: {
-  //         args: [
-  //           '--no-sandbox',
-  //           '--disable-infobars',
-  //           '--headless',
-  //           '--disable-gpu',
-  //           '--window-size=1920,1080',
-  //           '--enable-features=NetworkService,NetworkServiceInProcess',
-  //           '--password-store=basic',
-  //           '--use-mock-keychain',
-  //           '--dns-prefetch-disable',
-  //           '--disable-background-networking',
-  //           '--disable-remote-fonts',
-  //           '--ignore-certificate-errors',
-  //           '--disable-dev-shm-usage'
-  //         ]
-  //       }
-  //     }
-  //   }
-  // ],
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: [
+            '--no-sandbox',
+            '--disable-infobars',
+            '--headless',
+            '--disable-gpu',
+            '--window-size=1920,1080',
+            '--enable-features=NetworkService,NetworkServiceInProcess',
+            '--password-store=basic',
+            '--use-mock-keychain',
+            '--dns-prefetch-disable',
+            '--disable-background-networking',
+            '--disable-remote-fonts',
+            '--ignore-certificate-errors',
+            '--disable-dev-shm-usage'
+          ]
+        }
+      }
+    }
+  ],
 
   /* Global setup and teardown */
   globalSetup: undefined,

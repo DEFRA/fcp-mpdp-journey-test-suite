@@ -2,9 +2,7 @@ import { defineConfig } from '@playwright/test'
 import { ProxyAgent, setGlobalDispatcher } from 'undici'
 import { bootstrap } from 'global-agent'
 import baseConfig from './playwright.config.js'
-import cp from 'child_process'
-
-const clientPlaywrightVersion = cp.execSync('npx playwright --version').toString().trim().split(' ')[1]
+import { createBrowserStackProject } from './test/utils/browserstack-utils.js'
 
 if (process.env.HTTP_PROXY) {
   const dispatcher = new ProxyAgent({
@@ -18,152 +16,12 @@ if (process.env.HTTP_PROXY) {
 export default defineConfig({
   ...baseConfig,
 
-  /* Global test settings for BrowserStack */
-  timeout: 120 * 1000, // 2 minutes for BrowserStack
-  expect: { timeout: 30 * 1000 },
-  workers: 1, // Reduce workers for BrowserStack stability
-
-  /* Use baseURL from environment or default */
-  use: {
-    headless: false,
-    screenshot: 'only-on-failure',
-    /* Global timeout for each action */
-    actionTimeout: 15000,
-    /* Global timeout for navigation */
-    navigationTimeout: 45000
-  },
-
   projects: [
-    {
-      name: 'windows-chrome',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'chrome',
-            browser_version: 'latest',
-            os: 'Windows',
-            os_version: '11',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Chrome',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        }
-      }
-    },
-    {
-      name: 'windows-edge',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'edge',
-            browser_version: 'latest',
-            os: 'Windows',
-            os_version: '11',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Edge',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        }
-      }
-    },
-    {
-      name: 'windows-firefox',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'playwright-firefox',
-            browser_version: 'latest',
-            os: 'Windows',
-            os_version: '11',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - Windows Firefox',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        },
-        trace: 'off',
-        video: 'off'
-      }
-    },
-    {
-      name: 'macos-safari',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'playwright-webkit',
-            browser_version: 'latest',
-            os: 'OS X',
-            os_version: 'Monterey',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Safari 15.6',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        },
-        trace: 'off',
-        video: 'off'
-      }
-    },
-    {
-      name: 'macos-chrome',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'chrome',
-            browser_version: 'latest',
-            os: 'OS X',
-            os_version: 'Monterey',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Chrome',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        }
-      }
-    },
-    {
-      name: 'macos-firefox',
-      use: {
-        ...baseConfig.use,
-        connectOptions: {
-          wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-            browser: 'playwright-firefox',
-            browser_version: 'latest',
-            os: 'OS X',
-            os_version: 'Monterey',
-            'browserstack.username': process.env.BROWSERSTACK_USER || process.env.BROWSERSTACK_USERNAME,
-            'browserstack.accessKey': process.env.BROWSERSTACK_KEY || process.env.BROWSERSTACK_ACCESS_KEY,
-            'browserstack.local': 'false',
-            name: 'GOV.UK - macOS Firefox',
-            build: 'FCP MPDP',
-            'client.playwrightVersion': clientPlaywrightVersion
-          }))}`,
-          timeout: 120000
-        },
-        trace: 'off',
-        video: 'off'
-      }
-    }]
+    createBrowserStackProject({ name: 'windows-chrome', browser: 'chrome', os: 'Windows', osVersion: '11', displayName: 'Windows Chrome' }),
+    createBrowserStackProject({ name: 'windows-edge', browser: 'edge', os: 'Windows', osVersion: '11', displayName: 'Windows Edge' }),
+    createBrowserStackProject({ name: 'windows-firefox', browser: 'playwright-firefox', os: 'Windows', osVersion: '11', displayName: 'Windows Firefox' }),
+    createBrowserStackProject({ name: 'macos-safari', browser: 'playwright-webkit', os: 'OS X', osVersion: 'Monterey', displayName: 'macOS Safari' }),
+    createBrowserStackProject({ name: 'macos-chrome', browser: 'chrome', os: 'OS X', osVersion: 'Monterey', displayName: 'macOS Chrome' }),
+    createBrowserStackProject({ name: 'macos-firefox', browser: 'playwright-firefox', os: 'OS X', osVersion: 'Monterey', displayName: 'macOS Firefox' })
+  ]
 })
