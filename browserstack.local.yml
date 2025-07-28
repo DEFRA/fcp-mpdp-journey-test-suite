@@ -30,3 +30,9 @@ platforms:
     osVersion: Monterey
     browserName: playwright-firefox
     browserVersion: latest
+
+browserstackLocal: true
+browserStackLocalOptions:
+  localIdentifier: fcp-mpdp-journey-test-suite
+  forceLocal: true
+  onlyAutomate: true
