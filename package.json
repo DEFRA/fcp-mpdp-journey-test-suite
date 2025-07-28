@@ -18,7 +18,7 @@
   },
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
-    "test": "npm run clean && playwright test",
+    "test": "npm run test:browserstack",
     "test:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
     "test:local": "npm run clean && playwright test --config=playwright.local.config.js",
     "test:local:debug": "npm run clean && playwright test --config=playwright.local.config.js --debug",
