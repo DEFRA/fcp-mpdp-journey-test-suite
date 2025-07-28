@@ -1,4 +1,4 @@
-import { test, expect } from '../utils/global-test-setup.js'
+import { test, expect } from '@playwright/test'
 import { StartPage } from '../page-objects/start.page.js'
 
 test.describe('Service start page', () => {

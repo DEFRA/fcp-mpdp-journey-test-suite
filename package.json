@@ -19,19 +19,27 @@
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && playwright test",
-    "test:browserstack": "npm run clean && playwright test --config=playwright.browserstack.config.js",
+    "test:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
     "test:local": "npm run clean && playwright test --config=playwright.local.config.js",
     "test:local:debug": "npm run clean && playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "npm run clean && playwright test --config=playwright.local.browserstack.config.js",
+    "test:local:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js",
     "test:govuk:local": "npm run clean && playwright test --config=playwright.govuk.browserstack.config.js",
     "test:govuk:cloud": "npm run clean && playwright test --config=playwright.govuk.browserstack.cloud.config.js",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "postinstall": "npm run setup:husky",
+    "postinstall": "npm run setup:husky && npm update browserstack-node-sdk",
     "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
-    "report:publish": "npm run report; ./bin/publish-tests.sh"
+    "report:publish": "npm run report; ./bin/publish-tests.sh",
+    "setup:husky-browserstack": "browserstack-node-sdk node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
+    "test-browserstack": "npm run clean && browserstack-node-sdk playwright test",
+    "test:browserstack-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:local-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.local.config.js",
+    "test:local:debug-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.local.config.js --debug",
+    "test:local:browserstack-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js",
+    "test:govuk:local-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.govuk.browserstack.config.js",
+    "test:govuk:cloud-browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.govuk.browserstack.cloud.config.js"
   },
   "dependencies": {
     "@playwright/test": "1.50.0",
@@ -42,6 +50,7 @@
   },
   "devDependencies": {
     "browserstack-local": "1.5.8",
+    "browserstack-node-sdk": "1.40.1",
     "eslint": "9.31.0",
     "husky": "9.1.7",
     "neostandard": "0.12.2"
