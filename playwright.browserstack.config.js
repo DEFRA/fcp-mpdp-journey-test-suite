@@ -14,5 +14,11 @@ if (process.env.HTTP_PROXY) {
 
 // BrowserStack SDK will use browserstack.yml for configuration
 export default defineConfig({
-  ...baseConfig
+  ...baseConfig,
+  use: {
+    ...baseConfig.use,
+    proxy: {
+      server: 'localhost:3128'
+    }
+  }
 })
