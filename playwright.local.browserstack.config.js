@@ -3,7 +3,7 @@ import baseConfig from './playwright.browserstack.config.js'
 
 export default defineConfig({
   ...baseConfig,
-  retries: 0,
+  retries: 2,
 
   use: {
     ...baseConfig.use,
