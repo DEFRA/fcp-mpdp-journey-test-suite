@@ -3,7 +3,7 @@ accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
 buildName: FCP MPDP
-buildIdentifier: '#${BUILD_NUMBER}'
+buildIdentifier: ${ENVIRONMENT}
 
 platforms:
   - os: Windows
