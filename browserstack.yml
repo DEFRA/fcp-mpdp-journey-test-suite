@@ -3,7 +3,7 @@ accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
 buildName: FCP MPDP
-buildIdentifier: '#${BUILD_NUMBER}'
+buildIdentifier: ${ENVIRONMENT}
 
 platforms:
   - os: Windows
@@ -30,3 +30,11 @@ platforms:
     osVersion: Tahoe
     browserName: playwright-firefox
     browserVersion: latest
+
+browserstackLocal: true
+browserStackLocalOptions:
+  localIdentifier: fcp-mpdp-journey-test-suite
+  forceLocal: true
+  onlyAutomate: true
+  proxyHost: localhost
+  proxyPort: 3128
