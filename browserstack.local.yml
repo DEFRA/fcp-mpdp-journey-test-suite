@@ -3,7 +3,7 @@ accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
 buildName: FCP MPDP Local
-buildIdentifier: '#${BUILD_NUMBER}'
+buildIdentifier: '#${DATE_TIME}'
 
 platforms:
   - os: Windows
@@ -36,3 +36,5 @@ browserStackLocalOptions:
   localIdentifier: fcp-mpdp-journey-test-suite
   forceLocal: true
   onlyAutomate: true
+
+testObservability: false
