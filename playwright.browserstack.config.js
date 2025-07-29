@@ -14,9 +14,6 @@ global.GLOBAL_AGENT.HTTP_PROXY = 'http://localhost:3128'
 export default defineConfig({
   ...baseConfig,
   use: {
-    ...baseConfig.use,
-    proxy: {
-      server: 'localhost:3128'
-    }
+    ...baseConfig.use
   }
 })

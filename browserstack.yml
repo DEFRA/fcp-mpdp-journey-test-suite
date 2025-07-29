@@ -33,8 +33,11 @@ platforms:
 
 browserstackLocal: true
 browserStackLocalOptions:
-  localIdentifier: fcp-mpdp-journey-test-suite
-  forceLocal: true
+  localIdentifier: fcp-mpdp-journey-test-suite  
+  forceLocal: false
+  binarypath: '/root/.browserstack/BrowserStackLocal'
   onlyAutomate: true
   proxyHost: localhost
   proxyPort: 3128
+
+testObservability: false
