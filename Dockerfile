@@ -21,6 +21,9 @@ WORKDIR /app
 COPY . .
 RUN npm install
 
+ADD https://dnd2hcwqjlbad.cloudfront.net/binaries/release/latest_unzip/BrowserStackLocal-linux-x64 /root/.browserstack/BrowserStackLocal
+RUN chmod +x /root/.browserstack/BrowserStackLocal
+
 ENTRYPOINT [ "./entrypoint.sh" ]
 
 # This is downloading the linux amd64 aws cli. For M1 macs build and run with the --platform=linux/amd64 argument. eg docker build . --platform=linux/amd64
