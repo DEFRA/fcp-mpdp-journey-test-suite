@@ -2,7 +2,7 @@ userName: ${BROWSERSTACK_USER}
 accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
-buildName: FCP MPDP Tests
+buildName: FCP MPDP
 buildIdentifier: '#${BUILD_NUMBER}'
 
 platforms:
@@ -19,14 +19,14 @@ platforms:
     browserName: playwright-firefox
     browserVersion: latest
   - os: OS X
-    osVersion: Monterey
+    osVersion: Tahoe
     browserName: chrome
     browserVersion: latest
   - os: OS X
-    osVersion: Monterey
+    osVersion: Tahoe
     browserName: playwright-webkit
     browserVersion: latest
   - os: OS X
-    osVersion: Monterey
+    osVersion: Tahoe
     browserName: playwright-firefox
     browserVersion: latest
