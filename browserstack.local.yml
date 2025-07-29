@@ -30,6 +30,24 @@ platforms:
     osVersion: Tahoe
     browserName: playwright-firefox
     browserVersion: latest
+  - deviceName: Samsung Galaxy S23 Ultra
+    browserName: chrome
+    osVersion: 13
+  - deviceName: Samsung Galaxy Tab S9
+    browserName: chrome
+    osVersion: 13
+  - deviceName: Google Pixel 5
+    browserName: chrome
+    osVersion: 12
+  - deviceName: OnePlus 11R
+    browserName: chrome
+    osVersion: latest
+  - deviceName: iPhone 15 Pro Max
+    browserName: safari
+    osVersion: 17
+  - deviceName: iPhone 14
+    browserName: safari
+    osVersion: 18
 
 browserstackLocal: true
 browserStackLocalOptions:
