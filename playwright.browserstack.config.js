@@ -5,20 +5,17 @@ import baseConfig from './playwright.config.js'
 
 if (process.env.HTTP_PROXY) {
   const dispatcher = new ProxyAgent({
-    uri: process.env.HTTP_PROXY
+    uri: 'http://localhost:3128'
   })
   setGlobalDispatcher(dispatcher)
   bootstrap()
-  global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
+  global.GLOBAL_AGENT.HTTP_PROXY = 'http://localhost:3128'
 }
 
 // BrowserStack SDK will use browserstack.yml for configuration
 export default defineConfig({
   ...baseConfig,
   use: {
-    ...baseConfig.use,
-    proxy: {
-      server: 'localhost:3128'
-    }
+    ...baseConfig.use
   }
 })
