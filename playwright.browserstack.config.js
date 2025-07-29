@@ -16,6 +16,9 @@ if (process.env.HTTP_PROXY) {
 export default defineConfig({
   ...baseConfig,
   use: {
-    ...baseConfig.use
+    ...baseConfig.use,
+    proxy: {
+      server: 'localhost:3128'
+    }
   }
 })
