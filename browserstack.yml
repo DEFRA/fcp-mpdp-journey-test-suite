@@ -46,7 +46,6 @@ platforms:
     browserName: safari
     osVersion: 15
 
-
 browserstackLocal: true
 browserStackLocalOptions:
   localIdentifier: fcp-mpdp-journey-test-suite  
@@ -57,3 +56,5 @@ browserStackLocalOptions:
   proxyPort: 3128
 
 testObservability: false
+
+acceptSslCerts: true
