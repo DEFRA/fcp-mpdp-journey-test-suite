@@ -39,12 +39,6 @@ platforms:
   - deviceName: Google Pixel 9
     browserName: chrome
     osVersion: 15
-  - deviceName: iPhone 16
-    browserName: safari
-    osVersion: 18.5
-  - deviceName: iPad 9th
-    browserName: safari
-    osVersion: 15
 
 browserstackLocal: true
 browserStackLocalOptions:
