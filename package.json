@@ -37,11 +37,11 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "global-agent": "3.0.0",
-    "undici": "7.12.0"
+    "undici": "7.12.0",
+    "browserstack-local": "1.5.8",
+    "browserstack-node-sdk": "1.40.3"
   },
   "devDependencies": {
-    "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.40.3",
     "eslint": "9.31.0",
     "husky": "9.1.7",
     "neostandard": "0.12.2"

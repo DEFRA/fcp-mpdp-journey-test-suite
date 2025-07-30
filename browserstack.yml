@@ -10,41 +10,53 @@ platforms:
     osVersion: 11
     browserName: chrome
     browserVersion: latest
+    playwrightConfigOptions:
+      name: windows:chrome
   - os: Windows
     osVersion: 11
     browserName: edge
     browserVersion: latest
+    playwrightConfigOptions:
+      name: windows:edge
   - os: Windows
     osVersion: 11
     browserName: playwright-firefox
     browserVersion: latest
+    playwrightConfigOptions:
+      name: windows:firefox
   - os: OS X
     osVersion: Tahoe
     browserName: chrome
     browserVersion: latest
+    playwrightConfigOptions:
+      name: osx:chrome
   - os: OS X
     osVersion: Tahoe
     browserName: playwright-webkit
     browserVersion: latest
+    playwrightConfigOptions:
+      name: osx:webkit
   - os: OS X
     osVersion: Tahoe
     browserName: playwright-firefox
     browserVersion: latest
+    playwrightConfigOptions:
+      name: osx:firefox
   - deviceName: Samsung Galaxy S24
     browserName: chrome
     osVersion: 14
+    playwrightConfigOptions:
+      name: samsungGalaxyS24:chrome
   - deviceName: Samsung Galaxy Tab S9
     browserName: chrome
     osVersion: 13
+    playwrightConfigOptions:
+      name: samsungTabS9:chrome
   - deviceName: Google Pixel 9
     browserName: chrome
     osVersion: 15
-  - deviceName: iPhone 16
-    browserName: safari
-    osVersion: 18.5
-  - deviceName: iPad 9th
-    browserName: safari
-    osVersion: 15
+    playwrightConfigOptions:
+      name: googlePixel9:chrome
 
 browserstackLocal: true
 browserStackLocalOptions:
