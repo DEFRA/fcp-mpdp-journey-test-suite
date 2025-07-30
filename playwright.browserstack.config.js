@@ -10,10 +10,6 @@ setGlobalDispatcher(dispatcher)
 bootstrap()
 global.GLOBAL_AGENT.HTTP_PROXY = 'http://localhost:3128'
 
-// BrowserStack SDK will use browserstack.yml for configuration
 export default defineConfig({
-  ...baseConfig,
-  use: {
-    ...baseConfig.use
-  }
+  ...baseConfig
 })

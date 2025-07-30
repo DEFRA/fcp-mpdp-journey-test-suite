@@ -8,7 +8,8 @@
   },
   "author": "Defra DDTS",
   "contributors": [
-    "Rana Salem <rana.salem@defra.gov.uk>"
+    "Rana Salem <rana.salem@defra.gov.uk>",
+    "John Watson <john.watson1@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
   "aliases": {
@@ -32,7 +33,7 @@
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
   "dependencies": {
-    "@playwright/test": "1.50.1",
+    "@playwright/test": "1.53.2",
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "global-agent": "3.0.0",
@@ -40,7 +41,7 @@
   },
   "devDependencies": {
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.40.2",
+    "browserstack-node-sdk": "1.40.3",
     "eslint": "9.31.0",
     "husky": "9.1.7",
     "neostandard": "0.12.2"

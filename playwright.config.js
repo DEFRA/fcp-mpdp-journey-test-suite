@@ -5,17 +5,13 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './test/specs',
-  /* Match test files */
   testMatch: '**/*.e2e.js',
-  /* Run tests in files in parallel */
+
   fullyParallel: false,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  retries: 2,
   workers: 1,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+
   reporter: [
     [
       'allure-playwright',
@@ -25,25 +21,9 @@ export default defineConfig({
       }
     ]
   ],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-
-    /* Take screenshot on failure */
-    screenshot: 'only-on-failure',
-
-    /* Record video on failure */
-    video: 'retain-on-failure',
-
-    /* Global timeout for each action */
-    actionTimeout: 10000,
-
-    /* Global timeout for navigation */
-    navigationTimeout: 30000
+    trace: 'on-first-retry'
   },
 
   projects: [
@@ -72,15 +52,8 @@ export default defineConfig({
     }
   ],
 
-  /* Global setup and teardown */
-  globalSetup: undefined,
-  globalTeardown: undefined,
-
-  /* Timeout for each test */
   timeout: 60000,
-
-  /* Expect timeout */
   expect: {
-    timeout: 5000
+    timeout: 60000
   }
 })

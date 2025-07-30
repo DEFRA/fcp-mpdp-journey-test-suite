@@ -115,7 +115,7 @@ The table below shows which required browsers are tested by our BrowserStack con
 | **macOS** | Firefox | ✅ |  |
 | **iOS** | Safari | ⚠️ | In Beta |
 | **iOS** | Chrome | ❌ | Not supported |
-| **Android** | Chrome | ❌ | Not supported |
+| **Android** | Chrome | ✅ | Not supported |
 | **Android** | Samsung Internet | ❌ | Not supported |
 
 ### Testing Commands
