@@ -36,10 +36,11 @@
     "@playwright/test": "1.53.2",
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
-    "global-agent": "3.0.0",
-    "undici": "7.12.0",
+    "axe-core": "4.10.3",
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.40.3"
+    "browserstack-node-sdk": "1.40.3",
+    "global-agent": "3.0.0",
+    "undici": "7.12.0"
   },
   "devDependencies": {
     "eslint": "9.31.0",
