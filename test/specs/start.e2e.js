@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { startSpiderScan } from '../../zap/spider-scan.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
@@ -11,5 +12,9 @@ test.describe('Start page', () => {
 
   test('Should display the service name', async ({ page }) => {
     await expect(page.locator('h1')).toHaveText('Find farm and land payment data')
+  })
+
+  test.afterAll(async () => {
+    await startSpiderScan()
   })
 })
