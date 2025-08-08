@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { startSpiderScan } from '../../zap/spider-scan.js'
+import { startSpiderScan } from '../../zap/scan.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
