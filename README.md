@@ -8,7 +8,7 @@ The template to create a service that runs Playwright tests against an environ##
 
 ## Requirements
 
-#### Node.js
+### Node.js
 
 Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v10`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
@@ -45,7 +45,7 @@ Run journey tests using [local Playwright + BrowserStack configuration](./playwr
 npm run test:local:browserstack
 ```
 
-You must have a BrowserStack to run the journey tests locally. These are only available upon request. If you are unable to obtain a BrowserStack account then please proceed to run the local journey tests using [Playwright only](#running-local-tests-using-playwright).
+You must have a BrowserStack account to run the journey tests locally against BrowserStack. If you are unable to obtain a BrowserStack account then please proceed to run the local journey tests using [Playwright only](#running-local-tests-using-playwright).
 
 ### Debugging local tests
 
