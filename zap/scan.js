@@ -1,17 +1,13 @@
 import { zapClient } from './client.js'
+import fs from 'fs'
 
 export async function startSpiderScan () {
-  try {
-    const params = {
-      url: 'http://localhost:3000',
-      maxchildren: 0,
-      recurse: false,
-      subtreeonly: false
-    }
+  await zapClient.spider.scan({ url: 'http://locahost:3000' })
 
-    const response = await zapClient.spider.scan(params)
-    console.log('Spider started:', response)
-  } catch (error) {
-    console.error('Error starting spider scan:', error)
-  }
+  const report = await zapClient.reports.generate({
+    template: 'traditional-html',
+    title: 'ZAP Spider Scan Report for MPDP (fcp-mpdp)'
+  })
+
+  fs.writeFileSync('zap-report.html', JSON.stringify(report, null, 2), 'utf8')
 }
