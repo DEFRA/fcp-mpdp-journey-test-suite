@@ -1,0 +1,21 @@
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+
+test.describe('404 page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/does-not-exist')
+  })
+
+  test('Should display the correct title', async ({ page }) => {
+    await expect(page).toHaveTitle('Page not found - Find farm and land payment data - GOV.UK')
+  })
+
+  test('Should display the service name', async ({ page }) => {
+    await expect(page.locator('h1')).toHaveText('Page not found')
+  })
+
+  test('Should meet WCAG 2.2 AA', async ({ page }) => {
+    const results = await new AxeBuilder({ page }).analyze()
+    expect(results.violations).toHaveLength(0)
+  })
+})
