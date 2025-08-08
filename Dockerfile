@@ -17,10 +17,10 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 RUN npx playwright install --with-deps
 
-RUN curl -L https://github.com/zaproxy/zaproxy/releases/download/v2.16.1/ZAP_2.16.1_Linux.tar.gz -o ZAP_2.16.1_Linux.tar.gz \
+RUN curl -L https://github.com/zaproxy/zaproxy/releases/download/v2.16.1/ZAP_2.16.1_Linux.tar.gz -o zap_v2.16.1.tar.gz \
     && mkdir -p /opt/zap \
-    && tar -xzf ZAP_2.16.1_Linux.tar.gz -C /opt/zap \
-    && rm ZAP_2.16.1_Linux.tar.gz
+    && tar -xzf zap_v2.16.1.tar.gz -C /opt/zap \
+    && rm zap_v2.16.1.tar.gz
 
 WORKDIR /app
 
