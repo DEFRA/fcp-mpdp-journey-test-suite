@@ -18,4 +18,3 @@ BrowserStackLocal
 log/
 browserstackSetupConfig.json
 playwright-browserstack-sdk.config.*
-*-ZAP-Report-.html
