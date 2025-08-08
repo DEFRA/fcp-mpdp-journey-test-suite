@@ -7,6 +7,9 @@ export async function startSpiderScan () {
 
   await zapClient.reports.generate({
     template: 'traditional-html',
-    title: 'ZAP Spider Scan Report for MPDP (fcp-mpdp)'
+    title: 'ZAP Spider Scan Report for MPDP (fcp-mpdp)',
+    reportFileName: 'zap-report.html',
+    reportDir: '.',
+    display: true
   })
 }
