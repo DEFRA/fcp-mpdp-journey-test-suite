@@ -2,7 +2,9 @@ import { zapClient } from './client.js'
 import fs from 'fs'
 
 export async function startSpiderScan () {
-  await zapClient.spider.scan({ url: 'http://locahost:3000' })
+  const targetUrl = process.env.TARGET_URL || 'http://localhost:3000'
+
+  await zapClient.spider.scan({ url: targetUrl })
 
   const report = await zapClient.reports.generate({
     template: 'traditional-html',
