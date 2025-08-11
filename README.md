@@ -19,14 +19,9 @@ To use the correct version of Node.js for this application, via nvm:
 nvm use
 ```
 
-### OWASP ZAP
+### OWASP ZAP (Open Web Application Security Project / Zed Attack Proxy)
 
-To successfully run the ZAP scan locally, ZAP must be [installed](https://www.zaproxy.org/download/).  
-
-Before running any of the journey tests, a local instance of ZAP must already be running in the background:
-```
-~/path/to/your/zap/installation/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
-```
+To successfully run the ZAP Spider scan locally, ZAP must be [installed](https://www.zaproxy.org/download/).  
 
 ## Local Development
 
@@ -36,6 +31,14 @@ Install application dependencies:
 
 ```bash
 npm install
+```
+
+### Running ZAP locally
+
+An instance of ZAP must be running locally in the background before running any of the journey tests.
+
+```
+~/path/to/your/zap/installation/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
 ```
 
 ### Running local tests using Playwright
