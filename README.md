@@ -38,6 +38,7 @@ npm install
 An instance of ZAP must be running locally in the background before running any of the journey tests.
 
 ```
+chmod +x ~/path/to/your/zap/installation/zap.sh
 ~/path/to/your/zap/installation/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
 ```
 
