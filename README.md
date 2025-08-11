@@ -6,22 +6,9 @@ The template to create a service that runs Playwright tests against an environ##
 - **🖥️ Desktop Coverage**: 100% (6/6 desktop browsers)
 - **📱 Mobile Coverage**: 10% (1/4 mobile browsers in beta)
 
-- [Local](#local)
-  - [Requirements](#requirements)
-    - [Node.js](#nodejs)
-  - [Setup](#setup)
-  - [Running local tests](#running-local-tests)
-  - [Debugging local tests](#debugging-local-tests)
-- [Production](#production)
-  - [Debugging tests](#debugging-tests)
-- [Licence](#licence)
-  - [About the licence](#about-the-licence)
+## Requirements
 
-## Local Development
-
-### Requirements
-
-#### Node.js
+### Node.js
 
 Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v10`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
@@ -32,6 +19,12 @@ To use the correct version of Node.js for this application, via nvm:
 nvm use
 ```
 
+### OWASP ZAP (Open Web Application Security Project / Zed Attack Proxy)
+
+To successfully run the ZAP Spider scan locally, ZAP must be [installed](https://www.zaproxy.org/download/).  
+
+## Local Development
+
 ### Setup
 
 Install application dependencies:
@@ -40,13 +33,32 @@ Install application dependencies:
 npm install
 ```
 
-### Running local tests
+### Running ZAP locally
 
-Start application you are testing on the url specified in `baseUrl` [playwright.local.config.js](playwright.local.config.js)
+An instance of ZAP must be running locally in the background before running any of the journey tests.
+
+```
+chmod +x ~/path/to/your/zap/installation/zap.sh
+~/path/to/your/zap/installation/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
+```
+
+### Running local tests using Playwright
+
+Run journey tests using [local Playwright configuration](./playwright.local.config.js).
 
 ```bash
 npm run test:local
 ```
+
+### Running local tests using Playwright + BrowserStack
+
+Run journey tests using [local Playwright + BrowserStack configuration](./playwright.local.browserstack.config.js).  
+
+```bash
+npm run test:local:browserstack
+```
+
+You must have a BrowserStack account to run the journey tests locally against BrowserStack. If you are unable to obtain a BrowserStack account then please proceed to run the local journey tests using [Playwright only](#running-local-tests-using-playwright).
 
 ### Debugging local tests
 

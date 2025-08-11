@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { startSpiderScan } from '../../zap/scan.js'
 
 test.describe('404 page', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,5 +20,9 @@ test.describe('404 page', () => {
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     const results = await new AxeBuilder({ page }).analyze()
     expect(results.violations).toHaveLength(0)
+  })
+
+  test.afterAll(async () => {
+    await startSpiderScan()
   })
 })

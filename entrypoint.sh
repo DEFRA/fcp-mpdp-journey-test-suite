@@ -1,6 +1,18 @@
 #!/bin/sh
 
 echo "run_id: $RUN_ID"
+npm run zap:start &
+
+echo "Waiting for ZAP to start..."
+sleep 15
+
+if curl -s http://localhost:8080 >/dev/null; then
+  echo "ZAP is running"
+else
+  echo "ZAP failed to start"
+  exit 1
+fi
+
 npm run test:browserstack
 
 npm run report:publish
