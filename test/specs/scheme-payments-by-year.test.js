@@ -15,7 +15,7 @@ test.describe('Scheme payments by year page', () => {
     await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
   })
 
-  test('Should have a back link that directs to the start page', async ({page}) => {
+  test('Should have a back link that directs to the start page', async ({ page }) => {
     const backLink = page.locator('#back-link')
 
     await expect(backLink).toHaveText('Back')
@@ -25,7 +25,7 @@ test.describe('Scheme payments by year page', () => {
     expect(page).toHaveURL('/')
   })
 
-  test('Should have a download link', async({page}) => {
+  test('Should have a download link', async ({ page }) => {
     const downloadLink = page.locator('#download-details-link')
 
     await expect(downloadLink).toHaveText('Download this data (.CSV)')
