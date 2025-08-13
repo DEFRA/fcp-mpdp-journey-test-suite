@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-// import AxeBuilder from '@axe-core/playwright'
+import AxeBuilder from '@axe-core/playwright'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -32,8 +32,30 @@ test.describe('Scheme payments by year page', () => {
     await expect(downloadLink).toHaveAttribute('href', '#')
   })
 
-  // test('Should meet WCAG 2.2 AA', async ({ page }) => {
-  //   const results = await new AxeBuilder({ page }).analyze()
-  //   expect(results.violations).toHaveLength(0)
-  // })
+  test('Report a problem section should expand and contain correct information', async ({ page }) => {
+    const rpaEmailLink = page.locator('#rpa-email')
+    const sfiQueryFormLink = page.locator('#sfi-query-form')
+    const callChargesLink = page.locator('#call-charges')
+
+    await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
+
+    await expect(sfiQueryFormLink).toHaveText('SFI pilot query form')
+    await expect(sfiQueryFormLink).toHaveAttribute(
+      'href',
+      'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+    )
+
+    await expect(callChargesLink).toHaveText('Find out about call charges')
+    await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+  })
+
+  test('More actions links should exist and have correct targets', async ({ page }) => {
+    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '#')
+    await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+  })
+
+  test('Should meet WCAG 2.2 AA', async ({ page }) => {
+    const results = await new AxeBuilder({ page }).analyze()
+    expect(results.violations).toHaveLength(0)
+  })
 })
