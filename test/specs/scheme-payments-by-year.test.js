@@ -22,7 +22,7 @@ test.describe('Scheme payments by year page', () => {
     await expect(backLink).toHaveAttribute('href', '/')
 
     await backLink.click()
-    expect(page).toHaveURL('/')
+    await expect(page).toHaveURL('/')
   })
 
   test('Should have a download link', async ({ page }) => {
@@ -32,21 +32,81 @@ test.describe('Scheme payments by year page', () => {
     await expect(downloadLink).toHaveAttribute('href', '#')
   })
 
-  test('Report a problem section should expand and contain correct information', async ({ page }) => {
-    const rpaEmailLink = page.locator('#rpa-email')
-    const sfiQueryFormLink = page.locator('#sfi-query-form')
-    const callChargesLink = page.locator('#call-charges')
+  test.describe('Related Content', () => {
+    test('Related Content section contains correct information and directs to correct pages', async ({ page, context }) => {
+      const sectionHeading = page.locator('#related-content')
+      const fundingLink = page.locator('#fflm-link')
 
-    await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
+      await expect(sectionHeading).toHaveText('Related Content')
+      await expect(fundingLink).toHaveText('Funding for farmers, growers and land managers')
+    })
 
-    await expect(sfiQueryFormLink).toHaveText('SFI pilot query form')
-    await expect(sfiQueryFormLink).toHaveAttribute(
-      'href',
-      'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
-    )
+    test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
+      const fundingLink = page.locator('#fflm-link')
+      const pagePromise = context.waitForEvent('page')
 
-    await expect(callChargesLink).toHaveText('Find out about call charges')
-    await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+      await fundingLink.click()
+
+      const newPage = await pagePromise
+      await newPage.waitForLoadState()
+
+      expect(newPage.url()).toBe('https://www.gov.uk/guidance/funding-for-farmers')
+
+      await newPage.close()
+    })
+  })
+
+  test.describe('Report a problem', () => {
+    test('Report a problem section should expand and contain correct information', async ({ page }) => {
+      const rpaEmailLink = page.locator('#rpa-email')
+      const sfiQueryFormLink = page.locator('#sfi-query-form')
+      const callChargesLink = page.locator('#call-charges')
+
+      await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
+
+      await expect(sfiQueryFormLink).toHaveText('SFI pilot query form')
+      await expect(sfiQueryFormLink).toHaveAttribute(
+        'href',
+        'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+      )
+
+      await expect(callChargesLink).toHaveText('Find out about call charges')
+      await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+    })
+
+    test('SFI query form link should direct to the correct page', async ({ page, context }) => {
+      const reportProblemToggle = page.locator('#report-problem')
+      await reportProblemToggle.click()
+
+      const sfiQueryFormLink = page.locator('#sfi-query-form')
+      const pagePromise = context.waitForEvent('page')
+
+      await sfiQueryFormLink.click()
+
+      const newPage = await pagePromise
+      await newPage.waitForLoadState()
+
+      expect(newPage.url()).toBe('https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form')
+
+      await newPage.close()
+    })
+
+    test('Call charges link should direct to the correct page', async ({ page, context }) => {
+      const reportProblemToggle = page.locator('#report-problem')
+      await reportProblemToggle.click()
+
+      const callChargesLink = page.locator('#call-charges')
+      const pagePromise = context.waitForEvent('page')
+
+      await callChargesLink.click()
+
+      const newPage = await pagePromise
+      await newPage.waitForLoadState()
+
+      expect(newPage.url()).toBe('https://www.gov.uk/call-charges')
+
+      await newPage.close()
+    })
   })
 
   test('More actions links should exist and have correct targets', async ({ page }) => {
