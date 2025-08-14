@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -42,21 +43,20 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-      const fundingLink = page.locator('#fflm-link')
-      const pagePromise = context.waitForEvent('page')
-
-      await fundingLink.click()
-
-      const newPage = await pagePromise
-      await newPage.waitForLoadState()
-
-      expect(newPage.url()).toBe('https://www.gov.uk/guidance/funding-for-farmers')
-
-      await newPage.close()
+      await expectNewPageLink(
+        context,
+        page.locator('#fflm-link'),
+        'https://www.gov.uk/guidance/funding-for-farmers'
+      )
     })
   })
 
   test.describe('Report a problem', () => {
+    test.beforeEach(async ({ page }) => {
+      const reportProblemToggle = page.locator('#report-problem')
+      await reportProblemToggle.click()
+    })
+
     test('Report a problem section should expand and contain correct information', async ({ page }) => {
       const rpaEmailLink = page.locator('#rpa-email')
       const sfiQueryFormLink = page.locator('#sfi-query-form')
@@ -75,37 +75,19 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('SFI query form link should direct to the correct page', async ({ page, context }) => {
-      const reportProblemToggle = page.locator('#report-problem')
-      await reportProblemToggle.click()
-
-      const sfiQueryFormLink = page.locator('#sfi-query-form')
-      const pagePromise = context.waitForEvent('page')
-
-      await sfiQueryFormLink.click()
-
-      const newPage = await pagePromise
-      await newPage.waitForLoadState()
-
-      expect(newPage.url()).toBe('https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form')
-
-      await newPage.close()
+      await expectNewPageLink(
+        context,
+        page.locator('#sfi-query-form'),
+        'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+      )
     })
 
     test('Call charges link should direct to the correct page', async ({ page, context }) => {
-      const reportProblemToggle = page.locator('#report-problem')
-      await reportProblemToggle.click()
-
-      const callChargesLink = page.locator('#call-charges')
-      const pagePromise = context.waitForEvent('page')
-
-      await callChargesLink.click()
-
-      const newPage = await pagePromise
-      await newPage.waitForLoadState()
-
-      expect(newPage.url()).toBe('https://www.gov.uk/call-charges')
-
-      await newPage.close()
+      await expectNewPageLink(
+        context,
+        page.locator('#call-charges'),
+        'https://www.gov.uk/call-charges'
+      )
     })
   })
 
