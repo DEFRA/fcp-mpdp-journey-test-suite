@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/schemePaymentsByYear')
+    await page.goto('/scheme-payments-by-year')
   })
 
   test('Should display the correct title', async ({ page }) => {
@@ -24,6 +25,16 @@ test.describe('Scheme payments by year page', () => {
 
     await backLink.click()
     await expect(page).toHaveURL('/')
+  })
+
+  test('Should display the correct phase banner', async ({ page, context }) => {
+    await expectPhaseBanner({ page })
+
+    await expectNewPageLink(
+      context,
+      page.locator('.govuk-phase-banner .govuk-link'),
+      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+    )
   })
 
   test('Should have a download link', async ({ page }) => {
