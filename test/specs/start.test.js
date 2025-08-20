@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
+import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,11 +16,14 @@ test.describe('Start page', () => {
     await expect(page.locator('h1')).toHaveText('Find farm and land payment data')
   })
 
-  test('should display the correct phase banner', async ({ page }) => {
-    await expect(page.locator('.govuk-phase-banner')).toHaveCount(1)
-    await expect(page.locator('.govuk-phase-banner__content__tag')).toHaveText('Beta')
-    await expect(page.locator('.govuk-phase-banner__text')).toHaveText('This is a new service. Help us improve it and give your feedback (opens in new tab).')
-    await expect(page.locator('.govuk-phase-banner .govuk-link')).toHaveAttribute('href', 'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs')
+  test('Should display the correct phase banner', async ({ page, context }) => {
+    await expectPhaseBanner({ page })
+
+    await expectNewPageLink(
+      context,
+      page.locator('.govuk-phase-banner .govuk-link'),
+      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+    )
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
