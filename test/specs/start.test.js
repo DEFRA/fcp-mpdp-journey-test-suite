@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
+import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
@@ -63,12 +64,8 @@ test.describe('Start page', () => {
   })
 
   test.describe('Related Content', () => {
-    test('Related Content section contains correct information and directs to correct pages', async ({ page, context }) => {
-      const sectionHeading = page.locator('#related-content')
-      const fundingLink = page.locator('#fflm-link')
-
-      await expect(sectionHeading).toHaveText('Related Content')
-      await expect(fundingLink).toHaveText('Funding for farmers, growers and land managers')
+    test('Related Content section contains correct information', async ({ page }) => {
+      await expectRelatedContent({ page })
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
