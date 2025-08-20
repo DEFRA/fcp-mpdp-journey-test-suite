@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
-import { startSpiderScan } from '../../zap/scan.js'
+import { SecurityTest } from '../security.test.js'
+import { AccessibilityTest } from '../accessibility.test.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,11 +16,10 @@ test.describe('Start page', () => {
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toHaveLength(0)
+    await AccessibilityTest(page)
   })
 
-  test.afterAll(async () => {
-    await startSpiderScan()
+  test('Should meet security standards', async ({ page }) => {
+    await SecurityTest(page.url())
   })
 })

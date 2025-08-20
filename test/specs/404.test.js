@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
-import { startSpiderScan } from '../../zap/scan.js'
+import { SecurityTest } from '../security.test.js'
+import { AccessibilityTest } from '../accessibility.test.js'
 
 test.describe('404 page', () => {
   test.beforeEach(async ({ page }) => {
@@ -13,16 +13,15 @@ test.describe('404 page', () => {
 
   test('Should display the not found content', async ({ page }) => {
     await expect(page.locator('h1')).toHaveText('Page not found')
-    await expect(page.locator('p').nth(0)).toHaveText('If you typed the web address, check it is correct.')
-    await expect(page.locator('p').nth(1)).toHaveText('If you pasted the web address, check you copied the entire address.')
+    await expect(page.locator('p').nth(1)).toHaveText('If you typed the web address, check it is correct.')
+    await expect(page.locator('p').nth(2)).toHaveText('If you pasted the web address, check you copied the entire address.')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toHaveLength(0)
+    await AccessibilityTest(page)
   })
 
-  test.afterAll(async () => {
-    await startSpiderScan()
+  test('Should meet security standards', async ({ page }) => {
+    await SecurityTest(page.url())
   })
 })

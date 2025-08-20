@@ -1,7 +1,7 @@
 FROM node:22.13.1-slim
 
 ENV TZ="Europe/London"
-ENV TARGET_URL=https://fcp-mpdp-frontend.test.cdp-int.defra.cloud
+# ENV TARGET_URL=https://fcp-mpdp-frontend.test.cdp-int.defra.cloud
 
 USER root
 

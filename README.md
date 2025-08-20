@@ -19,10 +19,6 @@ To use the correct version of Node.js for this application, via nvm:
 nvm use
 ```
 
-### OWASP ZAP (Open Web Application Security Project / Zed Attack Proxy)
-
-To successfully run the ZAP Spider scan locally, ZAP must be [installed](https://www.zaproxy.org/download/).  
-
 ## Local Development
 
 ### Setup
@@ -31,15 +27,6 @@ Install application dependencies:
 
 ```bash
 npm install
-```
-
-### Running ZAP locally
-
-An instance of ZAP must be running locally in the background before running any of the journey tests.
-
-```
-chmod +x ~/path/to/your/zap/installation/zap.sh
-~/path/to/your/zap/installation/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
 ```
 
 ### Running local tests using Playwright
@@ -138,6 +125,20 @@ npm run test:local:browserstack
 # Test all working browsers against deployed service
 npm run test:browserstack
 ```
+
+## Security Testing
+
+This test suite includes ZAP (Zed Attack Proxy) security testing integration. ZAP automatically scans for security vulnerabilities and integrates results with Allure reporting.
+
+### Requirements
+
+For local testing, ZAP must be running before tests execute:
+
+```bash
+docker compose up -d zap
+```
+
+The local test scripts (`npm run test:local`, `npm run test:local:debug` and `npm run test:local:browserstack`) automatically start ZAP before running tests.
 
 ## Licence
 
