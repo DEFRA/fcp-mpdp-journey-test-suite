@@ -1,11 +1,11 @@
 import { expect } from '@playwright/test'
 
-export async function expectPhaseBanner({ page }) {
+export async function expectPhaseBanner ({ page }) {
   const phaseBannerSelectors = {
     root: '.govuk-phase-banner',
     contentTag: '.govuk-phase-banner__content__tag',
     text: '.govuk-phase-banner__text',
-    link: '.govuk-phase-banner .govuk-link' 
+    link: '.govuk-phase-banner .govuk-link'
   }
 
   await expect(page.locator(phaseBannerSelectors.root)).toHaveCount(1)
