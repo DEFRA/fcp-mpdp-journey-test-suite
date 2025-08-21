@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { SecurityTest } from '../security.test.js'
 import { AccessibilityTest } from '../accessibility.test.js'
+import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
+import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
 
 test.describe('404 page', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,6 +11,16 @@ test.describe('404 page', () => {
 
   test('Should display the correct title', async ({ page }) => {
     await expect(page).toHaveTitle('Page not found - Find farm and land payment data - GOV.UK')
+  })
+
+  test('Should display the correct phase banner', async ({ page, context }) => {
+    await expectPhaseBanner({ page })
+
+    await expectNewPageLink(
+      context,
+      page.locator('.govuk-phase-banner .govuk-link'),
+      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+    )
   })
 
   test('Should display the not found content', async ({ page }) => {
