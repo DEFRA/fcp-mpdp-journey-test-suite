@@ -3,6 +3,7 @@ import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-page-link-expect.js'
 import { AccessibilityTest } from '../accessibility.test.js'
 import { SecurityTest } from '../security.test.js'
+import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -18,16 +19,6 @@ test.describe('Scheme payments by year page', () => {
     await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
   })
 
-  test('Should have a back link that directs to the start page', async ({ page }) => {
-    const backLink = page.locator('#back-link')
-
-    await expect(backLink).toHaveText('Back')
-    await expect(backLink).toHaveAttribute('href', '/')
-
-    await backLink.click()
-    await expect(page).toHaveURL('/')
-  })
-
   test('Should display the correct phase banner', async ({ page, context }) => {
     await expectPhaseBanner({ page })
 
@@ -38,6 +29,16 @@ test.describe('Scheme payments by year page', () => {
     )
   })
 
+  test('Should have a back link that directs to the start page', async ({ page }) => {
+    const backLink = page.locator('#back-link')
+
+    await expect(backLink).toHaveText('Back')
+    await expect(backLink).toHaveAttribute('href', '/')
+
+    await backLink.click()
+    await expect(page).toHaveURL('/')
+  })
+
   test('Should have a download link', async ({ page }) => {
     const downloadLink = page.locator('#download-details-link')
 
@@ -46,12 +47,8 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test.describe('Related Content', () => {
-    test('Related Content section contains correct information and directs to correct pages', async ({ page, context }) => {
-      const sectionHeading = page.locator('#related-content')
-      const fundingLink = page.locator('#fflm-link')
-
-      await expect(sectionHeading).toHaveText('Related Content')
-      await expect(fundingLink).toHaveText('Funding for farmers, growers and land managers')
+    test('Related Content section contains correct information', async ({ page }) => {
+      await expectRelatedContent({ page })
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
