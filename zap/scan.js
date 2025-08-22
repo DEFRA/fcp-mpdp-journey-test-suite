@@ -18,6 +18,28 @@ function convertUrlForZap (url) {
   return url
 }
 
+async function isZapRunning () {
+  try {
+    const res = await fetch(`${ZAP_BASE_URL}/JSON/core/view/version/`)
+    if (!res.ok) return false
+    const data = await res.json()
+    return Boolean(data && (data.version || data['core.version'] || data))
+  } catch {
+    return false
+  }
+}
+
+async function waitForZapReady (timeoutMs = 15000, intervalMs = 500) {
+  const start = Date.now()
+  while (Date.now() - start < timeoutMs) {
+    if (await isZapRunning()) {
+      return
+    }
+    await new Promise(resolve => setTimeout(resolve, intervalMs))
+  }
+  throw new Error(`ZAP is not reachable at ${ZAP_BASE_URL}.`)
+}
+
 async function getZapResults () {
   const [alertsResponse, sitesResponse] = await Promise.all([
     fetch(`${ZAP_BASE_URL}/JSON/core/view/alerts/`),
@@ -90,6 +112,9 @@ async function waitForScanToComplete (scanId) {
 
 export async function startSpiderScan (url) {
   try {
+    // Ensure ZAP is up before attempting any API calls
+    await waitForZapReady()
+
     const zapAccessibleUrl = convertUrlForZap(url)
     console.log(`Converting URL for ZAP: ${url} -> ${zapAccessibleUrl}`)
 
