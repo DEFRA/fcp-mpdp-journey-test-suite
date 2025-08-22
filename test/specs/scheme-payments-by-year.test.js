@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
+import { expectNewTab } from '../../utils/new-page-link-expect.js'
 import { AccessibilityTest } from '../accessibility.test.js'
 import { SecurityTest } from '../security.test.js'
 
@@ -31,7 +31,7 @@ test.describe('Scheme payments by year page', () => {
   test('Should display the correct phase banner', async ({ page, context }) => {
     await expectPhaseBanner({ page })
 
-    await expectNewPageLink(
+    await expectNewTab(
       context,
       page.locator('.govuk-phase-banner .govuk-link'),
       'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
@@ -55,7 +55,7 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-      await expectNewPageLink(
+      await expectNewTab(
         context,
         page.locator('#fflm-link'),
         'https://www.gov.uk/guidance/funding-for-farmers'
@@ -87,19 +87,19 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('SFI query form link should direct to the correct page', async ({ page, context }) => {
-      // await expectNewPageLink(
-      //   context,
-      //   page.locator('#sfi-query-form'),
-      //   'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
-      // )
+      await expectNewTab(
+        context,
+        page.locator('#sfi-query-form'),
+        'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+      )
     })
 
     test('Call charges link should direct to the correct page', async ({ page, context }) => {
-      // await expectNewPageLink(
-      //   context,
-      //   page.locator('#call-charges'),
-      //   'https://www.gov.uk/call-charges'
-      // )
+      await expectNewTab(
+        context,
+        page.locator('#call-charges'),
+        'https://www.gov.uk/call-charges'
+      )
     })
   })
 
