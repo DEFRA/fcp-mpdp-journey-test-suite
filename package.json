@@ -23,7 +23,7 @@
     "test:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
     "test:local": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js && npm run report && npm run report:publish",
     "test:local:debug": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "npm run clean && docker compose up -d && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml && npm run report && npm run report:open",
+    "test:local:browserstack": "npm run clean && docker compose up -d && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml && npm run report && npm run report:publish",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
@@ -38,7 +38,7 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.40.3",
+    "browserstack-node-sdk": "1.41.1",
     "global-agent": "3.0.0",
     "undici": "7.12.0"
   },

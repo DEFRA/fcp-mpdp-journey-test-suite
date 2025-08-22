@@ -115,19 +115,14 @@ export async function startSpiderScan (url) {
       console.log(`Using retry scan with ID: ${scanId}`)
     }
 
-    console.log(`🔍 Started ZAP spider scan with ID: ${scanId}`)
+    console.log(`Started ZAP spider scan with ID: ${scanId}`)
 
-    // Wait for scan to complete
     await waitForScanToComplete(scanId)
 
-    // Get scan results
-    const { alerts, sites } = await getZapResults()
+    const { alerts } = await getZapResults()
 
-    // Attach results to Allure report
     await attachZapResultsToAllure(scanId, zapAccessibleUrl)
-    await displayScanResults(alerts, sites)
 
-    // Check for Medium risk alerts and apply exclusions
     await checkForFailingAlerts(alerts)
 
     console.log(`Security scan completed successfully with ID: ${scanId}`)
@@ -135,35 +130,6 @@ export async function startSpiderScan (url) {
   } catch (error) {
     console.error('Error starting ZAP spider scan:', error.message)
     throw error
-  }
-}
-
-export async function displayScanResults (alerts, sites) {
-  console.log('\n=== ZAP SCAN RESULTS ===')
-
-  try {
-    console.log(`\nSecurity Alerts Found: ${alerts.length}`)
-
-    if (alerts.length > 0) {
-      alerts.forEach((alert, index) => {
-        console.log(`\n${index + 1}. ${alert.alert} (${alert.risk})`)
-        console.log(`   URL: ${alert.url}`)
-        console.log(`   Description: ${alert.description}`)
-        console.log(`   Confidence: ${alert.confidence}`)
-      })
-    } else {
-      console.log('No security issues found!')
-    }
-
-    console.log(`\nURLs Discovered: ${sites.length}`)
-    sites.forEach((site, index) => {
-      console.log(`${index + 1}. ${site}`)
-    })
-
-    console.log('\nView detailed report at: http://localhost:8080')
-    console.log('========================\n')
-  } catch (error) {
-    console.error('Error displaying scan results:', error.message)
   }
 }
 
@@ -229,11 +195,6 @@ async function getZapScanResults (scanId) {
       const scanData = await scanResponse.json()
       results.scanInfo = scanData
     }
-
-    // Get ZAP version
-    const versionResponse = await fetch(`${ZAP_BASE_URL}/JSON/core/view/version/`)
-    const versionData = await versionResponse.json()
-    results.zapVersion = versionData.version
   } catch (error) {
     console.error('Error fetching ZAP results:', error.message)
   }
