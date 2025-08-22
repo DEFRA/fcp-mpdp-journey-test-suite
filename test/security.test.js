@@ -1,5 +1,5 @@
 import { startSpiderScan } from '../zap/scan'
 
-export async function SecurityTest (url) {
+export async function securityTest (url) {
   await startSpiderScan(url)
 }

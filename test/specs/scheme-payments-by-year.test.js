@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-page-link-expect.js'
 import { AccessibilityTest } from '../accessibility.test.js'
-import { SecurityTest } from '../security.test.js'
+import { securityTest } from '../security.test.js'
 import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Scheme payments by year page', () => {
@@ -110,6 +110,6 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('Should meet security standards', async ({ page }) => {
-    await SecurityTest(page.url())
+    await securityTest(page.url())
   })
 })

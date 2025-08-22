@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { SecurityTest } from '../security.test.js'
+import { securityTest } from '../security.test.js'
 import { AccessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-page-link-expect.js'
@@ -34,6 +34,6 @@ test.describe('404 page', () => {
   })
 
   test('Should meet security standards', async ({ page }) => {
-    await SecurityTest(page.url())
+    await securityTest(page.url())
   })
 })
