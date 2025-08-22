@@ -64,6 +64,6 @@ browserStackLocalOptions:
   forceLocal: true
   onlyAutomate: true
 
-testObservability: false
-
 acceptSslCerts: true
+
+idleTimeout: 350

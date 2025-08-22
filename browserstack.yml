@@ -70,3 +70,5 @@ browserStackLocalOptions:
 testObservability: false
 
 acceptSslCerts: true
+
+idleTimeout: 350

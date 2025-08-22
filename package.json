@@ -21,16 +21,16 @@
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && playwright test",
     "test:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
-    "test:local": "npm run clean && playwright test --config=playwright.local.config.js",
-    "test:local:debug": "npm run clean && playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",
+    "test:local": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js; npm run report && npm run report:publish; docker compose down",
+    "test:local:debug": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js --debug",
+    "test:local:browserstack": "npm run clean && docker compose up -d && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml; npm run report && npm run report:publish; docker compose down",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "postinstall": "npm run setup:husky",
-    "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
-    "report:publish": "npm run report; ./bin/publish-tests.sh"
+    "report:open": "allure open allure-report",
+    "report:publish": "npm run report; ./bin/publish-tests.sh",
+    "zap:start": "/opt/zap/ZAP_2.16.1/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true"
   },
   "dependencies": {
     "@axe-core/playwright": "4.10.2",
@@ -38,7 +38,7 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.40.3",
+    "browserstack-node-sdk": "1.41.1",
     "global-agent": "3.0.0",
     "undici": "7.12.0"
   },

@@ -6,22 +6,9 @@ The template to create a service that runs Playwright tests against an environ##
 - **🖥️ Desktop Coverage**: 100% (6/6 desktop browsers)
 - **📱 Mobile Coverage**: 10% (1/4 mobile browsers in beta)
 
-- [Local](#local)
-  - [Requirements](#requirements)
-    - [Node.js](#nodejs)
-  - [Setup](#setup)
-  - [Running local tests](#running-local-tests)
-  - [Debugging local tests](#debugging-local-tests)
-- [Production](#production)
-  - [Debugging tests](#debugging-tests)
-- [Licence](#licence)
-  - [About the licence](#about-the-licence)
+## Requirements
 
-## Local Development
-
-### Requirements
-
-#### Node.js
+### Node.js
 
 Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v10`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
@@ -32,6 +19,8 @@ To use the correct version of Node.js for this application, via nvm:
 nvm use
 ```
 
+## Local Development
+
 ### Setup
 
 Install application dependencies:
@@ -40,13 +29,23 @@ Install application dependencies:
 npm install
 ```
 
-### Running local tests
+### Running local tests using Playwright
 
-Start application you are testing on the url specified in `baseUrl` [playwright.local.config.js](playwright.local.config.js)
+Run journey tests using [local Playwright configuration](./playwright.local.config.js).
 
 ```bash
 npm run test:local
 ```
+
+### Running local tests using Playwright + BrowserStack
+
+Run journey tests using [local Playwright + BrowserStack configuration](./playwright.local.browserstack.config.js).  
+
+```bash
+npm run test:local:browserstack
+```
+
+You must have a BrowserStack account to run the journey tests locally against BrowserStack. If you are unable to obtain a BrowserStack account then please proceed to run the local journey tests using [Playwright only](#running-local-tests-using-playwright).
 
 ### Debugging local tests
 
@@ -126,6 +125,20 @@ npm run test:local:browserstack
 # Test all working browsers against deployed service
 npm run test:browserstack
 ```
+
+## Security Testing
+
+This test suite includes ZAP (Zed Attack Proxy) security testing integration. ZAP automatically scans for security vulnerabilities and integrates results with Allure reporting.
+
+### Requirements
+
+For local testing, ZAP must be running before tests execute:
+
+```bash
+docker compose up -d zap
+```
+
+The local test scripts (`npm run test:local`, `npm run test:local:debug` and `npm run test:local:browserstack`) automatically start ZAP before running tests.
 
 ## Licence
 
