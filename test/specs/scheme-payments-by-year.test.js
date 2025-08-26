@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
+import { expectNewTab } from '../../utils/new-tab-link-expect.js'
+import { accessibilityTest } from '../accessibility.test.js'
+import { securityTest } from '../security.test.js'
+import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -17,6 +19,16 @@ test.describe('Scheme payments by year page', () => {
     await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
   })
 
+  test('Should display the correct phase banner', async ({ page, context }) => {
+    await expectPhaseBanner({ page })
+
+    await expectNewTab(
+      context,
+      page.locator('.govuk-phase-banner .govuk-link'),
+      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+    )
+  })
+
   test('Should have a back link that directs to the start page', async ({ page }) => {
     const backLink = page.locator('#back-link')
 
@@ -27,16 +39,6 @@ test.describe('Scheme payments by year page', () => {
     await expect(page).toHaveURL('/')
   })
 
-  test('Should display the correct phase banner', async ({ page, context }) => {
-    await expectPhaseBanner({ page })
-
-    await expectNewPageLink(
-      context,
-      page.locator('.govuk-phase-banner .govuk-link'),
-      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
-    )
-  })
-
   test('Should have a download link', async ({ page }) => {
     const downloadLink = page.locator('#download-details-link')
 
@@ -45,16 +47,12 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test.describe('Related Content', () => {
-    test('Related Content section contains correct information and directs to correct pages', async ({ page, context }) => {
-      const sectionHeading = page.locator('#related-content')
-      const fundingLink = page.locator('#fflm-link')
-
-      await expect(sectionHeading).toHaveText('Related Content')
-      await expect(fundingLink).toHaveText('Funding for farmers, growers and land managers')
+    test('Related Content section contains correct information', async ({ page }) => {
+      await expectRelatedContent({ page })
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-      await expectNewPageLink(
+      await expectNewTab(
         context,
         page.locator('#fflm-link'),
         'https://www.gov.uk/guidance/funding-for-farmers'
@@ -86,7 +84,7 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('SFI query form link should direct to the correct page', async ({ page, context }) => {
-      await expectNewPageLink(
+      await expectNewTab(
         context,
         page.locator('#sfi-query-form'),
         'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
@@ -94,7 +92,7 @@ test.describe('Scheme payments by year page', () => {
     })
 
     test('Call charges link should direct to the correct page', async ({ page, context }) => {
-      await expectNewPageLink(
+      await expectNewTab(
         context,
         page.locator('#call-charges'),
         'https://www.gov.uk/call-charges'
@@ -108,7 +106,10 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toHaveLength(0)
+    await accessibilityTest(page)
+  })
+
+  test('Should meet security standards', async ({ page }) => {
+    await securityTest(page.url())
   })
 })

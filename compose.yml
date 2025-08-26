@@ -1,5 +1,8 @@
 services:
-  selenium-chrome:
-    image: selenium/standalone-chrome:123.0
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
     ports:
-      - 4444:4444
+      - "8080:8080"
+    volumes:
+      - ./zap:/zap/wrk
