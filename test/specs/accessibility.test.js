@@ -19,10 +19,18 @@ test.describe('Accessibility page', () => {
   })
 
   test('Should have a back link that directs to the previous page', async ({ page }) => {
+    const accessibilityLink = 'a[href="/accessibility"]'
     const backLink = page.locator('#back-link')
+    const url = new URL('/', page.url()).href
+
+    await page.goto('/')
+    await page.click(accessibilityLink)
+    await page.waitForURL('/accessibility')
+
+    await expect(page).toHaveURL('/accessibility')
 
     await expect(backLink).toHaveText('Back')
-    await expect(backLink).toHaveAttribute('href', '{{ referer }}')
+    await expect(backLink).toHaveAttribute('href', url)
   })
 
   test('Should display the correct phase banner', async ({ page, context }) => {
