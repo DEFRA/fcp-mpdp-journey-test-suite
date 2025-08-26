@@ -32,10 +32,10 @@ test.describe('Start page', () => {
     const viewYearlyTotalsLink = page.locator('#view-yearly-totals')
 
     await expect(viewYearlyTotalsLink).toHaveText('view yearly totals')
-    await expect(viewYearlyTotalsLink).toHaveAttribute('href', '#')
+    await expect(viewYearlyTotalsLink).toHaveAttribute('href', '/scheme-payments-by-year')
 
     await viewYearlyTotalsLink.click()
-    await expect(page).toHaveURL('/#')
+    await expect(page).toHaveURL('/scheme-payments-by-year')
   })
 
   test('Start button should direct to the /search', async ({ page }) => {
