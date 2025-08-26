@@ -5,5 +5,6 @@ export async function expectNewTab (context, link, expectedUrl) {
     context.waitForEvent('page'),
     link.click()
   ])
+
   await expect(newPage).toHaveURL(expectedUrl)
 }

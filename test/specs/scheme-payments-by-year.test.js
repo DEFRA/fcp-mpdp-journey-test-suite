@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewTab } from '../../utils/new-tab-link-expect.js'
+import { expectNewTab } from '../../utils/new-tab-expect.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { securityTest } from '../security.test.js'
 import { expectRelatedContent } from '../../utils/related-content-expect.js'
@@ -48,7 +48,11 @@ test.describe('Scheme payments by year page', () => {
 
   test.describe('Related Content', () => {
     test('Related Content section contains correct information', async ({ page }) => {
-      await expectRelatedContent({ page })
+      const links = [
+        { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
+      ]
+
+      await expectRelatedContent({ page, links })
     })
 
     test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {

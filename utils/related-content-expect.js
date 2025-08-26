@@ -1,9 +1,11 @@
 import { expect } from '@playwright/test'
 
-export async function expectRelatedContent ({ page }) {
+export async function expectRelatedContent ({ page, sectionText = 'Related Content', links = [] }) {
   const sectionHeading = page.locator('#related-content')
-  const fundingLink = page.locator('#fflm-link')
+  await expect(sectionHeading).toHaveText(sectionText)
 
-  await expect(sectionHeading).toHaveText('Related Content')
-  await expect(fundingLink).toHaveText('Funding for farmers, growers and land managers')
+  for (const { selector, text } of links) {
+    const link = page.locator(selector)
+    await expect(link).toHaveText(text)
+  }
 }
