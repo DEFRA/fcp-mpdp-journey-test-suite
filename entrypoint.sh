@@ -4,14 +4,29 @@ echo "run_id: $RUN_ID"
 npm run zap:start &
 
 echo "Waiting for ZAP to start..."
-sleep 15
 
-if curl -s http://localhost:8080 >/dev/null; then
-  echo "ZAP is running"
-else
-  echo "ZAP failed to start"
-  exit 1
-fi
+# Wait for ZAP to be ready with retries
+MAX_ATTEMPTS=12
+ATTEMPT=1
+SLEEP_TIME=5
+
+while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+  echo "Checking ZAP status (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
+  
+  if curl -s --max-time 5 http://localhost:8080 >/dev/null; then
+    echo "ZAP is running"
+    break
+  fi
+  
+  if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+    echo "ZAP failed to start after $MAX_ATTEMPTS attempts"
+    exit 1
+  fi
+  
+  echo "ZAP not ready yet, waiting ${SLEEP_TIME}s..."
+  sleep $SLEEP_TIME
+  ATTEMPT=$((ATTEMPT + 1))
+done
 
 npm run test:browserstack
 
