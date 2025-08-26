@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
+import { securityTest } from '../security.test.js'
+import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewPageLink } from '../../utils/new-page-link-expect.js'
+import { expectNewTab } from '../../utils/new-tab-link-expect.js'
 
 test.describe('404 page', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,7 +16,7 @@ test.describe('404 page', () => {
   test('Should display the correct phase banner', async ({ page, context }) => {
     await expectPhaseBanner({ page })
 
-    await expectNewPageLink(
+    await expectNewTab(
       context,
       page.locator('.govuk-phase-banner .govuk-link'),
       'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
@@ -29,7 +30,10 @@ test.describe('404 page', () => {
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toHaveLength(0)
+    await accessibilityTest(page)
+  })
+
+  test('Should meet security standards', async ({ page }) => {
+    await securityTest(page.url())
   })
 })
