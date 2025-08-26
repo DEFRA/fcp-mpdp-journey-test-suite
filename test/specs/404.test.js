@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { AccessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewTab } from '../../utils/new-page-link-expect.js'
+import { expectNewTab } from '../../utils/new-tab-link-expect.js'
 
 test.describe('404 page', () => {
   test.beforeEach(async ({ page }) => {
