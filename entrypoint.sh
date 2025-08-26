@@ -6,7 +6,7 @@ npm run zap:start &
 echo "Waiting for ZAP to start..."
 
 # Wait for ZAP to be ready with retries
-MAX_ATTEMPTS=12
+MAX_ATTEMPTS=30
 ATTEMPT=1
 SLEEP_TIME=5
 
