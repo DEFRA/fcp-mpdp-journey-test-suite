@@ -1,6 +1,6 @@
 import { allure } from 'allure-playwright'
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 const ZAP_BASE_URL = 'http://localhost:8080'
 

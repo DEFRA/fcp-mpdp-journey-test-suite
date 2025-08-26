@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
-import { AccessibilityTest } from '../accessibility.test.js'
+import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-tab-link-expect.js'
 import { expectRelatedContent } from '../../utils/related-content-expect.js'
@@ -79,7 +79,7 @@ test.describe('Start page', () => {
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
-    await AccessibilityTest(page)
+    await accessibilityTest(page)
   })
 
   test('Should meet security standards', async ({ page }) => {
