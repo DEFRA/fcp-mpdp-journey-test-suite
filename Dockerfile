@@ -1,3 +1,7 @@
+# Multi-stage build: Extract ZAP from official image
+FROM ghcr.io/zaproxy/zaproxy:stable AS zap-source
+
+# Main build stage
 FROM node:22.13.1-slim
 
 ENV TZ="Europe/London"
@@ -5,30 +9,23 @@ ENV TZ="Europe/London"
 USER root
 
 RUN apt-get update -qq \
-    && apt-get install -qqy \
-    curl \
-    zip \
-    openjdk-17-jre-headless \
+    && apt-get install -qqy curl zip openjdk-17-jre-headless \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip aws \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    && ./aws/install
-
 RUN npx playwright install --with-deps
 
-RUN curl -L https://github.com/zaproxy/zaproxy/releases/download/v2.16.1/ZAP_2.16.1_Linux.tar.gz -o zap_v2.16.1.tar.gz \
-    && mkdir -p /opt/zap \
-    && tar -xzf zap_v2.16.1.tar.gz -C /opt/zap \
-    && rm zap_v2.16.1.tar.gz
+# Copy ZAP from the official image
+COPY --from=zap-source /zap /zap
 
 WORKDIR /app
 
 COPY . .
 RUN npm install
-
-RUN chmod +x /opt/zap/ZAP_2.16.1/zap.sh
 
 ADD https://dnd2hcwqjlbad.cloudfront.net/binaries/release/latest_unzip/BrowserStackLocal-linux-x64 /root/.browserstack/BrowserStackLocal
 RUN chmod +x /root/.browserstack/BrowserStackLocal
