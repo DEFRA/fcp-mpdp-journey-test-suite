@@ -105,7 +105,7 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('More actions links should exist and have correct targets', async ({ page }) => {
-    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '#')
+    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
     await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
   })
 

@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
 
-export async function expectRelatedContent ({ page, sectionText = 'Related Content', links = [] }) {
+export async function expectRelatedContent ({ page, sectionText = 'Related content', links = [] }) {
   const sectionHeading = page.locator('#related-content')
   await expect(sectionHeading).toHaveText(sectionText)
 

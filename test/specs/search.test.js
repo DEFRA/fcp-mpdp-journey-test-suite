@@ -5,17 +5,32 @@ import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-tab-expect.js'
 import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
-test.describe('Start page', () => {
+test.describe('Search page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/search')
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Find farm and land payment data - GOV.UK')
+    await expect(page).toHaveTitle('Search for an agreement holder - Find farm and land payment data - GOV.UK')
   })
 
-  test('Should display the service name', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Find farm and land payment data')
+  test('Should display the correct heading', async ({ page }) => {
+    await expect(page.locator('h1')).toHaveText('Search for an agreement holder')
+  })
+
+  test('Should have a back link that directs to the previous page', async ({ page }) => {
+    const searchLink = 'a[href="/search"]'
+    const backLink = page.locator('#back-link')
+    const url = new URL('/', page.url()).href
+
+    await page.goto('/')
+    await page.click(searchLink)
+    await page.waitForURL('/search')
+
+    await expect(page).toHaveURL('/search')
+
+    await expect(backLink).toHaveText('Back')
+    await expect(backLink).toHaveAttribute('href', url)
   })
 
   test('Should display the correct phase banner', async ({ page, context }) => {
@@ -28,40 +43,13 @@ test.describe('Start page', () => {
     )
   })
 
-  test('View yearly totals link should direct to /scheme-payments-by-year route', async ({ page }) => {
-    const viewYearlyTotalsLink = page.locator('#view-yearly-totals')
-
-    await expect(viewYearlyTotalsLink).toHaveText('view yearly totals')
-    await expect(viewYearlyTotalsLink).toHaveAttribute('href', '/scheme-payments-by-year')
-
-    await viewYearlyTotalsLink.click()
-    await expect(page).toHaveURL('/scheme-payments-by-year')
-  })
-
-  test('Start button should direct to the /search', async ({ page }) => {
-    const startButton = page.locator('#start-button')
-
-    await expect(startButton).toHaveAttribute('href', '/search')
-
-    await startButton.click()
-    await expect(page).toHaveURL('/search')
-  })
-
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-all-link')
 
     await expect(downloadLink).toHaveAttribute('href', '#')
 
     await downloadLink.click()
-    await expect(page).toHaveURL('/#')
-  })
-
-  test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('#cap-link'),
-      'https://cap-payments.defra.gov.uk/Default.aspx'
-    )
+    await expect(page).toHaveURL('/search#')
   })
 
   test.describe('Related Content', () => {
