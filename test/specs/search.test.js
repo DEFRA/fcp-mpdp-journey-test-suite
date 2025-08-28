@@ -49,7 +49,7 @@ test.describe('Search page', () => {
     await expect(downloadLink).toHaveAttribute('href', '#')
 
     await downloadLink.click()
-    await expect(page).toHaveURL('/#')
+    await expect(page).toHaveURL('/search#')
   })
 
   test.describe('Related Content', () => {

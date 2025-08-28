@@ -41,10 +41,10 @@ test.describe('Start page', () => {
   test('Start button should direct to the /search', async ({ page }) => {
     const startButton = page.locator('#start-button')
 
-    await expect(startButton).toHaveAttribute('href', '#')
+    await expect(startButton).toHaveAttribute('href', '/search')
 
     await startButton.click()
-    await expect(page).toHaveURL('/#')
+    await expect(page).toHaveURL('/search')
   })
 
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
