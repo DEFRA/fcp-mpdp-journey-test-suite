@@ -3,6 +3,7 @@ import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-tab-expect.js'
+import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
@@ -68,24 +69,10 @@ test.describe('Results page', () => {
       await expect(searchBox).toHaveValue('Smith')
     })
 
-    test.describe('Sort by dropdown', () => {
-      test('Should render sort by dropdown selection list', async ({ page }) => {
-        const sortByDropdown = page.locator('#sort-by-dropdown')
+    test('Should render sort by dropdown selection list', async ({ page }) => {
+      const sortByDropdown = page.locator('#sort-by-dropdown')
 
-        await expect(sortByDropdown).toBeVisible()
-      })
-
-      // test('Should reorder results when selecting a different sort option', async ({ page }) => {
-      //   const dropdown = page.locator('#sort-by-selection')
-      //   const firstResult = page.locator('h3 a').first()
-      //   const initialText = await firstResult.textContent()
-
-      //   await dropdown.selectOption('Payee name')
-      //   await page.waitForLoadState('networkidle')
-      //   const newText = await firstResult.textContent()
-
-      //   expect(newText).not.toEqual(initialText)
-      // })
+      await expect(sortByDropdown).toBeVisible()
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -173,17 +160,51 @@ test.describe('Results page', () => {
   test.describe('Error on invalid search query', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/search')
-      await page.fill('#search-input', '')
       await page.getByRole('button', { name: 'Search' }).click()
-
-      await page.waitForURL(url => {
-        const base = new URL(page.url()).origin
-        const u = new URL(url.toString(), base)
-
-        return u.pathname === '/results' && u.searchParams.get('searchString') === ''
-      })
+      await page.locator('.govuk-error-summary').first().waitFor({ state: 'visible' })
     })
 
-    test('')
+    test('Should display the error summary', async ({ page }) => {
+      const errorSummary = page.locator('.govuk-error-summary')
+      await expect(errorSummary).toBeVisible()
+      await expect(errorSummary.locator('h2')).toHaveText('There is a problem')
+      await expect(errorSummary.locator('ul li')).toHaveText('Enter a name or location')
+    })
+
+    test('Should display the correct title with "Error:"', async ({ page }) => {
+      await expect(page).toHaveTitle('Error: Search for an agreement holder - Find farm and land payment data - GOV.UK')
+    })
+
+    test('Should display the back link that navigates to search page', async ({ page }) => {
+      const backLink = page.locator('#back-link')
+      await expect(backLink).toBeVisible()
+      await expect(backLink).toHaveText('Back')
+
+      await backLink.click()
+      await expect(page).toHaveURL('/search')
+    })
+
+    test('Should not show any results', async ({ page }) => {
+      const resultsSection = page.locator('#total-results')
+      await expect(resultsSection).toHaveCount(0)
+    })
+
+    test.describe('Related Content', () => {
+      test('Related Content section contains correct information', async ({ page }) => {
+        const links = [
+          { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
+        ]
+
+        await expectRelatedContent({ page, links })
+      })
+
+      test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
+        await expectNewTab(
+          context,
+          page.locator('#fflm-link'),
+          'https://www.gov.uk/guidance/funding-for-farmers'
+        )
+      })
+    })
   })
 })
