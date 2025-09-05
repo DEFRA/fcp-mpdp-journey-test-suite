@@ -1,0 +1,87 @@
+import { test, expect } from '@playwright/test'
+import { securityTest } from '../security.test.js'
+import { accessibilityTest } from '../accessibility.test.js'
+import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
+import { expectNewTab } from '../../utils/new-tab-expect.js'
+import { expectRelatedContent } from '../../utils/related-content-expect.js'
+
+test.describe('Results page', () => {
+  test.describe('With valid searchString that returns results', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/search')
+      await page.fill('#search-input', 'Smith')
+      await page.getByRole('button', { name: 'Search' }).click()
+
+      await page.waitForURL(url => {
+        const base = new URL(page.url()).origin
+        const u = new URL(url.toString(), base)
+
+        return u.pathname === '/results' && u.searchParams.get('searchString') === 'Smith'
+      })
+    })
+
+    test('Should display the correct title', async ({ page }) => {
+      await expect(page).toHaveTitle('Results for ‘Smith’ - Find farm and land payment data - GOV.UK')
+    })
+
+    test('Should display the correct heading and subheading', async ({ page }) => {
+      await expect(page.locator('h1')).toHaveText('Results for ‘Smith’')
+      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location')
+    })
+
+    test('Should display the correct phase banner', async ({ page, context }) => {
+      await expectPhaseBanner({ page })
+
+      await expectNewTab(
+        context,
+        page.locator('.govuk-phase-banner .govuk-link'),
+        'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+      )
+    })
+
+    test('Should have a back link that directs to the search page', async ({ page }) => {
+      const backLink = page.locator('#back-link')
+
+      await expect(backLink).toHaveText('Back')
+      await expect(backLink).toHaveAttribute('href', '/search')
+
+      await backLink.click()
+      await expect(page).toHaveURL('/search')
+    })
+
+    test.describe('Related Content', () => {
+      test('Related Content section contains correct information', async ({ page }) => {
+        const links = [
+          { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
+        ]
+
+        await expectRelatedContent({ page, links })
+      })
+
+      test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
+        await expectNewTab(
+          context,
+          page.locator('#fflm-link'),
+          'https://www.gov.uk/guidance/funding-for-farmers'
+        )
+      })
+    })
+
+    // test('Should render search box', async ({ page }) => {
+    //   const searchBox = page.locator('#results-search-input')
+    //   const searchButton = page.locator('.govuk-button')
+
+    //   await expect(searchButton).toBeVisible()
+    //   await expect(searchBox).toBeVisible()
+    //   await expect(searchBox).toHaveValue('Smith')
+    // })
+
+    test('Should meet WCAG 2.2 AA', async ({ page }) => {
+      await accessibilityTest(page)
+    })
+
+    test('Should meet security standards', async ({ page }) => {
+      await securityTest(page.url())
+    })
+  })
+})
