@@ -3,7 +3,6 @@ import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
 import { expectNewTab } from '../../utils/new-tab-expect.js'
-import { expectRelatedContent } from '../../utils/related-content-expect.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
@@ -26,7 +25,7 @@ test.describe('Results page', () => {
 
     test('Should display the correct heading and subheading', async ({ page }) => {
       await expect(page.locator('h1')).toHaveText('Results for ‘Smith’')
-      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location')
+      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location.')
     })
 
     test('Should display the correct phase banner', async ({ page, context }) => {
@@ -49,32 +48,33 @@ test.describe('Results page', () => {
       await expect(page).toHaveURL('/search')
     })
 
-    test.describe('Related Content', () => {
-      test('Related Content section contains correct information', async ({ page }) => {
-        const links = [
-          { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
-        ]
+    test('Download search results link should download a .CSV file', async ({ page }) => {
+      const downloadLink = page.locator('#download-results-link')
 
-        await expectRelatedContent({ page, links })
-      })
+      await expect(downloadLink).toHaveAttribute('href', '#')
 
-      test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-        await expectNewTab(
-          context,
-          page.locator('#fflm-link'),
-          'https://www.gov.uk/guidance/funding-for-farmers'
-        )
-      })
+      await downloadLink.click()
+      const currentUrl = page.url()
+
+      await expect(currentUrl.endsWith('#')).toBeTruthy()
     })
 
-    // test('Should render search box', async ({ page }) => {
-    //   const searchBox = page.locator('#results-search-input')
-    //   const searchButton = page.locator('.govuk-button')
+    test('Should render search box', async ({ page }) => {
+      const searchBox = page.locator('#results-search-input')
+      const searchButton = page.locator('.govuk-button')
 
-    //   await expect(searchButton).toBeVisible()
-    //   await expect(searchBox).toBeVisible()
-    //   await expect(searchBox).toHaveValue('Smith')
-    // })
+      await expect(searchButton).toBeVisible()
+      await expect(searchBox).toBeVisible()
+      await expect(searchBox).toHaveValue('Smith')
+    })
+
+    test.describe('Sort by dropdown', () => {
+      test('Should render sort by dropdown selection list', async ({ page }) => {
+        const sortByDropdown = page.locator('#sort-by-dropdown')
+
+        await expect(sortByDropdown).toBeVisible()
+      })
+    })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
       await accessibilityTest(page)
