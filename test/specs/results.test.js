@@ -74,6 +74,18 @@ test.describe('Results page', () => {
 
         await expect(sortByDropdown).toBeVisible()
       })
+
+      // test('Should reorder results when selecting a different sort option', async ({ page }) => {
+      //   const dropdown = page.locator('#sort-by-selection')
+      //   const firstResult = page.locator('h3 a').first()
+      //   const initialText = await firstResult.textContent()
+
+      //   await dropdown.selectOption('Payee name')
+      //   await page.waitForLoadState('networkidle')
+      //   const newText = await firstResult.textContent()
+
+      //   expect(newText).not.toEqual(initialText)
+      // })
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -83,5 +95,95 @@ test.describe('Results page', () => {
     test('Should meet security standards', async ({ page }) => {
       await securityTest(page.url())
     })
+  })
+
+  test.describe('With valid searchString that returns no results', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/search')
+      await page.fill('#search-input', '__INVALID_SEARCH_STRING__')
+      await page.getByRole('button', { name: 'Search' }).click()
+
+      await page.waitForURL(url => {
+        const base = new URL(page.url()).origin
+        const u = new URL(url.toString(), base)
+
+        return u.pathname === '/results' && u.searchParams.get('searchString') === '__INVALID_SEARCH_STRING__'
+      })
+    })
+
+    test('Should display the correct title', async ({ page }) => {
+      await expect(page).toHaveTitle('We found no results for ‘__INVALID_SEARCH_STRING__’ - Find farm and land payment data - GOV.UK')
+    })
+
+    test('Should display the correct heading and subheading(s)', async ({ page }) => {
+      await expect(page.locator('h1')).toHaveText('We found no results for ‘__INVALID_SEARCH_STRING__’')
+      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location.')
+      await expect(page.locator('h2').nth(1)).toHaveText('There are no matching results.')
+    })
+
+    test('Should display the correct phase banner', async ({ page, context }) => {
+      await expectPhaseBanner({ page })
+
+      await expectNewTab(
+        context,
+        page.locator('.govuk-phase-banner .govuk-link'),
+        'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
+      )
+    })
+
+    test('Should have a back link that directs to the search page', async ({ page }) => {
+      const backLink = page.locator('#back-link')
+
+      await expect(backLink).toHaveText('Back')
+      await expect(backLink).toHaveAttribute('href', '/search')
+
+      await backLink.click()
+      await expect(page).toHaveURL('/search')
+    })
+
+    test('Download search results link should download a .CSV file', async ({ page }) => {
+      const downloadLink = page.locator('#download-all-link')
+
+      await expect(downloadLink).toHaveAttribute('href', '#')
+
+      await downloadLink.click()
+      const currentUrl = page.url()
+
+      await expect(currentUrl.endsWith('#')).toBeTruthy()
+    })
+
+    test('Should render search box', async ({ page }) => {
+      const searchBox = page.locator('#results-search-input')
+      const searchButton = page.locator('.govuk-button')
+
+      await expect(searchButton).toBeVisible()
+      await expect(searchBox).toBeVisible()
+      await expect(searchBox).toHaveValue('__INVALID_SEARCH_STRING__')
+    })
+
+    test('Should meet WCAG 2.2 AA', async ({ page }) => {
+      await accessibilityTest(page)
+    })
+
+    test('Should meet security standards', async ({ page }) => {
+      await securityTest(page.url())
+    })
+  })
+
+  test.describe('Error on invalid search query', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/search')
+      await page.fill('#search-input', '')
+      await page.getByRole('button', { name: 'Search' }).click()
+
+      await page.waitForURL(url => {
+        const base = new URL(page.url()).origin
+        const u = new URL(url.toString(), base)
+
+        return u.pathname === '/results' && u.searchParams.get('searchString') === ''
+      })
+    })
+
+    test('')
   })
 })
