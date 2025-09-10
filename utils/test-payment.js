@@ -1,4 +1,4 @@
-export const testData = {
+export const testPayment = {
   payeeName: 'Feeney and Sons',
   partPostcode: 'GO15',
   town: 'Alekfield',
