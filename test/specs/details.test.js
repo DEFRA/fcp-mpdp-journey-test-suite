@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { testData } from '../../utils/test-data.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { securityTest } from '../security.test.js'
 import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
@@ -11,12 +12,12 @@ test.describe('Details page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Feeney and Sons - Find farm and land payment data - GOV.UK')
+    await expect(page).toHaveTitle(`${testData.payeeName} - Find farm and land payment data - GOV.UK`)
   })
 
   test('Should display the correct heading', async ({ page }) => {
     const heading = await page.locator('h1')
-    expect(heading).toHaveText('Feeney and Sons')
+    expect(heading).toHaveText(`${testData.payeeName}`)
   })
 
   test('Should display the correct phase banner', async ({ page, context }) => {
@@ -46,8 +47,8 @@ test.describe('Details page', () => {
     const dateRange = await page.locator('#date-range').innerText()
 
     expect(totalSchemes).toBe('Payments from 1 schemes')
-    expect(totalAmount).toBe('£33,577.90')
-    expect(dateRange).toBe('1 April 2023 to 31 March 2024')
+    expect(totalAmount).toBe(`£${testData.readableTotal}`)
+    expect(dateRange).toBe(`1 April ${testData.startYear} to 31 March ${testData.endYear}`)
   })
 
   test.describe('Related Content', () => {
