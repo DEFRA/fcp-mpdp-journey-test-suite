@@ -11,7 +11,8 @@ test.describe('Accessibility page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
+    const title = await page.title()
+    expect(title).toBe('Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the correct heading', async ({ page }) => {
@@ -27,7 +28,8 @@ test.describe('Accessibility page', () => {
     await page.click(accessibilityLink)
     await page.waitForURL('/accessibility')
 
-    await expect(page).toHaveURL('/accessibility')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/accessibility')
 
     await expect(backLink).toHaveText('Back')
     await expect(backLink).toHaveAttribute('href', url)

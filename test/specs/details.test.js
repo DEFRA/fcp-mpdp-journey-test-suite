@@ -12,12 +12,12 @@ test.describe('Details page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle(`${testPayment.payeeName} - Find farm and land payment data - GOV.UK`)
+    const title = await page.title()
+    expect(title).toBe(`${testPayment.payeeName} - Find farm and land payment data - GOV.UK`)
   })
 
   test('Should display the correct heading', async ({ page }) => {
-    const heading = await page.locator('h1')
-    expect(heading).toHaveText(`${testPayment.payeeName}`)
+    await expect(page.locator('h1')).toHaveText(`${testPayment.payeeName}`)
   })
 
   test('Should display the correct phase banner', async ({ page, context }) => {
@@ -38,7 +38,10 @@ test.describe('Details page', () => {
     expect(href).toBe('/results?searchString=Sons&page=1')
 
     await backLink.click()
-    await expect(page).toHaveURL(/\/results\?searchString=Sons&page=1$/)
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/results')
+    expect(currentUrl.searchParams.get('searchString')).toBe('Sons')
+    expect(currentUrl.searchParams.get('page')).toBe('1')
   })
 
   test('Summary panel should display correct totals', async ({ page }) => {

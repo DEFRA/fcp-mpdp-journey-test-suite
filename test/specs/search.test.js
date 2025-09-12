@@ -11,7 +11,8 @@ test.describe('Search page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Search for an agreement holder - Find farm and land payment data - GOV.UK')
+    const title = await page.title()
+    expect(title).toBe('Search for an agreement holder - Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the correct heading', async ({ page }) => {
@@ -27,7 +28,8 @@ test.describe('Search page', () => {
     await page.click(searchLink)
     await page.waitForURL('/search')
 
-    await expect(page).toHaveURL('/search')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/search')
 
     await expect(backLink).toHaveText('Back')
     await expect(backLink).toHaveAttribute('href', url)
@@ -49,7 +51,8 @@ test.describe('Search page', () => {
     await expect(downloadLink).toHaveAttribute('href', '#')
 
     await downloadLink.click()
-    await expect(page).toHaveURL('/search#')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/search')
   })
 
   test.describe('Related Content', () => {

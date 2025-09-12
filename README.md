@@ -93,6 +93,8 @@ Two Playwright configuration files are provided to help run the tests using Brow
 They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
 
+BrowserStack support for Playwright page assertions such as `toHaveUrl` and `toHaveTitle` is currently inconsistent.  As a workaround, these assertions have been replaced with alternative matchers.
+
 ### Environment Variables
 
 Before running BrowserStack tests, you need to set up the following environment variables:
