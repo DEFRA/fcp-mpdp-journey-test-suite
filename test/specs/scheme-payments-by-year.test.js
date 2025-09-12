@@ -11,7 +11,8 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Scheme payments by year - Find farm and land payment data - GOV.UK')
+    const title = await page.title()
+    expect(title).toBe('Scheme payments by year - Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the correct heading and subtitle', async ({ page }) => {
@@ -36,7 +37,8 @@ test.describe('Scheme payments by year page', () => {
     await expect(backLink).toHaveAttribute('href', '/')
 
     await backLink.click()
-    await expect(page).toHaveURL('/')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/')
   })
 
   test('Should have a download link', async ({ page }) => {

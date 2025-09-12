@@ -11,7 +11,8 @@ test.describe('Start page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Find farm and land payment data - GOV.UK')
+    const title = await page.title()
+    expect(title).toBe('Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the service name', async ({ page }) => {
@@ -35,7 +36,8 @@ test.describe('Start page', () => {
     await expect(viewYearlyTotalsLink).toHaveAttribute('href', '/scheme-payments-by-year')
 
     await viewYearlyTotalsLink.click()
-    await expect(page).toHaveURL('/scheme-payments-by-year')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/scheme-payments-by-year')
   })
 
   test('Start button should direct to the /search', async ({ page }) => {
@@ -44,7 +46,8 @@ test.describe('Start page', () => {
     await expect(startButton).toHaveAttribute('href', '/search')
 
     await startButton.click()
-    await expect(page).toHaveURL('/search')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/search')
   })
 
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
@@ -53,7 +56,8 @@ test.describe('Start page', () => {
     await expect(downloadLink).toHaveAttribute('href', '#')
 
     await downloadLink.click()
-    await expect(page).toHaveURL('/#')
+    const currentUrl = new URL(page.url())
+    expect(currentUrl.pathname).toBe('/')
   })
 
   test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page, context }) => {

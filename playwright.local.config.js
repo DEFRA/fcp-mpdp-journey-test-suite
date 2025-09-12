@@ -9,7 +9,7 @@ export default defineConfig({
   use: {
     ...baseConfig.use,
     baseURL: 'http://localhost:3000',
-    headless: false,
+    headless: true,
     trace: 'on',
     video: 'on'
   }

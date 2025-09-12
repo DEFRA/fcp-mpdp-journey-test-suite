@@ -10,7 +10,8 @@ test.describe('404 page', () => {
   })
 
   test('Should display the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Page not found - Find farm and land payment data - GOV.UK')
+    const title = await page.title()
+    expect(title).toBe('Page not found - Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the correct phase banner', async ({ page, context }) => {
