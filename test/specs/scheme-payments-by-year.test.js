@@ -42,10 +42,10 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('Should have a download link', async ({ page }) => {
-    const downloadLink = page.locator('#download-details-link')
+    const downloadLink = page.locator('#download-scheme-payments-by-year-summary-link')
 
     await expect(downloadLink).toHaveText('Download this data (.CSV)')
-    await expect(downloadLink).toHaveAttribute('href', '#')
+    await expect(downloadLink).toHaveAttribute('href', '/download-scheme-payments-by-year-summary')
   })
 
   test.describe('Related Content', () => {
