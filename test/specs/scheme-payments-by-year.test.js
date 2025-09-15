@@ -41,11 +41,20 @@ test.describe('Scheme payments by year page', () => {
     expect(currentUrl.pathname).toBe('/')
   })
 
-  test('Should have a download link', async ({ page }) => {
+  test('Download scheme payments by year link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-scheme-payments-by-year-link')
 
     await expect(downloadLink).toHaveText('Download this data (.CSV)')
     await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      downloadLink.click()
+    ])
+
+    const filename = download.suggestedFilename()
+
+    expect(filename).toBe('ffc-payments-by-year.csv')
   })
 
   test.describe('Related Content', () => {
