@@ -153,7 +153,7 @@ test.describe('Results page', () => {
     test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
       const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-      await expect(downloadLink).toHaveText('download all scheme payment data (.CSV, 3MB)')
+      await expect(downloadLink).toHaveText('download all scheme payment data')
       await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
       const [download] = await Promise.all([
