@@ -51,13 +51,19 @@ test.describe('Start page', () => {
   })
 
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
-    const downloadLink = page.locator('#download-all-link')
+    const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-    await expect(downloadLink).toHaveAttribute('href', '#')
+    await expect(downloadLink).toHaveText('download all scheme payment data')
+    await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
-    await downloadLink.click()
-    const currentUrl = new URL(page.url())
-    expect(currentUrl.pathname).toBe('/')
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      downloadLink.click()
+    ])
+
+    const filename = download.suggestedFilename()
+
+    expect(filename).toBe('ffc-payment-data.csv')
   })
 
   test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page, context }) => {

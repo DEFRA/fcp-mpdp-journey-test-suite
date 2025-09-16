@@ -60,8 +60,9 @@ platforms:
 
 browserstackLocal: true
 browserStackLocalOptions:
-  localIdentifier: fcp-mpdp-journey-test-suite-local
   onlyAutomate: true
+
+interactiveDebugging: false
 
 acceptSslCerts: true
 acceptInsecureCerts: true
