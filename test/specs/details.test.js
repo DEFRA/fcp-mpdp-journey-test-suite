@@ -44,6 +44,22 @@ test.describe('Details page', () => {
     expect(currentUrl.searchParams.get('page')).toBe('1')
   })
 
+  test('Download details link should download a .CSV file', async ({ page }) => {
+    const downloadLink = page.locator('#download-details-link')
+
+    await expect(downloadLink).toHaveText('Download this data (.CSV)')
+    await expect(downloadLink).toHaveAttribute('href', '/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      downloadLink.click()
+    ])
+
+    const filename = download.suggestedFilename()
+
+    expect(filename).toBe('ffc-payment-details.csv')
+  })
+
   test('Summary panel should display correct totals', async ({ page }) => {
     const totalSchemes = await page.locator('#total-schemes').innerText()
     const totalAmount = await page.locator('#mpdp-summary-panel p.govuk-heading-m').innerText()
