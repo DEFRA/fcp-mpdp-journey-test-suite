@@ -54,12 +54,17 @@ test.describe('Results page', () => {
     test('Download search results link should download a .CSV file', async ({ page }) => {
       const downloadLink = page.locator('#download-results-link')
 
-      await expect(downloadLink).toHaveAttribute('href', '#')
+      await expect(downloadLink).toHaveText(/Download \d+ results \(\.CSV\)/)
+      await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
 
-      await downloadLink.click()
-      const currentUrl = new URL(page.url())
+      const [download] = await Promise.all([
+        page.waitForEvent('download'),
+        downloadLink.click()
+      ])
 
-      expect(currentUrl.pathname).toBe('/results')
+      const filename = download.suggestedFilename()
+
+      expect(filename).toBe('ffc-payment-results.csv')
     })
 
     test('Should render search box', async ({ page }) => {
@@ -153,7 +158,7 @@ test.describe('Results page', () => {
     test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
       const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-      await expect(downloadLink).toHaveText('download all scheme payment data')
+      await expect(downloadLink).toHaveText('download all scheme payment data (4.7MB)')
       await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
       const [download] = await Promise.all([
