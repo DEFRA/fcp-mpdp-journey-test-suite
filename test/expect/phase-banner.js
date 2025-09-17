@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
 
-export async function expectPhaseBanner ({ page }) {
+export async function expectPhaseBanner (page) {
   const phaseBannerSelectors = {
     root: '.govuk-phase-banner',
     contentTag: '.govuk-phase-banner__content__tag',

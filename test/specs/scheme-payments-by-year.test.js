@@ -14,7 +14,7 @@ test.describe('Scheme payments by year page', () => {
 
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, 'Scheme payments by year - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
     await expectHeader(page, 'Scheme payments by year')
     await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
 

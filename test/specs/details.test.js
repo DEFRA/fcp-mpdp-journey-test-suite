@@ -15,7 +15,7 @@ test.describe('Details page', () => {
 
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, `${testPayment.payeeName} - Find farm and land payment data - GOV.UK`)
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
     await expectTitle(page, `${testPayment.payeeName} - Find farm and land payment data - GOV.UK`)
     await expectHeader(page, `${testPayment.payeeName}`)
 

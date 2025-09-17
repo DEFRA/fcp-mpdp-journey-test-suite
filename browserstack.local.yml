@@ -62,8 +62,6 @@ browserstackLocal: true
 browserStackLocalOptions:
   onlyAutomate: true
 
-interactiveDebugging: false
-
 acceptSslCerts: true
 acceptInsecureCerts: true
 

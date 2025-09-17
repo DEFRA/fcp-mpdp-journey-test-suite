@@ -13,7 +13,7 @@ test.describe('Search page', () => {
 
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, 'Search for an agreement holder - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
     await expectHeader(page, 'Search for an agreement holder')
 
     const links = [

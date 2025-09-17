@@ -66,8 +66,6 @@ browserStackLocalOptions:
   proxyHost: localhost
   proxyPort: 3128
 
-interactiveDebugging: false
-
 acceptSslCerts: true
 
 idleTimeout: 350

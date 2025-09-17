@@ -14,7 +14,7 @@ test.describe('Accessibility page', () => {
 
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, 'Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
     await expectHeader(page, 'Accessibility statement for Find Farm and Land Payment Data')
 
     const links = [

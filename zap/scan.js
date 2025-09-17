@@ -137,7 +137,7 @@ async function isZapRunning () {
   }
 }
 
-async function waitForZapReady (timeoutMs = 15000, intervalMs = 500) {
+async function waitForZapReady (timeoutMs = 120000, intervalMs = 500) {
   const start = Date.now()
   while (Date.now() - start < timeoutMs) {
     if (await isZapRunning()) {

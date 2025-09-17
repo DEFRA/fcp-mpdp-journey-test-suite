@@ -15,7 +15,7 @@ test.describe('Start page', () => {
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, 'Find farm and land payment data - GOV.UK')
     await expectHeader(page, 'Find farm and land payment data')
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }

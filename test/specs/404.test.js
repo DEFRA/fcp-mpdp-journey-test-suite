@@ -12,7 +12,7 @@ test.describe('404 page', () => {
 
   test('Should display the correct content', async ({ page }) => {
     await expectTitle(page, 'Page not found - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner({ page })
+    await expectPhaseBanner(page)
     await expectHeader(page, 'Page not found')
     await expect(page.locator('p').nth(1)).toHaveText('If you typed the web address, check it is correct.')
     await expect(page.locator('p').nth(2)).toHaveText('If you pasted the web address, check you copied the entire address.')
