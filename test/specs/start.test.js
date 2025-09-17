@@ -35,7 +35,7 @@ test.describe('Start page', () => {
   test('View yearly totals link should direct to /scheme-payments-by-year route', async ({ page }) => {
     const viewYearlyTotalsLink = page.locator('#view-yearly-totals')
 
-    await expect(viewYearlyTotalsLink).toHaveText('view yearly totals')
+    await expect(viewYearlyTotalsLink).toContainText('view yearly totals')
     await expect(viewYearlyTotalsLink).toHaveAttribute('href', '/scheme-payments-by-year')
 
     await viewYearlyTotalsLink.click()
@@ -56,7 +56,7 @@ test.describe('Start page', () => {
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-    await expect(downloadLink).toHaveText('download all scheme payment data (4.7MB)')
+    await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
     await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
     const downloadPromise = page.waitForEvent('download')

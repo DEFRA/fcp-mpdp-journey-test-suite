@@ -39,7 +39,7 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.42.5",
+    "browserstack-node-sdk": "1.42.7",
     "global-agent": "3.0.0",
     "undici": "7.12.0"
   },

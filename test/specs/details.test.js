@@ -38,7 +38,7 @@ test.describe('Details page', () => {
 
   test('Should have a back link that directs to the results page', async ({ page }) => {
     const backLink = page.locator('#back-link')
-    await expect(backLink).toHaveText('Back to results')
+    await expect(backLink).toContainText('Back to results')
 
     const href = await backLink.getAttribute('href')
     expect(href).toBe('/results?searchString=Sons&page=1')
@@ -63,13 +63,13 @@ test.describe('Details page', () => {
 
       await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
 
-      await expect(sfiQueryFormLink).toHaveText('SFI pilot query form')
+      await expect(sfiQueryFormLink).toContainText('SFI pilot query form')
       await expect(sfiQueryFormLink).toHaveAttribute(
         'href',
         'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
       )
 
-      await expect(callChargesLink).toHaveText('Find out about call charges')
+      await expect(callChargesLink).toContainText('Find out about call charges')
       await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
     })
 

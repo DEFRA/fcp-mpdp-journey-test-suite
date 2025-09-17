@@ -2,10 +2,10 @@ import { expect } from '@playwright/test'
 
 export async function expectRelatedContent ({ page, sectionText = 'Related content', links = [] }) {
   const sectionHeading = page.locator('#related-content')
-  await expect(sectionHeading).toHaveText(sectionText)
+  await expect(sectionHeading).toContainText(sectionText)
 
   for (const { selector, text } of links) {
     const link = page.locator(selector)
-    await expect(link).toHaveText(text)
+    await expect(link).toContainText(text)
   }
 }

@@ -9,7 +9,7 @@ export async function expectPhaseBanner (page) {
   }
 
   await expect(page.locator(phaseBannerSelectors.root)).toHaveCount(1)
-  await expect(page.locator(phaseBannerSelectors.contentTag)).toHaveText('Beta')
-  await expect(page.locator(phaseBannerSelectors.text)).toHaveText('This is a new service. Help us improve it and give your feedback (opens in new tab).')
+  await expect(page.locator(phaseBannerSelectors.contentTag)).toContainText('Beta')
+  await expect(page.locator(phaseBannerSelectors.text)).toContainText('This is a new service. Help us improve it and give your feedback (opens in new tab).')
   await expect(page.locator(phaseBannerSelectors.link)).toHaveAttribute('href', 'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs')
 }

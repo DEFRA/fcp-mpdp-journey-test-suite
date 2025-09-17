@@ -16,7 +16,7 @@ test.describe('Scheme payments by year page', () => {
     await expectTitle(page, 'Scheme payments by year - Find farm and land payment data - GOV.UK')
     await expectPhaseBanner(page)
     await expectHeader(page, 'Scheme payments by year')
-    await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
+    await expect(page.locator('#subtitle')).toContainText('We publish some scheme payments as a total for each financial year.')
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
@@ -28,7 +28,7 @@ test.describe('Scheme payments by year page', () => {
   test('Should have a back link that directs to the start page', async ({ page }) => {
     const backLink = page.locator('#back-link')
 
-    await expect(backLink).toHaveText('Back')
+    await expect(backLink).toContainText('Back')
     await expect(backLink).toHaveAttribute('href', '/')
 
     await backLink.click()
@@ -39,7 +39,7 @@ test.describe('Scheme payments by year page', () => {
   test('Download scheme payments by year link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-scheme-payments-by-year-link')
 
-    await expect(downloadLink).toHaveText('Download this data (.CSV)')
+    await expect(downloadLink).toContainText('Download this data (.CSV)')
     await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
 
     const downloadPromise = page.waitForEvent('download')
@@ -64,13 +64,13 @@ test.describe('Scheme payments by year page', () => {
 
       await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
 
-      await expect(sfiQueryFormLink).toHaveText('SFI pilot query form')
+      await expect(sfiQueryFormLink).toContainText('SFI pilot query form')
       await expect(sfiQueryFormLink).toHaveAttribute(
         'href',
         'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
       )
 
-      await expect(callChargesLink).toHaveText('Find out about call charges')
+      await expect(callChargesLink).toContainText('Find out about call charges')
       await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
     })
 

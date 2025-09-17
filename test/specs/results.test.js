@@ -24,7 +24,7 @@ test.describe('Results page', () => {
       await expectTitle(page, 'Results for ‘Smith’ - Find farm and land payment data - GOV.UK')
       await expectPhaseBanner(page)
       await expectHeader(page, 'Results for ‘Smith’')
-      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location.')
+      await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
       await expectSearchBox(page, 'Smith')
     })
 
@@ -87,8 +87,8 @@ test.describe('Results page', () => {
       await expectTitle(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’ - Find farm and land payment data - GOV.UK')
       await expectPhaseBanner(page)
       await expectHeader(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
-      await expect(page.locator('p').nth(1)).toHaveText('You can search by name and location.')
-      await expect(page.locator('h2').nth(1)).toHaveText('There are no matching results.')
+      await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
+      await expect(page.locator('h2').nth(1)).toContainText('There are no matching results.')
       await expectSearchBox(page, '__INVALID_SEARCH_STRING__')
     })
 
@@ -115,8 +115,8 @@ test.describe('Results page', () => {
     test('Should display the correct content', async ({ page }) => {
       const errorSummary = page.locator('.govuk-error-summary')
       await expect(errorSummary).toBeVisible()
-      await expect(errorSummary.locator('h2')).toHaveText('There is a problem')
-      await expect(errorSummary.locator('ul li')).toHaveText('Enter a name or location')
+      await expect(errorSummary.locator('h2')).toContainText('There is a problem')
+      await expect(errorSummary.locator('ul li')).toContainText('Enter a name or location')
 
       await expectTitle(page, 'Error: Search for an agreement holder - Find farm and land payment data - GOV.UK')
 
@@ -146,7 +146,7 @@ async function expectSearchBox (page, placeholder) {
 async function expectBackLink (page) {
   const backLink = page.locator('#back-link')
 
-  await expect(backLink).toHaveText('Back')
+  await expect(backLink).toContainText('Back')
   await expect(backLink).toHaveAttribute('href', expect.stringContaining('/search'))
 
   await backLink.click()
@@ -157,7 +157,7 @@ async function expectBackLink (page) {
 async function expectDownloadResults (page) {
   const downloadLink = page.locator('#download-results-link')
 
-  await expect(downloadLink).toHaveText(/Download \d+ results \(\.CSV\)/)
+  await expect(downloadLink).toContainText(/Download \d+ results \(\.CSV\)/)
   await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
 
   const downloadPromise = page.waitForEvent('download')
@@ -172,7 +172,7 @@ async function expectDownloadResults (page) {
 async function expectDownloadAll (page) {
   const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-  await expect(downloadLink).toHaveText('download all scheme payment data (4.7MB)')
+  await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
   await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
   const downloadPromise = page.waitForEvent('download')

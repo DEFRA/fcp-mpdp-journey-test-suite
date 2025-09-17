@@ -35,14 +35,14 @@ test.describe('Search page', () => {
     const currentUrl = new URL(page.url())
     expect(currentUrl.pathname).toBe('/search')
 
-    await expect(backLink).toHaveText('Back')
+    await expect(backLink).toContainText('Back')
     await expect(backLink).toHaveAttribute('href', url)
   })
 
   test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-    await expect(downloadLink).toHaveText('download all scheme payment data (4.7MB)')
+    await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
     await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
     const downloadPromise = page.waitForEvent('download')

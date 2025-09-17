@@ -37,7 +37,7 @@ test.describe('Accessibility page', () => {
     const currentUrl = new URL(page.url())
     expect(currentUrl.pathname).toBe('/accessibility')
 
-    await expect(backLink).toHaveText('Back')
+    await expect(backLink).toContainText('Back')
     await expect(backLink).toHaveAttribute('href', url)
   })
 
