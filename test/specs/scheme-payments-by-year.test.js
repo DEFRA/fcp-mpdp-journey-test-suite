@@ -1,33 +1,28 @@
 import { test, expect } from '@playwright/test'
-import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewTab } from '../../utils/new-tab-expect.js'
+import { expectPhaseBanner } from '../expect/phase-banner.js'
+import { expectNewTab } from '../expect/new-tab.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { securityTest } from '../security.test.js'
-import { expectRelatedContent } from '../../utils/related-content-expect.js'
+import { expectRelatedContent } from '../expect/related-content.js'
+import { expectTitle } from '../expect/title.js'
+import { expectHeader } from '../expect/header.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/scheme-payments-by-year')
   })
 
-  test('Should display the correct title', async ({ page }) => {
-    const title = await page.title()
-    expect(title).toBe('Scheme payments by year - Find farm and land payment data - GOV.UK')
-  })
-
-  test('Should display the correct heading and subtitle', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Scheme payments by year')
-    await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
-  })
-
-  test('Should display the correct phase banner', async ({ page, context }) => {
+  test('Should display the correct content', async ({ page }) => {
+    await expectTitle(page, 'Scheme payments by year - Find farm and land payment data - GOV.UK')
     await expectPhaseBanner({ page })
+    await expectHeader(page, 'Scheme payments by year')
+    await expect(page.locator('#subtitle')).toHaveText('We publish some scheme payments as a total for each financial year.')
 
-    await expectNewTab(
-      context,
-      page.locator('.govuk-phase-banner .govuk-link'),
-      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
-    )
+    const links = [
+      { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
+    ]
+
+    await expectRelatedContent({ page, links })
   })
 
   test('Should have a back link that directs to the start page', async ({ page }) => {
@@ -47,32 +42,13 @@ test.describe('Scheme payments by year page', () => {
     await expect(downloadLink).toHaveText('Download this data (.CSV)')
     await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      downloadLink.click()
-    ])
+    const downloadPromise = page.waitForEvent('download')
+    await downloadLink.click()
+    const download = await downloadPromise
 
     const filename = download.suggestedFilename()
 
     expect(filename).toBe('ffc-payments-by-year.csv')
-  })
-
-  test.describe('Related Content', () => {
-    test('Related Content section contains correct information', async ({ page }) => {
-      const links = [
-        { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
-      ]
-
-      await expectRelatedContent({ page, links })
-    })
-
-    test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-      await expectNewTab(
-        context,
-        page.locator('#fflm-link'),
-        'https://www.gov.uk/guidance/funding-for-farmers'
-      )
-    })
   })
 
   test.describe('Report a problem', () => {

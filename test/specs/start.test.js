@@ -1,27 +1,30 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewTab } from '../../utils/new-tab-expect.js'
-import { expectRelatedContent } from '../../utils/related-content-expect.js'
+import { expectPhaseBanner } from '../expect/phase-banner.js'
+import { expectNewTab } from '../expect/new-tab.js'
+import { expectRelatedContent } from '../expect/related-content.js'
+import { expectTitle } from '../expect/title.js'
+import { expectHeader } from '../expect/header.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
   })
 
-  test('Should display the correct title', async ({ page }) => {
-    const title = await page.title()
-    expect(title).toBe('Find farm and land payment data - GOV.UK')
-  })
-
-  test('Should display the service name', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Find farm and land payment data')
-  })
-
-  test('Should display the correct phase banner', async ({ page, context }) => {
+  test('Should display the correct content', async ({ page }) => {
+    await expectTitle(page, 'Find farm and land payment data - GOV.UK')
+    await expectHeader(page, 'Find farm and land payment data')
     await expectPhaseBanner({ page })
 
+    const links = [
+      { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
+    ]
+
+    await expectRelatedContent({ page, links })
+  })
+
+  test('Phase banner should link to the feedback form', async ({ page, context }) => {
     await expectNewTab(
       context,
       page.locator('.govuk-phase-banner .govuk-link'),
@@ -56,10 +59,9 @@ test.describe('Start page', () => {
     await expect(downloadLink).toHaveText('download all scheme payment data (4.7MB)')
     await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      downloadLink.click()
-    ])
+    const downloadPromise = page.waitForEvent('download')
+    await downloadLink.click()
+    const download = await downloadPromise
 
     const filename = download.suggestedFilename()
 
@@ -74,22 +76,12 @@ test.describe('Start page', () => {
     )
   })
 
-  test.describe('Related Content', () => {
-    test('Related Content section contains correct information', async ({ page }) => {
-      const links = [
-        { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
-      ]
-
-      await expectRelatedContent({ page, links })
-    })
-
-    test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-      await expectNewTab(
-        context,
-        page.locator('#fflm-link'),
-        'https://www.gov.uk/guidance/funding-for-farmers'
-      )
-    })
+  test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
+    await expectNewTab(
+      context,
+      page.locator('#fflm-link'),
+      'https://www.gov.uk/guidance/funding-for-farmers'
+    )
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
