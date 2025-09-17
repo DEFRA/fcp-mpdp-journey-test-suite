@@ -12,11 +12,11 @@ test.describe('Accessibility page', () => {
 
   test('Should display the correct title', async ({ page }) => {
     const title = await page.title()
-    expect(title).toBe('Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
+    expect(title).toBe('Accessibility statement for Find farm and land payment data - Find farm and land payment data - GOV.UK')
   })
 
   test('Should display the correct heading', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Accessibility statement for Find Farm and Land Payment Data')
+    await expect(page.locator('h1')).toHaveText('Accessibility statement for Find farm and land payment data')
   })
 
   test('Should have a back link that directs to the previous page', async ({ page }) => {
@@ -43,6 +43,12 @@ test.describe('Accessibility page', () => {
       page.locator('.govuk-phase-banner .govuk-link'),
       'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
     )
+  })
+
+  test('Internal accessibility contact is directed to the correct email address', async ({ page }) => {
+    const accessibilityContactEmailAddress = page.locator('#accessibility-contact-email')
+
+    await expect(accessibilityContactEmailAddress).toHaveAttribute('href', 'mailto:morgan.dirodi@defra.gov.uk')
   })
 
   test('Equality Advisory and Support Service link directs to the correct page', async ({ page, context }) => {
