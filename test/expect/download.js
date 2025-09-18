@@ -3,7 +3,6 @@ import { isAndroid } from '../../utils/devices'
 
 export async function expectDownload (page, link, expectedFilename, testInfo) {
   // Android testing on BrowserStack supports file downloads, however, there is an unresolved issue verifying the filename.
-  // As a workaround, we just ensure the link is clickable.
   if (!isAndroid(testInfo)) {
     const downloadPromise = page.waitForEvent('download')
 
@@ -12,7 +11,5 @@ export async function expectDownload (page, link, expectedFilename, testInfo) {
     const filename = download.suggestedFilename()
 
     expect(filename).toBe(expectedFilename)
-  } else {
-    await link.click()
   }
 }
