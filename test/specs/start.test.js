@@ -7,6 +7,7 @@ import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
 import { isAndroid } from '../../utils/devices.js'
+import { expectDownload } from '../expect/download.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
@@ -68,13 +69,7 @@ test.describe('Start page', () => {
       await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
     }
 
-    const downloadPromise = page.waitForEvent('download')
-    await downloadLink.click()
-    const download = await downloadPromise
-
-    const filename = download.suggestedFilename()
-
-    expect(filename).toBe('ffc-payment-data.csv')
+    await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
   })
 
   test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page, context }) => {

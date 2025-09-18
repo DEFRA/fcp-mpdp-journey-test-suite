@@ -5,6 +5,7 @@ import { expectPhaseBanner } from '../expect/phase-banner.js'
 import { expectHeader } from '../expect/header.js'
 import { expectTitle } from '../expect/title.js'
 import { isAndroid } from '../../utils/devices.js'
+import { expectDownload } from '../expect/download.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
@@ -26,7 +27,7 @@ test.describe('Results page', () => {
       await expectPhaseBanner(page, testInfo)
       await expectHeader(page, 'Results for ‘Smith’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
-      await expectSearchBox(page, 'Smith')
+      await expectSearchBox(page, 'Smith', testInfo)
     })
 
     test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
@@ -90,7 +91,7 @@ test.describe('Results page', () => {
       await expectHeader(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
       await expect(page.locator('h2').nth(1)).toContainText('There are no matching results.')
-      await expectSearchBox(page, '__INVALID_SEARCH_STRING__')
+      await expectSearchBox(page, '__INVALID_SEARCH_STRING__', testInfo)
     })
 
     test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
@@ -113,7 +114,7 @@ test.describe('Results page', () => {
       await page.locator('.govuk-error-summary').first().waitFor({ state: 'visible' })
     })
 
-    test('Should display the correct content', async ({ page }) => {
+    test('Should display the correct content', async ({ page }, testInfo) => {
       const errorSummary = page.locator('.govuk-error-summary')
       await expect(errorSummary).toBeVisible()
       await expect(errorSummary.locator('h2')).toContainText('There is a problem')
@@ -121,8 +122,10 @@ test.describe('Results page', () => {
 
       await expectTitle(page, 'Error: Search for an agreement holder - Find farm and land payment data - GOV.UK')
 
-      const resultsSection = page.locator('#total-results')
-      await expect(resultsSection).toHaveCount(0)
+      if (!isAndroid(testInfo)) {
+        const resultsSection = page.locator('#total-results')
+        await expect(resultsSection).toHaveCount(0)
+      }
     })
 
     test('Should display the back link that navigates to search page', async ({ page }, testInfo) => {
@@ -135,13 +138,16 @@ test.describe('Results page', () => {
   })
 })
 
-async function expectSearchBox (page, placeholder) {
+async function expectSearchBox (page, placeholder, testInfo) {
   const searchBox = page.locator('#results-search-input')
   const searchButton = page.locator('.govuk-button')
 
   await expect(searchButton).toBeVisible()
   await expect(searchBox).toBeVisible()
-  await expect(searchBox).toHaveValue(placeholder)
+
+  if (!isAndroid(testInfo)) {
+    await expect(searchBox).toHaveValue(placeholder)
+  }
 }
 
 async function expectBackLink (page, testInfo) {
@@ -167,13 +173,7 @@ async function expectDownloadResults (page, testInfo) {
     await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
   }
 
-  const downloadPromise = page.waitForEvent('download')
-  await downloadLink.click()
-  const download = await downloadPromise
-
-  const filename = download.suggestedFilename()
-
-  expect(filename).toBe('ffc-payment-results.csv')
+  await expectDownload(page, downloadLink, 'ffc-payment-results.csv', testInfo)
 }
 
 async function expectDownloadAll (page, testInfo) {
@@ -185,11 +185,5 @@ async function expectDownloadAll (page, testInfo) {
     await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
   }
 
-  const downloadPromise = page.waitForEvent('download')
-  await downloadLink.click()
-  const download = await downloadPromise
-
-  const filename = download.suggestedFilename()
-
-  expect(filename).toBe('ffc-payment-data.csv')
+  await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
 }

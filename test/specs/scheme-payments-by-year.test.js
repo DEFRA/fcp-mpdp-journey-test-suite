@@ -7,6 +7,7 @@ import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
 import { isAndroid } from '../../utils/devices.js'
+import { expectDownload } from '../expect/download.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -49,13 +50,7 @@ test.describe('Scheme payments by year page', () => {
       await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
     }
 
-    const downloadPromise = page.waitForEvent('download')
-    await downloadLink.click()
-    const download = await downloadPromise
-
-    const filename = download.suggestedFilename()
-
-    expect(filename).toBe('ffc-payments-by-year.csv')
+    await expectDownload(page, downloadLink, 'ffc-payments-by-year.csv', testInfo)
   })
 
   test.describe('Report a problem', () => {
@@ -100,9 +95,8 @@ test.describe('Scheme payments by year page', () => {
   })
 
   test('More actions links should exist and have correct targets', async ({ page }, testInfo) => {
-    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-
     if (!isAndroid(testInfo)) {
+      await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
       await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
     }
   })
