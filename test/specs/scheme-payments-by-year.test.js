@@ -6,6 +6,7 @@ import { securityTest } from '../security.test.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -25,22 +26,28 @@ test.describe('Scheme payments by year page', () => {
     await expectRelatedContent(page, links)
   })
 
-  test('Should have a back link that directs to the start page', async ({ page }) => {
+  test('Should have a back link that directs to the start page', async ({ page }, testInfo) => {
     const backLink = page.locator('#back-link')
 
     await expect(backLink).toContainText('Back')
-    await expect(backLink).toHaveAttribute('href', '/')
+
+    if (!isAndroid(testInfo)) {
+      await expect(backLink).toHaveAttribute('href', '/')
+    }
 
     await backLink.click()
     const currentUrl = new URL(page.url())
     expect(currentUrl.pathname).toBe('/')
   })
 
-  test('Download scheme payments by year link should download a .CSV file', async ({ page }) => {
+  test('Download scheme payments by year link should download a .CSV file', async ({ page }, testInfo) => {
     const downloadLink = page.locator('#download-scheme-payments-by-year-link')
 
     await expect(downloadLink).toContainText('Download this data (.CSV)')
-    await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
+
+    if (!isAndroid(testInfo)) {
+      await expect(downloadLink).toHaveAttribute('href', '/scheme-payments-by-year/file')
+    }
 
     const downloadPromise = page.waitForEvent('download')
     await downloadLink.click()
@@ -57,21 +64,22 @@ test.describe('Scheme payments by year page', () => {
       await reportProblemToggle.click()
     })
 
-    test('Report a problem section should expand and contain correct information', async ({ page }) => {
+    test('Report a problem section should expand and contain correct information', async ({ page }, testInfo) => {
       const rpaEmailLink = page.locator('#rpa-email')
       const sfiQueryFormLink = page.locator('#sfi-query-form')
       const callChargesLink = page.locator('#call-charges')
 
-      await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
-
       await expect(sfiQueryFormLink).toContainText('SFI pilot query form')
-      await expect(sfiQueryFormLink).toHaveAttribute(
-        'href',
-        'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
-      )
-
       await expect(callChargesLink).toContainText('Find out about call charges')
-      await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+
+      if (!isAndroid(testInfo)) {
+        await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
+        await expect(sfiQueryFormLink).toHaveAttribute(
+          'href',
+          'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+        )
+        await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+      }
     })
 
     test('SFI query form link should direct to the correct page', async ({ page, context }) => {
@@ -91,9 +99,12 @@ test.describe('Scheme payments by year page', () => {
     })
   })
 
-  test('More actions links should exist and have correct targets', async ({ page }) => {
+  test('More actions links should exist and have correct targets', async ({ page }, testInfo) => {
     await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-    await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+
+    if (!isAndroid(testInfo)) {
+      await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+    }
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {

@@ -93,7 +93,17 @@ Two Playwright configuration files are provided to help run the tests using Brow
 They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
 See the CDP Documentation for more details.
 
-BrowserStack support for Playwright page assertions such as `toHaveUrl`, `toHaveText` and `toHaveTitle` is currently inconsistent across devices.  As a workaround, these assertions have been replaced with alternative matchers.
+### Known Issues
+
+BrowserStack compatibility with Playwright is still evolving.
+
+As such, some compromises have been made based on risk 
+
+- BrowserStack support for Playwright page assertions such as `toHaveUrl`, `toHaveText` and `toHaveTitle` is currently inconsistent across devices.  As a workaround, these assertions have been replaced with alternative matchers.
+
+- BrowserStack support for all required device and browser combinations is not yet available meaning some are not currently tested.  See the table below for details.
+
+- Some Playwright locators fail to match accurately on Android devices.  These assertions have been skipped for Android devices.
 
 ### Environment Variables
 

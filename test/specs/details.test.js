@@ -7,6 +7,7 @@ import { expectNewTab } from '../expect/new-tab.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Details page', () => {
   test.beforeEach(async ({ page }) => {
@@ -32,8 +33,10 @@ test.describe('Details page', () => {
     expect(totalAmount).toBe(`£${testPayment.readableTotal}`)
     expect(dateRange).toBe(`1 April ${testPayment.startYear} to 31 March ${testPayment.endYear}`)
 
-    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-    await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+    if (!isAndroid(testInfo)) {
+      await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
+      await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+    }
   })
 
   test('Should have a back link that directs to the results page', async ({ page }) => {
@@ -56,21 +59,22 @@ test.describe('Details page', () => {
       await reportProblemToggle.click()
     })
 
-    test('Report a problem section should expand and contain correct information', async ({ page }) => {
+    test('Report a problem section should expand and contain correct information', async ({ page }, testInfo) => {
       const rpaEmailLink = page.locator('#rpa-email')
       const sfiQueryFormLink = page.locator('#sfi-query-form')
       const callChargesLink = page.locator('#call-charges')
 
-      await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
-
       await expect(sfiQueryFormLink).toContainText('SFI pilot query form')
-      await expect(sfiQueryFormLink).toHaveAttribute(
-        'href',
-        'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
-      )
-
       await expect(callChargesLink).toContainText('Find out about call charges')
-      await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+
+      if (!isAndroid(testInfo)) {
+        await expect(rpaEmailLink).toHaveAttribute('href', 'mailto:ruralpayments@defra.gov.uk')
+        await expect(sfiQueryFormLink).toHaveAttribute(
+          'href',
+          'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
+        )
+        await expect(callChargesLink).toHaveAttribute('href', 'https://www.gov.uk/call-charges')
+      }
     })
 
     test('SFI query form link should direct to the correct page', async ({ page, context }) => {

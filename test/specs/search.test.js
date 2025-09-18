@@ -5,6 +5,7 @@ import { expectPhaseBanner } from '../expect/phase-banner.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Search page', () => {
   test.beforeEach(async ({ page }) => {
@@ -23,7 +24,7 @@ test.describe('Search page', () => {
     await expectRelatedContent(page, links)
   })
 
-  test('Should have a back link that directs to the previous page', async ({ page }) => {
+  test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
     const searchLink = 'a[href="/search"]'
     const backLink = page.locator('#back-link')
     const url = new URL('/', page.url()).href
@@ -36,14 +37,20 @@ test.describe('Search page', () => {
     expect(currentUrl.pathname).toBe('/search')
 
     await expect(backLink).toContainText('Back')
-    await expect(backLink).toHaveAttribute('href', url)
+
+    if (!isAndroid(testInfo)) {
+      await expect(backLink).toHaveAttribute('href', url)
+    }
   })
 
-  test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
+  test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
     const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
     await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
-    await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
+
+    if (!isAndroid(testInfo)) {
+      await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
+    }
 
     const downloadPromise = page.waitForEvent('download')
     await downloadLink.click()

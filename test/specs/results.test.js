@@ -4,6 +4,7 @@ import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../expect/phase-banner.js'
 import { expectHeader } from '../expect/header.js'
 import { expectTitle } from '../expect/title.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
@@ -28,12 +29,12 @@ test.describe('Results page', () => {
       await expectSearchBox(page, 'Smith')
     })
 
-    test('Should have a back link that directs to the search page', async ({ page }) => {
-      await expectBackLink(page)
+    test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
+      await expectBackLink(page, testInfo)
     })
 
-    test('Download search results link should download a .CSV file', async ({ page }) => {
-      await expectDownloadResults(page)
+    test('Download search results link should download a .CSV file', async ({ page }, testInfo) => {
+      await expectDownloadResults(page, testInfo)
     })
 
     test.describe('Sort By dropdown functionality', () => {
@@ -92,12 +93,12 @@ test.describe('Results page', () => {
       await expectSearchBox(page, '__INVALID_SEARCH_STRING__')
     })
 
-    test('Should have a back link that directs to the search page', async ({ page }) => {
-      await expectBackLink(page)
+    test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
+      await expectBackLink(page, testInfo)
     })
 
-    test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
-      await expectDownloadAll(page)
+    test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
+      await expectDownloadAll(page, testInfo)
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -124,8 +125,8 @@ test.describe('Results page', () => {
       await expect(resultsSection).toHaveCount(0)
     })
 
-    test('Should display the back link that navigates to search page', async ({ page }) => {
-      await expectBackLink(page)
+    test('Should display the back link that navigates to search page', async ({ page }, testInfo) => {
+      await expectBackLink(page, testInfo)
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -143,22 +144,28 @@ async function expectSearchBox (page, placeholder) {
   await expect(searchBox).toHaveValue(placeholder)
 }
 
-async function expectBackLink (page) {
+async function expectBackLink (page, testInfo) {
   const backLink = page.locator('#back-link')
 
   await expect(backLink).toContainText('Back')
-  await expect(backLink).toHaveAttribute('href', expect.stringContaining('/search'))
+
+  if (!isAndroid(testInfo)) {
+    await expect(backLink).toHaveAttribute('href', expect.stringContaining('/search'))
+  }
 
   await backLink.click()
   const currentUrl = new URL(page.url())
   expect(currentUrl.pathname).toBe('/search')
 }
 
-async function expectDownloadResults (page) {
+async function expectDownloadResults (page, testInfo) {
   const downloadLink = page.locator('#download-results-link')
 
   await expect(downloadLink).toContainText(/Download \d+ results \(\.CSV\)/)
-  await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
+
+  if (!isAndroid(testInfo)) {
+    await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
+  }
 
   const downloadPromise = page.waitForEvent('download')
   await downloadLink.click()
@@ -169,11 +176,14 @@ async function expectDownloadResults (page) {
   expect(filename).toBe('ffc-payment-results.csv')
 }
 
-async function expectDownloadAll (page) {
+async function expectDownloadAll (page, testInfo) {
   const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
   await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
-  await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
+
+  if (!isAndroid(testInfo)) {
+    await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
+  }
 
   const downloadPromise = page.waitForEvent('download')
   await downloadLink.click()
