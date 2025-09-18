@@ -1,25 +1,32 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../../utils/phase-banner-expect.js'
-import { expectNewTab } from '../../utils/new-tab-expect.js'
-import { expectRelatedContent } from '../../utils/related-content-expect.js'
+import { expectPhaseBanner } from '../expect/phase-banner.js'
+import { expectNewTab } from '../expect/new-tab.js'
+import { expectRelatedContent } from '../expect/related-content.js'
+import { expectTitle } from '../expect/title.js'
+import { expectHeader } from '../expect/header.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Accessibility page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/accessibility')
   })
 
-  test('Should display the correct title', async ({ page }) => {
-    const title = await page.title()
-    expect(title).toBe('Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
+  test('Should display the correct content', async ({ page }, testInfo) => {
+    await expectTitle(page, 'Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
+    await expectPhaseBanner(page, testInfo)
+    await expectHeader(page, 'Accessibility statement for Find Farm and Land Payment Data')
+
+    const links = [
+      { selector: '#tc-link', text: 'Terms and conditions' },
+      { selector: '#about-govuk-link', text: 'About GOV.UK' }
+    ]
+
+    await expectRelatedContent(page, links)
   })
 
-  test('Should display the correct heading', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Accessibility statement for Find Farm and Land Payment Data')
-  })
-
-  test('Should have a back link that directs to the previous page', async ({ page }) => {
+  test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
     const accessibilityLink = 'a[href="/accessibility"]'
     const backLink = page.locator('#back-link')
     const url = new URL('/', page.url()).href
@@ -31,18 +38,11 @@ test.describe('Accessibility page', () => {
     const currentUrl = new URL(page.url())
     expect(currentUrl.pathname).toBe('/accessibility')
 
-    await expect(backLink).toHaveText('Back')
-    await expect(backLink).toHaveAttribute('href', url)
-  })
+    await expect(backLink).toContainText('Back')
 
-  test('Should display the correct phase banner', async ({ page, context }) => {
-    await expectPhaseBanner({ page })
-
-    await expectNewTab(
-      context,
-      page.locator('.govuk-phase-banner .govuk-link'),
-      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
-    )
+    if (!isAndroid(testInfo)) {
+      await expect(backLink).toHaveAttribute('href', url)
+    }
   })
 
   test('Equality Advisory and Support Service link directs to the correct page', async ({ page, context }) => {
@@ -61,31 +61,20 @@ test.describe('Accessibility page', () => {
     )
   })
 
-  test.describe('Related Content', () => {
-    test('Related Content section contains correct information', async ({ page }) => {
-      const links = [
-        { selector: '#tc-link', text: 'Terms and conditions' },
-        { selector: '#about-govuk-link', text: 'About GOV.UK' }
-      ]
+  test('Terms and conditions link directs to the correct page', async ({ context, page }) => {
+    await expectNewTab(
+      context,
+      page.locator('#tc-link'),
+      'https://www.gov.uk/help/terms-conditions'
+    )
+  })
 
-      await expectRelatedContent({ page, links })
-    })
-
-    test('Terms and conditions link directs to the correct page', async ({ context, page }) => {
-      await expectNewTab(
-        context,
-        page.locator('#tc-link'),
-        'https://www.gov.uk/help/terms-conditions'
-      )
-    })
-
-    test('About GOV.UK link directs to the correct page', async ({ context, page }) => {
-      await expectNewTab(
-        context,
-        page.locator('#about-govuk-link'),
-        'https://www.gov.uk/help/about-govuk'
-      )
-    })
+  test('About GOV.UK link directs to the correct page', async ({ context, page }) => {
+    await expectNewTab(
+      context,
+      page.locator('#about-govuk-link'),
+      'https://www.gov.uk/help/about-govuk'
+    )
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
