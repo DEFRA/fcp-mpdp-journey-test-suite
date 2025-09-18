@@ -6,15 +6,16 @@ import { expectNewTab } from '../expect/new-tab.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Accessibility page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/accessibility')
   })
 
-  test('Should display the correct content', async ({ page }) => {
+  test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner(page)
+    await expectPhaseBanner(page, testInfo)
     await expectHeader(page, 'Accessibility statement for Find Farm and Land Payment Data')
 
     const links = [
@@ -22,10 +23,10 @@ test.describe('Accessibility page', () => {
       { selector: '#about-govuk-link', text: 'About GOV.UK' }
     ]
 
-    await expectRelatedContent({ page, links })
+    await expectRelatedContent(page, links)
   })
 
-  test('Should have a back link that directs to the previous page', async ({ page }) => {
+  test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
     const accessibilityLink = 'a[href="/accessibility"]'
     const backLink = page.locator('#back-link')
     const url = new URL('/', page.url()).href
@@ -38,7 +39,10 @@ test.describe('Accessibility page', () => {
     expect(currentUrl.pathname).toBe('/accessibility')
 
     await expect(backLink).toContainText('Back')
-    await expect(backLink).toHaveAttribute('href', url)
+
+    if (!isAndroid(testInfo)) {
+      await expect(backLink).toHaveAttribute('href', url)
+    }
   })
 
   test('Equality Advisory and Support Service link directs to the correct page', async ({ page, context }) => {

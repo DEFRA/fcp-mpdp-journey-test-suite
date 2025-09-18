@@ -12,16 +12,16 @@ test.describe('Start page', () => {
     await page.goto('/')
   })
 
-  test('Should display the correct content', async ({ page }) => {
+  test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Find farm and land payment data - GOV.UK')
+    await expectPhaseBanner(page, testInfo)
     await expectHeader(page, 'Find farm and land payment data')
-    await expectPhaseBanner(page)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
     ]
 
-    await expectRelatedContent({ page, links })
+    await expectRelatedContent(page, links)
   })
 
   test('Phase banner should link to the feedback form', async ({ page, context }) => {

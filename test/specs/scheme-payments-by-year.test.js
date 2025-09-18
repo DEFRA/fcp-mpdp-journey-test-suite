@@ -12,9 +12,9 @@ test.describe('Scheme payments by year page', () => {
     await page.goto('/scheme-payments-by-year')
   })
 
-  test('Should display the correct content', async ({ page }) => {
+  test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Scheme payments by year - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner(page)
+    await expectPhaseBanner(page, testInfo)
     await expectHeader(page, 'Scheme payments by year')
     await expect(page.locator('#subtitle')).toContainText('We publish some scheme payments as a total for each financial year.')
 
@@ -22,7 +22,7 @@ test.describe('Scheme payments by year page', () => {
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
     ]
 
-    await expectRelatedContent({ page, links })
+    await expectRelatedContent(page, links)
   })
 
   test('Should have a back link that directs to the start page', async ({ page }) => {

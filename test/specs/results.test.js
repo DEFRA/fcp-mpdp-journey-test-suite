@@ -20,9 +20,9 @@ test.describe('Results page', () => {
       })
     })
 
-    test('Should display the correct content', async ({ page }) => {
+    test('Should display the correct content', async ({ page }, testInfo) => {
       await expectTitle(page, 'Results for ‘Smith’ - Find farm and land payment data - GOV.UK')
-      await expectPhaseBanner(page)
+      await expectPhaseBanner(page, testInfo)
       await expectHeader(page, 'Results for ‘Smith’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
       await expectSearchBox(page, 'Smith')
@@ -83,9 +83,9 @@ test.describe('Results page', () => {
       })
     })
 
-    test('Should display the correct content', async ({ page }) => {
+    test('Should display the correct content', async ({ page }, testInfo) => {
       await expectTitle(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’ - Find farm and land payment data - GOV.UK')
-      await expectPhaseBanner(page)
+      await expectPhaseBanner(page, testInfo)
       await expectHeader(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
       await expect(page.locator('h2').nth(1)).toContainText('There are no matching results.')

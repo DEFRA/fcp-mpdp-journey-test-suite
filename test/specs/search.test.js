@@ -11,16 +11,16 @@ test.describe('Search page', () => {
     await page.goto('/search')
   })
 
-  test('Should display the correct content', async ({ page }) => {
+  test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Search for an agreement holder - Find farm and land payment data - GOV.UK')
-    await expectPhaseBanner(page)
+    await expectPhaseBanner(page, testInfo)
     await expectHeader(page, 'Search for an agreement holder')
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
     ]
 
-    await expectRelatedContent({ page, links })
+    await expectRelatedContent(page, links)
   })
 
   test('Should have a back link that directs to the previous page', async ({ page }) => {
