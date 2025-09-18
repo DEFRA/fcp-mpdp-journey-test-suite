@@ -117,7 +117,7 @@ test.describe('Scheme payments by year page', () => {
 
   test('More actions links should exist and have correct targets', async ({ page }) => {
     await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-    await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
+    await expect(page.locator('#print-link')).toHaveAttribute('href', '#')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
