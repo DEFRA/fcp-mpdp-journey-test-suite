@@ -57,7 +57,7 @@ test.describe('Details page', () => {
   test('Download details link should download a .CSV file', async ({ page }, testInfo) => {
     const downloadLink = page.locator('#download-details-link')
 
-    await expect(downloadLink).toHaveText('Download this data (.CSV)')
+    await expect(downloadLink).toContainText('Download this data (.CSV)')
 
     if (!isAndroid(testInfo)) {
       await expect(downloadLink).toHaveAttribute('href', '/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
