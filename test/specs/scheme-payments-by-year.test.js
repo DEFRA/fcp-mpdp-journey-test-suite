@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { expectPhaseBanner } from '../expect/phase-banner.js'
-import { expectNewTab } from '../expect/new-tab.js'
+import { expectPageUrl } from '../expect/page-url.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { securityTest } from '../security.test.js'
 import { expectRelatedContent } from '../expect/related-content.js'
@@ -77,18 +77,18 @@ test.describe('Scheme payments by year page', () => {
       }
     })
 
-    test('SFI query form link should direct to the correct page', async ({ page, context }) => {
-      await expectNewTab(
-        context,
-        page.locator('#sfi-query-form'),
+    test('SFI query form link should direct to the correct page', async ({ page }) => {
+      await expectPageUrl(
+        page,
+        '#sfi-query-form',
         'https://www.gov.uk/government/publications/sustainable-farming-incentive-pilot-query-form'
       )
     })
 
-    test('Call charges link should direct to the correct page', async ({ page, context }) => {
-      await expectNewTab(
-        context,
-        page.locator('#call-charges'),
+    test('Call charges link should direct to the correct page', async ({ page }) => {
+      await expectPageUrl(
+        page,
+        '#call-charges',
         'https://www.gov.uk/call-charges'
       )
     })

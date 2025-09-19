@@ -3,6 +3,7 @@ import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../expect/phase-banner.js'
 import { expectNewTab } from '../expect/new-tab.js'
+import { expectPageUrl } from '../expect/page-url.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
@@ -72,18 +73,18 @@ test.describe('Start page', () => {
     await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
   })
 
-  test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('#cap-link'),
+  test('Should have a UK Co-ordinating Body link that directs to the correct page', async ({ page }) => {
+    await expectPageUrl(
+      page,
+      '#cap-link',
       'https://cap-payments.defra.gov.uk/Default.aspx'
     )
   })
 
-  test('Funding for farmers, growers and land managers directs to the correct page', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('#fflm-link'),
+  test('Funding for farmers, growers and land managers directs to the correct page', async ({ page }) => {
+    await expectPageUrl(
+      page,
+      '#fflm-link',
       'https://www.gov.uk/guidance/funding-for-farmers'
     )
   })
