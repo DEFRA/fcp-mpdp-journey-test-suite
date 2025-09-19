@@ -63,7 +63,7 @@ test.describe('Details page', () => {
       await expect(downloadLink).toHaveAttribute('href', '/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
     }
 
-    expectDownload(page, downloadLink, 'ffc-payment-details.csv', testInfo)
+    await expectDownload(page, downloadLink, 'ffc-payment-details.csv', testInfo)
   })
 
   test.describe('Report a problem', () => {
