@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectPhaseBanner } from '../expect/phase-banner.js'
-import { expectNewTab } from '../expect/new-tab.js'
+import { expectPageUrl } from '../expect/page-url.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
@@ -53,34 +53,34 @@ test.describe('Accessibility page', () => {
     }
   })
 
-  test('Equality Advisory and Support Service link directs to the correct page', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('#eass-link'),
-      'https://www.equalityadvisoryservice.com'
+  test('Equality Advisory and Support Service link directs to the correct page', async ({ page }) => {
+    await expectPageUrl(
+      page,
+      '#eass-link',
+      'https://www.equalityadvisoryservice.com/'
     )
   })
 
-  test('Web Content Accessibility Guidelines link directs to the correct page', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('#wcag-link'),
+  test('Web Content Accessibility Guidelines link directs to the correct page', async ({ page }) => {
+    await expectPageUrl(
+      page,
+      '#wcag-link',
       'https://www.w3.org/TR/WCAG21/'
     )
   })
 
   test('Terms and conditions link directs to the correct page', async ({ context, page }) => {
-    await expectNewTab(
-      context,
-      page.locator('#tc-link'),
+    await expectPageUrl(
+      page,
+      '#tc-link',
       'https://www.gov.uk/help/terms-conditions'
     )
   })
 
   test('About GOV.UK link directs to the correct page', async ({ context, page }) => {
-    await expectNewTab(
-      context,
-      page.locator('#about-govuk-link'),
+    await expectPageUrl(
+      page,
+      '#about-govuk-link',
       'https://www.gov.uk/help/about-govuk'
     )
   })
