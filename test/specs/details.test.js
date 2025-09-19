@@ -7,6 +7,7 @@ import { expectNewTab } from '../expect/new-tab.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
+import { expectDownload } from '../expect/download.js'
 import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Details page', () => {
@@ -51,6 +52,18 @@ test.describe('Details page', () => {
     expect(currentUrl.pathname).toBe('/results')
     expect(currentUrl.searchParams.get('searchString')).toBe('Sons')
     expect(currentUrl.searchParams.get('page')).toBe('1')
+  })
+
+  test('Download details link should download a .CSV file', async ({ page }, testInfo) => {
+    const downloadLink = page.locator('#download-details-link')
+
+    await expect(downloadLink).toContainText('Download this data (.CSV)')
+
+    if (!isAndroid(testInfo)) {
+      await expect(downloadLink).toHaveAttribute('href', '/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
+    }
+
+    await expectDownload(page, downloadLink, 'ffc-payment-details.csv', testInfo)
   })
 
   test.describe('Report a problem', () => {
