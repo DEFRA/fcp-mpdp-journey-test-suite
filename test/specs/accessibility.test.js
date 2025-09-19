@@ -14,9 +14,9 @@ test.describe('Accessibility page', () => {
   })
 
   test('Should display the correct content', async ({ page }, testInfo) => {
-    await expectTitle(page, 'Accessibility statement for Find Farm and Land Payment Data - Find farm and land payment data - GOV.UK')
+    await expectTitle(page, 'Accessibility statement for Find farm and land payment data - Find farm and land payment data - GOV.UK')
     await expectPhaseBanner(page, testInfo)
-    await expectHeader(page, 'Accessibility statement for Find Farm and Land Payment Data')
+    await expectHeader(page, 'Accessibility statement for Find farm and land payment data')
 
     const links = [
       { selector: '#tc-link', text: 'Terms and conditions' },
@@ -42,6 +42,14 @@ test.describe('Accessibility page', () => {
 
     if (!isAndroid(testInfo)) {
       await expect(backLink).toHaveAttribute('href', url)
+    }
+  })
+
+  test('Internal accessibility contact is directed to the correct email address', async ({ page }, testInfo) => {
+    const accessibilityContactEmailAddress = page.locator('#accessibility-contact-email')
+
+    if (!isAndroid(testInfo)) {
+      await expect(accessibilityContactEmailAddress).toHaveAttribute('href', 'mailto:morgan.dirodi@defra.gov.uk')
     }
   })
 
