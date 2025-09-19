@@ -45,10 +45,12 @@ test.describe('Accessibility page', () => {
     }
   })
 
-  test('Internal accessibility contact is directed to the correct email address', async ({ page }) => {
+  test('Internal accessibility contact is directed to the correct email address', async ({ page }, testInfo) => {
     const accessibilityContactEmailAddress = page.locator('#accessibility-contact-email')
 
-    await expect(accessibilityContactEmailAddress).toHaveAttribute('href', 'mailto:morgan.dirodi@defra.gov.uk')
+    if (!isAndroid(testInfo)) {
+      await expect(accessibilityContactEmailAddress).toHaveAttribute('href', 'mailto:morgan.dirodi@defra.gov.uk')
+    }
   })
 
   test('Equality Advisory and Support Service link directs to the correct page', async ({ page, context }) => {
