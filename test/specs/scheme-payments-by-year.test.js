@@ -8,6 +8,7 @@ import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
 import { isAndroid } from '../../utils/devices.js'
 import { expectDownload } from '../expect/download.js'
+import { expectMoreActionsSection } from '../expect/more-actions.js'
 
 test.describe('Scheme payments by year page', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,6 +20,7 @@ test.describe('Scheme payments by year page', () => {
     await expectPhaseBanner(page, testInfo)
     await expectHeader(page, 'Scheme payments by year')
     await expect(page.locator('#subtitle')).toContainText('We publish some scheme payments as a total for each financial year.')
+    await expectMoreActionsSection(page, testInfo)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
@@ -92,13 +94,6 @@ test.describe('Scheme payments by year page', () => {
         'https://www.gov.uk/call-charges'
       )
     })
-  })
-
-  test('More actions links should exist and have correct targets', async ({ page }, testInfo) => {
-    if (!isAndroid(testInfo)) {
-      await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-      await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
-    }
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {

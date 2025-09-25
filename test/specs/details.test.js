@@ -8,6 +8,7 @@ import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/header.js'
 import { expectDownload } from '../expect/download.js'
+import { expectMoreActionsSection } from '../expect/more-actions.js'
 import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Details page', () => {
@@ -20,6 +21,7 @@ test.describe('Details page', () => {
     await expectPhaseBanner(page, testInfo)
     await expectTitle(page, `${testPayment.payeeName} - Find farm and land payment data - GOV.UK`)
     await expectHeader(page, `${testPayment.payeeName}`)
+    await expectMoreActionsSection(page, testInfo)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
@@ -33,11 +35,6 @@ test.describe('Details page', () => {
     expect(totalSchemes).toBe('Payments from 1 schemes')
     expect(totalAmount).toBe(`£${testPayment.readableTotal}`)
     expect(dateRange).toBe(`1 April ${testPayment.startYear} to 31 March ${testPayment.endYear}`)
-
-    if (!isAndroid(testInfo)) {
-      await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-      await expect(page.locator('#print-link')).toHaveAttribute('href', 'javascript:window.print()')
-    }
   })
 
   test('Should have a back link that directs to the results page', async ({ page }) => {
