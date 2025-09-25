@@ -46,17 +46,17 @@ platforms:
     browserName: chrome
     osVersion: 14
     playwrightConfigOptions:
-      name: samsungGalaxyS24:chrome
+      name: android:samsungGalaxyS24:chrome
   - deviceName: Samsung Galaxy Tab S9
     browserName: chrome
     osVersion: 13
     playwrightConfigOptions:
-      name: samsungTabS9:chrome
+      name: android:samsungTabS9:chrome
   - deviceName: Google Pixel 9
     browserName: chrome
     osVersion: 15
     playwrightConfigOptions:
-      name: googlePixel9:chrome
+      name: android:googlePixel9:chrome
 
 browserstackLocal: true
 browserStackLocalOptions:
@@ -65,8 +65,6 @@ browserStackLocalOptions:
   onlyAutomate: true
   proxyHost: localhost
   proxyPort: 3128
-
-interactiveDebugging: false
 
 acceptSslCerts: true
 
