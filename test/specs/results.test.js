@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../expect/phase-banner.js'
-import { expectHeader } from '../expect/header.js'
 import { expectTitle } from '../expect/title.js'
-import { isAndroid } from '../../utils/devices.js'
+import { expectHeader } from '../expect/common/header.js'
+import { expectPhaseBanner } from '../expect/common/phase-banner.js'
+import { expectBackLink } from '../expect/back-link.js'
+import { expectHeading } from '../expect/heading.js'
+import { expectSearchBox } from '../expect/search-box.js'
 import { expectDownload } from '../expect/download.js'
+import { expectFooter } from '../expect/common/footer.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
@@ -23,15 +27,17 @@ test.describe('Results page', () => {
     })
 
     test('Should display the correct content', async ({ page }, testInfo) => {
-      await expectTitle(page, 'Results for ‘Smith’ - Find farm and land payment data - GOV.UK')
+      await expectTitle(page, 'Results for ‘Smith’')
+      await expectHeader(page, testInfo)
       await expectPhaseBanner(page, testInfo)
-      await expectHeader(page, 'Results for ‘Smith’')
+      await expectHeading(page, 'Results for ‘Smith’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
-      await expectSearchBox(page, 'Smith', testInfo)
+      await expectSearchBox(page, '#results-search-input', 'Smith', testInfo)
+      await expectFooter(page, testInfo)
     })
 
     test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
-      await expectBackLink(page, testInfo)
+      await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
     test('Download search results link should download a .CSV file', async ({ page }, testInfo) => {
@@ -86,16 +92,18 @@ test.describe('Results page', () => {
     })
 
     test('Should display the correct content', async ({ page }, testInfo) => {
-      await expectTitle(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’ - Find farm and land payment data - GOV.UK')
+      await expectTitle(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
+      await expectHeader(page, testInfo)
       await expectPhaseBanner(page, testInfo)
-      await expectHeader(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
+      await expectHeading(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
       await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
       await expect(page.locator('h2').nth(1)).toContainText('There are no matching results.')
-      await expectSearchBox(page, '__INVALID_SEARCH_STRING__', testInfo)
+      await expectSearchBox(page, '#results-search-input', '__INVALID_SEARCH_STRING__', testInfo)
+      await expectFooter(page, testInfo)
     })
 
     test('Should have a back link that directs to the search page', async ({ page }, testInfo) => {
-      await expectBackLink(page, testInfo)
+      await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
     test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
@@ -120,7 +128,7 @@ test.describe('Results page', () => {
       await expect(errorSummary.locator('h2')).toContainText('There is a problem')
       await expect(errorSummary.locator('ul li')).toContainText('Enter a name or location')
 
-      await expectTitle(page, 'Error: Search for an agreement holder - Find farm and land payment data - GOV.UK')
+      await expectTitle(page, 'Error: Search for an agreement holder')
 
       if (!isAndroid(testInfo)) {
         const resultsSection = page.locator('#total-results')
@@ -129,7 +137,7 @@ test.describe('Results page', () => {
     })
 
     test('Should display the back link that navigates to search page', async ({ page }, testInfo) => {
-      await expectBackLink(page, testInfo)
+      await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -137,32 +145,6 @@ test.describe('Results page', () => {
     })
   })
 })
-
-async function expectSearchBox (page, placeholder, testInfo) {
-  const searchBox = page.locator('#results-search-input')
-  const searchButton = page.locator('.govuk-button')
-
-  await expect(searchButton).toBeVisible()
-  await expect(searchBox).toBeVisible()
-
-  if (!isAndroid(testInfo)) {
-    await expect(searchBox).toHaveValue(placeholder)
-  }
-}
-
-async function expectBackLink (page, testInfo) {
-  const backLink = page.locator('#back-link')
-
-  await expect(backLink).toContainText('Back')
-
-  if (!isAndroid(testInfo)) {
-    await expect(backLink).toHaveAttribute('href', expect.stringContaining('/search'))
-  }
-
-  await backLink.click()
-  const currentUrl = new URL(page.url())
-  expect(currentUrl.pathname).toBe('/search')
-}
 
 async function expectDownloadResults (page, testInfo) {
   const downloadLink = page.locator('#download-results-link')

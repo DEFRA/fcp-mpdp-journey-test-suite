@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../utils/devices'
+import { isAndroid } from '../../utils/devices.js'
 
 export async function expectDownload (page, link, expectedFilename, testInfo) {
   // Android testing on BrowserStack supports file downloads, however, there is an unresolved issue verifying the filename.
