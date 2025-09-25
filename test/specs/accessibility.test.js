@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../expect/phase-banner.js'
+import { expectTitle } from '../expect/title.js'
+import { expectHeader } from '../expect/common/header.js'
+import { expectPhaseBanner } from '../expect/common/phase-banner.js'
+import { expectBackLink } from '../expect/back-link.js'
+import { expectHeading } from '../expect/heading.js'
 import { expectPageUrl } from '../expect/page-url.js'
 import { expectRelatedContent } from '../expect/related-content.js'
-import { expectTitle } from '../expect/title.js'
-import { expectHeader } from '../expect/header.js'
+import { expectFooter } from '../expect/common/footer.js'
 import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Accessibility page', () => {
@@ -14,9 +17,10 @@ test.describe('Accessibility page', () => {
   })
 
   test('Should display the correct content', async ({ page }, testInfo) => {
-    await expectTitle(page, 'Accessibility statement for Find farm and land payment data - Find farm and land payment data - GOV.UK')
+    await expectTitle(page, 'Accessibility statement for Find farm and land payment data')
+    await expectHeader(page, testInfo)
     await expectPhaseBanner(page, testInfo)
-    await expectHeader(page, 'Accessibility statement for Find farm and land payment data')
+    await expectHeading(page, 'Accessibility statement for Find farm and land payment data')
 
     const links = [
       { selector: '#tc-link', text: 'Terms and conditions' },
@@ -24,25 +28,17 @@ test.describe('Accessibility page', () => {
     ]
 
     await expectRelatedContent(page, links)
+    await expectFooter(page, testInfo)
   })
 
   test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
     const accessibilityLink = 'a[href="/accessibility"]'
-    const backLink = page.locator('#back-link')
-    const url = new URL('/', page.url()).href
 
     await page.goto('/')
     await page.click(accessibilityLink)
     await page.waitForURL('/accessibility')
 
-    const currentUrl = new URL(page.url())
-    expect(currentUrl.pathname).toBe('/accessibility')
-
-    await expect(backLink).toContainText('Back')
-
-    if (!isAndroid(testInfo)) {
-      await expect(backLink).toHaveAttribute('href', url)
-    }
+    await expectBackLink(page, testInfo, { expectedPath: '/' })
   })
 
   test('Internal accessibility contact is directed to the correct email address', async ({ page }, testInfo) => {
@@ -53,37 +49,22 @@ test.describe('Accessibility page', () => {
     }
   })
 
-  test('Equality Advisory and Support Service link directs to the correct page', async ({ page }) => {
-    await expectPageUrl(
-      page,
-      '#eass-link',
-      'https://www.equalityadvisoryservice.com/'
-    )
-  })
+  const links = [
+    { reference: 'Equality Advisory and Support Service (EASS)', selector: '#eass-link', url: 'https://www.equalityadvisoryservice.com/' },
+    { reference: 'Web Content Accessibility Guidelines (WCAG)', selector: '#wcag-link', url: 'https://www.w3.org/TR/WCAG21/' },
+    { reference: 'Terms and conditions', selector: '#tc-link', url: 'https://www.gov.uk/help/terms-conditions' },
+    { reference: 'About GOV.UK', selector: '#about-govuk-link', url: 'https://www.gov.uk/help/about-govuk' }
+  ]
 
-  test('Web Content Accessibility Guidelines link directs to the correct page', async ({ page }) => {
-    await expectPageUrl(
-      page,
-      '#wcag-link',
-      'https://www.w3.org/TR/WCAG21/'
-    )
-  })
-
-  test('Terms and conditions link directs to the correct page', async ({ context, page }) => {
-    await expectPageUrl(
-      page,
-      '#tc-link',
-      'https://www.gov.uk/help/terms-conditions'
-    )
-  })
-
-  test('About GOV.UK link directs to the correct page', async ({ context, page }) => {
-    await expectPageUrl(
-      page,
-      '#about-govuk-link',
-      'https://www.gov.uk/help/about-govuk'
-    )
-  })
+  for (const { reference, selector, url } of links) {
+    test(`${reference} link directs to the correct page`, async ({ page }) => {
+      await expectPageUrl(
+        page,
+        selector,
+        url
+      )
+    })
+  }
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     await accessibilityTest(page)

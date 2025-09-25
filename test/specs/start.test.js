@@ -1,38 +1,33 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../expect/phase-banner.js'
-import { expectNewTab } from '../expect/new-tab.js'
-import { expectPageUrl } from '../expect/page-url.js'
-import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
-import { expectHeader } from '../expect/header.js'
-import { isAndroid } from '../../utils/devices.js'
+import { expectHeader } from '../expect/common/header.js'
+import { expectPhaseBanner } from '../expect/common/phase-banner.js'
+import { expectHeading } from '../expect/heading.js'
+import { expectPageUrl } from '../expect/page-url.js'
 import { expectDownload } from '../expect/download.js'
+import { expectRelatedContent } from '../expect/related-content.js'
+import { expectFooter } from '../expect/common/footer.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
   })
 
-  test('Should display the correct content', async ({ page }, testInfo) => {
-    await expectTitle(page, 'Find farm and land payment data - GOV.UK')
+  test('Should display the correct content', async ({ context, page }, testInfo) => {
+    await expectTitle(page)
+    await expectHeader(page, testInfo)
     await expectPhaseBanner(page, testInfo)
-    await expectHeader(page, 'Find farm and land payment data')
+    await expectHeading(page, 'Find farm and land payment data')
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
     ]
 
     await expectRelatedContent(page, links)
-  })
-
-  test('Phase banner should link to the feedback form', async ({ page, context }) => {
-    await expectNewTab(
-      context,
-      page.locator('.govuk-phase-banner .govuk-link'),
-      'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
-    )
+    await expectFooter(page, testInfo)
   })
 
   test('View yearly totals link should direct to /scheme-payments-by-year route', async ({ page }, testInfo) => {

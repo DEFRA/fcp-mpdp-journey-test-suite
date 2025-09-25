@@ -1,12 +1,16 @@
 import { test, expect } from '@playwright/test'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { expectPhaseBanner } from '../expect/phase-banner.js'
-import { expectRelatedContent } from '../expect/related-content.js'
 import { expectTitle } from '../expect/title.js'
-import { expectHeader } from '../expect/header.js'
-import { isAndroid } from '../../utils/devices.js'
+import { expectHeader } from '../expect/common/header.js'
+import { expectPhaseBanner } from '../expect/common/phase-banner.js'
+import { expectBackLink } from '../expect/back-link.js'
+import { expectHeading } from '../expect/heading.js'
+import { expectSearchBox } from '../expect/search-box.js'
 import { expectDownload } from '../expect/download.js'
+import { expectRelatedContent } from '../expect/related-content.js'
+import { expectFooter } from '../expect/common/footer.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Search page', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,34 +18,26 @@ test.describe('Search page', () => {
   })
 
   test('Should display the correct content', async ({ page }, testInfo) => {
-    await expectTitle(page, 'Search for an agreement holder - Find farm and land payment data - GOV.UK')
+    await expectTitle(page, 'Search for an agreement holder')
+    await expectHeader(page, testInfo)
     await expectPhaseBanner(page, testInfo)
-    await expectHeader(page, 'Search for an agreement holder')
+    await expectHeading(page, 'Search for an agreement holder')
+    await expectSearchBox(page, '#search-input', '', testInfo)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
     ]
 
     await expectRelatedContent(page, links)
+    await expectFooter(page, testInfo)
   })
 
   test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
-    const searchLink = 'a[href="/search"]'
-    const backLink = page.locator('#back-link')
-    const url = new URL('/', page.url()).href
-
     await page.goto('/')
-    await page.click(searchLink)
+    await page.click('a[href="/search"]')
     await page.waitForURL('/search')
 
-    const currentUrl = new URL(page.url())
-    expect(currentUrl.pathname).toBe('/search')
-
-    await expect(backLink).toContainText('Back')
-
-    if (!isAndroid(testInfo)) {
-      await expect(backLink).toHaveAttribute('href', url)
-    }
+    await expectBackLink(page, testInfo, { expectedPath: '/' })
   })
 
   test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
