@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { acceptCookies } from '../../utils/accept-cookies.js'
 import { testPayment } from '../../utils/test-payment.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { securityTest } from '../security.test.js'
@@ -18,7 +17,6 @@ import { isAndroid } from '../../utils/devices.js'
 test.describe('Details page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/details?payeeName=Feeney%20and%20Sons&partPostcode=GO15&searchString=Sons&page=1')
-    await acceptCookies(page)
   })
 
   test('Should display the correct content', async ({ page }, testInfo) => {

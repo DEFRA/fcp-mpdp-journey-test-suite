@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { acceptCookies } from '../../utils/accept-cookies.js'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
@@ -15,7 +14,6 @@ import { isAndroid } from '../../utils/devices.js'
 test.describe('Start page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
-    await acceptCookies(page)
   })
 
   test('Should display the correct content', async ({ page }, testInfo) => {
