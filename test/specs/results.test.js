@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { acceptCookies } from '../../utils/accept-cookies.js'
 import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
@@ -15,6 +16,7 @@ test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/search')
+      await acceptCookies(page)
       await page.fill('#search-input', 'Smith')
       await page.getByRole('button', { name: 'Search' }).click()
 
@@ -80,6 +82,7 @@ test.describe('Results page', () => {
   test.describe('With valid searchString that returns no results', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/search')
+      await acceptCookies(page)
       await page.fill('#search-input', '__INVALID_SEARCH_STRING__')
       await page.getByRole('button', { name: 'Search' }).click()
 
