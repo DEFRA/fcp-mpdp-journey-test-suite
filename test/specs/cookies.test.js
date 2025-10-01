@@ -43,3 +43,18 @@ test.describe('Cookies page', () => {
 //     await cookiesBanner.waitFor({ state: 'hidden' })
 //   }
 // }
+
+// async function rejectCookies (page) {
+//   const cookiesBanner = page.locator('.js-cookies-banner')
+
+//   if (cookiesBanner.isVisible()) {
+//     await page.getByRole('button', { name: 'Reject analytics cookies' }).click()
+
+//     const rejectedCookiesBanner = page.locator('.js-cookies-rejected')
+//     await rejectedCookiesBanner.waitFor({ state: 'visible' })
+
+//     await rejectedCookiesBanner.getByRole('button', { name: 'Hide this message' }).click()
+
+//     await cookiesBanner.waitFor({ state: 'hidden' })
+//   }
+// }
