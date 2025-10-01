@@ -28,3 +28,18 @@ test.describe('Cookies page', () => {
     await securityTest(page.url())
   })
 })
+
+// async function acceptCookies (page) {
+//   const cookiesBanner = page.locator('.js-cookies-banner')
+
+//   if (cookiesBanner.isVisible()) {
+//     await page.getByRole('button', { name: 'Accept analytics cookies' }).click()
+
+//     const acceptedCookiesBanner = page.locator('.js-cookies-accepted')
+//     await acceptedCookiesBanner.waitFor({ state: 'visible' })
+
+//     await acceptedCookiesBanner.getByRole('button', { name: 'Hide this message' }).click()
+
+//     await cookiesBanner.waitFor({ state: 'hidden' })
+//   }
+// }
