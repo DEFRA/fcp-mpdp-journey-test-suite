@@ -22,15 +22,11 @@ test.describe('Cookies page and banner', () => {
     })
 
     test('Should successfully change cookie settings to "Yes" via radio buttons on cookies page', async ({ page }) => {
-      const choice = 'Yes'
-
-      await expectUpdatedCookiePreferences(page, choice)
+      await expectUpdatedCookiePreferences(page, 'Yes')
     })
 
     test('Should successfully change cookie settings to "No" via radio buttons on cookies page', async ({ page }) => {
-      const choice = 'No'
-
-      await expectUpdatedCookiePreferences(page, choice)
+      await expectUpdatedCookiePreferences(page, 'No')
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
