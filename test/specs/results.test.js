@@ -31,7 +31,7 @@ test.describe('Results page', () => {
       await expectHeader(page, testInfo)
       await expectPhaseBanner(page, testInfo)
       await expectHeading(page, 'Results for ‘Smith’')
-      await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
+      await expect(page.getByText('You can search by name and location.')).toBeVisible()
       await expectSearchBox(page, '#results-search-input', 'Smith', testInfo)
       await expectFooter(page, testInfo)
     })
@@ -96,8 +96,8 @@ test.describe('Results page', () => {
       await expectHeader(page, testInfo)
       await expectPhaseBanner(page, testInfo)
       await expectHeading(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
-      await expect(page.locator('p').nth(1)).toContainText('You can search by name and location.')
-      await expect(page.locator('h2').nth(1)).toContainText('There are no matching results.')
+      await expect(page.getByText('You can search by name and location.')).toBeVisible()
+      await expect(page.getByRole('heading', { level: 2, name: 'There are no matching results.' })).toBeVisible()
       await expectSearchBox(page, '#results-search-input', '__INVALID_SEARCH_STRING__', testInfo)
       await expectFooter(page, testInfo)
     })
@@ -124,6 +124,7 @@ test.describe('Results page', () => {
 
     test('Should display the correct content', async ({ page }, testInfo) => {
       const errorSummary = page.locator('.govuk-error-summary')
+
       await expect(errorSummary).toBeVisible()
       await expect(errorSummary.locator('h2')).toContainText('There is a problem')
       await expect(errorSummary.locator('ul li')).toContainText('Enter a name or location')

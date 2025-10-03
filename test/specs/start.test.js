@@ -16,7 +16,7 @@ test.describe('Start page', () => {
     await page.goto('/')
   })
 
-  test('Should display the correct content', async ({ context, page }, testInfo) => {
+  test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page)
     await expectHeader(page, testInfo)
     await expectPhaseBanner(page, testInfo)

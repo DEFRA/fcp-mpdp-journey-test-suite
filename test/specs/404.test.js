@@ -17,8 +17,8 @@ test.describe('404 page', () => {
     await expectHeader(page, testInfo)
     await expectPhaseBanner(page, testInfo)
     await expectHeading(page, 'Page not found')
-    await expect(page.locator('p').nth(1)).toContainText('If you typed the web address, check it is correct.')
-    await expect(page.locator('p').nth(2)).toContainText('If you pasted the web address, check you copied the entire address.')
+    await expect(page.getByText('If you typed the web address, check it is correct.')).toBeVisible()
+    await expect(page.getByText('If you pasted the web address, check you copied the entire address.')).toBeVisible()
     await expectFooter(page, testInfo)
   })
 
