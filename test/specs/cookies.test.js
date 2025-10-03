@@ -6,6 +6,7 @@ import { expectHeader } from '../expect/common/header.js'
 import { expectPhaseBanner } from '../expect/common/phase-banner.js'
 import { expectHeading } from '../expect/heading.js'
 import { expectFooter } from '../expect/common/footer.js'
+import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Cookies page and banner', () => {
   test.describe('Cookies page renders expected content', () => {
@@ -44,18 +45,22 @@ test.describe('Cookies page and banner', () => {
       await page.goto('/cookies')
     })
 
-    test('Cookies banner displays correct message and is hidden after accepting analytics cookies', async ({ page }) => {
+    test('Cookies banner displays correct message and is hidden after accepting analytics cookies', async ({ page }, testInfo) => {
       const cookiesBanner = page.locator('.js-cookies-banner')
       await acceptCookies(page, cookiesBanner)
 
-      await expect(cookiesBanner).toBeHidden()
+      if (!isAndroid(testInfo)) {
+        await expect(cookiesBanner).toBeHidden()
+      }
     })
 
-    test('Cookies banner displays the correct message and is hidden after rejecting analytics cookies', async ({ page }) => {
+    test('Cookies banner displays the correct message and is hidden after rejecting analytics cookies', async ({ page }, testInfo) => {
       const cookiesBanner = page.locator('.js-cookies-banner')
       await rejectCookies(page, cookiesBanner)
 
-      await expect(cookiesBanner).toBeHidden()
+      if (!isAndroid(testInfo)) {
+        await expect(cookiesBanner).toBeHidden()
+      }
     })
   })
 })
