@@ -17,15 +17,20 @@ RUN apt-get update -qq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npx playwright install --with-deps
-
 # Copy ZAP from the official image
 COPY --from=zap-source /zap /zap
 
 WORKDIR /app
 
-COPY . .
+# Copy package files first for better Docker layer caching
+COPY package*.json .
 RUN npm install
+
+# Install Playwright browsers after npm install to ensure version compatibility
+RUN npx playwright install --with-deps
+
+# Copy the rest of the test code
+COPY . .
 
 ADD https://dnd2hcwqjlbad.cloudfront.net/binaries/release/latest_unzip/BrowserStackLocal-linux-x64 /root/.browserstack/BrowserStackLocal
 RUN chmod +x /root/.browserstack/BrowserStackLocal

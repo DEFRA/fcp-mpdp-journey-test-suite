@@ -30,7 +30,7 @@ done
 
 TEST_SCRIPT=${TEST_SCRIPT:-"browserstack"}
 
-run run test:$TEST_SCRIPT
+npm run test:$TEST_SCRIPT
 
 npm run report:publish
 publish_exit_code=$?
