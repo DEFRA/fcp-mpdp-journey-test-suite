@@ -28,7 +28,9 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT + 1))
 done
 
-npm run test:browserstack
+TEST_SCRIPT=${TEST_SCRIPT:-"browserstack"}
+
+run run test:$TEST_SCRIPT
 
 npm run report:publish
 publish_exit_code=$?

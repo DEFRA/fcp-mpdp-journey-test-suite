@@ -2,7 +2,7 @@
 FROM ghcr.io/zaproxy/zaproxy:stable AS zap-source
 
 # Main build stage
-FROM node:22.13.1-slim
+FROM node:22.20.0-slim
 
 ENV TZ="Europe/London"
 
