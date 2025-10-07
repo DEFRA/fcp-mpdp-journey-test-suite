@@ -4,6 +4,7 @@ services:
     environment:
       BROWSERSTACK_USERNAME: ${BROWSERSTACK_USERNAME}
       BROWSERSTACK_ACCESS_KEY: ${BROWSERSTACK_ACCESS_KEY}
+      PUBLISH_TEST_RESULTS: 0
     volumes:
       - ./allure-results:/app/allure-results
       - ./allure-report:/app/allure-report

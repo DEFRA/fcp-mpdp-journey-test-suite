@@ -60,6 +60,8 @@ platforms:
 
 browserstackLocal: true
 browserStackLocalOptions:
+  forceLocal: false
+  binarypath: '/root/.browserstack/BrowserStackLocal'
   onlyAutomate: true
 
 acceptSslCerts: true

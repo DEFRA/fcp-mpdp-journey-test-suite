@@ -1,6 +1,6 @@
 # fcp-mpdp-journey-test-suite
 
-Playwright test suite for the Making Payment Data Public service.
+Playwright test suite for the Making Payment Data Public (MPDP) service.
 
 - user acceptance tests using [Playwright](https://playwright.dev/)
 - cross browser compatibility tests using [BrowserStack](https://www.browserstack.com/)
@@ -18,6 +18,10 @@ Docker can be installed from [Docker's official website](https://docs.docker.com
 In order to ensure this test suite passes when running locally and via CI/CD pipelines on CDP, a known database record is used when testing journeys that require payment activity data e.g. the `/details` page. To achieve this a known database record that exists in all CDP environments (excluding production) is added to the [`seed`](https://github.com/DEFRA/fcp-mpdp-core/blob/main/data/seed.js) module on [fcp-mpdp-core](https://github.com/DEFRA/fcp-mpdp-core). The record is initially set up as an object, `testData` and this can be easily updated to reflect any of the known records that exist in the `DEV`, `TEST`, and `PERF-TEST` databases.
 
 ## Local Development
+
+The MPDP service must be running on `localhost:3000` prior to the test run. 
+
+As the tests are intended to run in a container, the base URL defaults to `http://host.docker.internal:3000` to allow the container to access the host machine. If you need to run the tests against a different URL, you can set the `BASE_URL` environment variable.
 
 ### Setup
 
