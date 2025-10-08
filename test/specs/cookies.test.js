@@ -27,7 +27,7 @@ test.describe('Cookies page and banner', () => {
       const cookiesLink = 'a[href="/cookies"]'
 
       await page.goto('/')
-      await page.click(accessibilityLink)
+      await page.click(cookiesLink)
       await page.waitForURL('/cookies')
 
       await expectBackLink(page, testInfo, { expectedPath: '/' })
