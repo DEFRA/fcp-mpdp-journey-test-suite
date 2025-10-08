@@ -4,6 +4,7 @@ import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
 import { expectPhaseBanner } from '../expect/common/phase-banner.js'
+import { expectBackLink } from '../expect/back-link.js'
 import { expectHeading } from '../expect/heading.js'
 import { expectFooter } from '../expect/common/footer.js'
 import { isAndroid } from '../../utils/devices.js'
@@ -20,6 +21,16 @@ test.describe('Cookies page and banner', () => {
       await expectPhaseBanner(page, testInfo)
       await expectHeading(page, 'Cookies')
       await expectFooter(page, testInfo)
+    })
+
+    test('Should have a back link that directs to the previous page', async ({ page }, testInfo) => {
+      const cookiesLink = 'a[href="/cookies"]'
+
+      await page.goto('/')
+      await page.click(accessibilityLink)
+      await page.waitForURL('/cookies')
+
+      await expectBackLink(page, testInfo, { expectedPath: '/' })
     })
 
     test('Should successfully change cookie settings to "Yes" via radio buttons on cookies page', async ({ page }) => {
