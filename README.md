@@ -62,7 +62,13 @@ This test suite uses **Allure** for generating test reports that are compatible 
 - S3 publishing pipeline
 - Enterprise reporting standards
 
-The test configuration generates Allure reports in `allure-results/` (raw data) and `allure-report/` (HTML report).
+The test configuration generates Allure reports in `allure-results/` (raw data) and can optionally publish to `allure-report/`(HTML report).
+
+To publish the report run the following command after running the tests:
+
+```bash
+npm run report:publish
+```
 
 ## Production
 
