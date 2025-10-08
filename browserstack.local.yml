@@ -67,4 +67,4 @@ browserStackLocalOptions:
 acceptSslCerts: true
 acceptInsecureCerts: true
 
-idleTimeout: 350
+idleTimeout: 700
