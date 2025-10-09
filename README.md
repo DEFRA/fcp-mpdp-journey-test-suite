@@ -112,8 +112,8 @@ As such, some compromises have been made based on risk
 Before running BrowserStack tests, you need to set up the following environment variables added to a `.env` file in the root of the project:
 
 ```bash
-BROWSERSTACK_USERNAME=<your_browserstack_username>
-BROWSERSTACK_ACCESS_KEY=<your_browserstack_access_key>
+BROWSERSTACK_USER=<your_browserstack_username>
+BROWSERSTACK_KEY=<your_browserstack_access_key>
 ```
 
 ### GOV.UK Browser Requirements Coverage
