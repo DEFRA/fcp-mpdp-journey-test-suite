@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test'
 
 const expectedFooterLinks = [
-  'https://www.gov.uk/help/privacy-notice',
+  '/privacy',
   '/cookies',
   '/accessibility',
   'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs',
