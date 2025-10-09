@@ -1,6 +1,7 @@
 services:
   fcp-mpdp-journey-test-suite:
     build: .
+    platform: linux/amd64 # Ensure compatibility with Mac x64 emulation
     environment:
       BROWSERSTACK_USERNAME: ${BROWSERSTACK_USERNAME}
       BROWSERSTACK_ACCESS_KEY: ${BROWSERSTACK_ACCESS_KEY}
