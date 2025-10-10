@@ -14,25 +14,22 @@
     "Lawrence Sithole <Lawrence.Sithole@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
-  "aliases": {
-    "~": ".",
-    "page-objects": "test/page-objects",
-    "components": "test/components"
-  },
   "scripts": {
-    "clean": "rm -rf allure-results && rm -rf allure-report",
-    "test": "npm run clean && playwright test",
-    "test:browserstack": "npm run clean && browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
-    "test:local": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js; docker compose down",
-    "test:local:debug": "npm run clean && docker compose up -d && playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "npm run clean && docker compose up -d && browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml; docker compose down",
+    "create:folders": "mkdir -p allure-results && mkdir -p allure-report",
+    "test": "playwright test",
+    "test:browserstack": "browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:local": "playwright test --config=playwright.local.config.js",
+    "test:local:debug": "playwright test --config=playwright.local.config.js --debug",
+    "test:local:browserstack": "browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
     "report:open": "allure open allure-report",
     "report:publish": "npm run report; ./bin/publish-tests.sh",
-    "zap:start": "/zap/zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true -config anticsrf.tokens.token.name=crumb"
+    "zap:start": "/zap/zap.sh -daemon -host 0.0.0.0 -port 8080 -silent -nostdout -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true -config anticsrf.tokens.token.name=crumb",
+    "docker:test:local": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=local fcp-mpdp-journey-test-suite",
+    "docker:test:local:browserstack": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=local:browserstack fcp-mpdp-journey-test-suite"
   },
   "dependencies": {
     "@axe-core/playwright": "4.10.2",
@@ -40,7 +37,7 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.8",
-    "browserstack-node-sdk": "1.42.7",
+    "browserstack-node-sdk": "1.45.0",
     "global-agent": "3.0.0",
     "undici": "7.12.0"
   },

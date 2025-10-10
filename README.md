@@ -1,29 +1,27 @@
-fcp-mpdp-journey-test-suite
+# fcp-mpdp-journey-test-suite
 
-The template to create a service that runs Playwright tests against an environ#### Coverage Summary
-- **✅ Fully Tested**: 6/10 browser combinations (60%)
-- **⚠️ Beta Testing**: 1/10 browser combinations (iOS Safari)
-- **🖥️ Desktop Coverage**: 100% (6/6 desktop browsers)
-- **📱 Mobile Coverage**: 10% (1/4 mobile browsers in beta)
+Playwright test suite for the Making Payment Data Public (MPDP) service.
+
+- user acceptance tests using [Playwright](https://playwright.dev/)
+- cross browser compatibility tests using [BrowserStack](https://www.browserstack.com/)
+- security testing using [ZAP](https://www.zaproxy.org/)
+- accessibility testing using [axe-core](https://www.deque.com/axe/)
 
 ## Requirements
 
-### Node.js
+This application is intended to be run in a Docker container to ensure consistency across environments.
 
-Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v10`. You will find it
-easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
-
-To use the correct version of Node.js for this application, via nvm:
-
-```bash
-nvm use
-```
+Docker can be installed from [Docker's official website](https://docs.docker.com/get-docker/).
 
 ### Test data
 
 In order to ensure this test suite passes when running locally and via CI/CD pipelines on CDP, a known database record is used when testing journeys that require payment activity data e.g. the `/details` page. To achieve this a known database record that exists in all CDP environments (excluding production) is added to the [`seed`](https://github.com/DEFRA/fcp-mpdp-core/blob/main/data/seed.js) module on [fcp-mpdp-core](https://github.com/DEFRA/fcp-mpdp-core). The record is initially set up as an object, `testData` and this can be easily updated to reflect any of the known records that exist in the `DEV`, `TEST`, and `PERF-TEST` databases.
 
 ## Local Development
+
+The MPDP service must be running on `localhost:3000` prior to the test run. 
+
+As the tests are intended to run in a container, the base URL defaults to `http://host.docker.internal:3000` to allow the container to access the host machine. If you need to run the tests against a different URL, you can set the `BASE_URL` environment variable.
 
 ### Setup
 
@@ -33,28 +31,26 @@ Install application dependencies:
 npm install
 ```
 
-### Running local tests using Playwright
-
-Run journey tests using [local Playwright configuration](./playwright.local.config.js).
+Build the Docker image:
 
 ```bash
-npm run test:local
+docker compose build
 ```
 
-### Running local tests using Playwright + BrowserStack
+### Running local tests with Playwright
 
-Run journey tests using [local Playwright + BrowserStack configuration](./playwright.local.browserstack.config.js).  
+Run journey tests using Docker using [local Playwright configuration](./playwright.local.config.js).
 
 ```bash
-npm run test:local:browserstack
+npm run docker:test:local
 ```
 
-You must have a BrowserStack account to run the journey tests locally against BrowserStack. If you are unable to obtain a BrowserStack account then please proceed to run the local journey tests using [Playwright only](#running-local-tests-using-playwright).
+### Running local tests with Playwright + BrowserStack
 
-### Debugging local tests
+Run journey tests using Docker with [BrowserStack configuration](./playwright.local.browserstack.config.js).
 
 ```bash
-npm run test:local:debug
+npm run docker:test:local:browserstack
 ```
 
 ### Reporting
@@ -66,7 +62,13 @@ This test suite uses **Allure** for generating test reports that are compatible 
 - S3 publishing pipeline
 - Enterprise reporting standards
 
-The test configuration generates Allure reports in `allure-results/` (raw data) and `allure-report/` (HTML report).
+The test configuration generates Allure reports in `allure-results/` (raw data) and can optionally publish to `allure-report/`(HTML report).
+
+To publish the report run the following command after running the tests:
+
+```bash
+npm run report:publish
+```
 
 ## Production
 
@@ -107,11 +109,11 @@ As such, some compromises have been made based on risk
 
 ### Environment Variables
 
-Before running BrowserStack tests, you need to set up the following environment variables:
+Before running BrowserStack tests, you need to set up the following environment variables added to a `.env` file in the root of the project:
 
 ```bash
-export BROWSERSTACK_USER=<your_browserstack_username>
-export BROWSERSTACK_KEY=<your_browserstack_access_key>
+BROWSERSTACK_USER=<your_browserstack_username>
+BROWSERSTACK_KEY=<your_browserstack_access_key>
 ```
 
 ### GOV.UK Browser Requirements Coverage
@@ -132,15 +134,6 @@ The table below shows which required browsers are tested by our BrowserStack con
 | **iOS** | Chrome | ❌ | Not supported |
 | **Android** | Chrome | ✅ | Not supported |
 | **Android** | Samsung Internet | ❌ | Not supported |
-
-### Testing Commands
-```bash
-# Test all working browsers against localhost
-npm run test:local:browserstack
-
-# Test all working browsers against deployed service
-npm run test:browserstack
-```
 
 ## Security Testing
 

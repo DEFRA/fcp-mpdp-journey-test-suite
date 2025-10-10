@@ -28,14 +28,21 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT + 1))
 done
 
-npm run test:browserstack
+TEST_SCRIPT=${TEST_SCRIPT:-"browserstack"}
 
-npm run report:publish
-publish_exit_code=$?
+npm run test:$TEST_SCRIPT
 
-if [ $publish_exit_code -ne 0 ]; then
-  echo "failed to publish test results"
-  exit $publish_exit_code
+# if PUBLISH_TEST_RESULTS is not set, default to true
+PUBLISH_TEST_RESULTS=${PUBLISH_TEST_RESULTS:- 1}
+
+if [ "$PUBLISH_TEST_RESULTS" -eq 1 ]; then
+  npm run report:publish
+  publish_exit_code=$?
+
+  if [ $publish_exit_code -ne 0 ]; then
+    echo "failed to publish test results"
+    exit $publish_exit_code
+  fi
 fi
 
 # At the end of the test run, if the suite has failed we write a file called 'FAILED'

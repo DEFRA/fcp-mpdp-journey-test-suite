@@ -1,8 +1,12 @@
 services:
-  zap:
-    image: ghcr.io/zaproxy/zaproxy:stable
-    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true -config anticsrf.tokens.token.name=crumb
-    ports:
-      - "8080:8080"
+  fcp-mpdp-journey-test-suite:
+    build: .
+    platform: linux/amd64 # Ensure compatibility with Mac x64 emulation
+    environment:
+      BROWSERSTACK_USER: ${BROWSERSTACK_USER}
+      BROWSERSTACK_KEY: ${BROWSERSTACK_KEY}
+      PUBLISH_TEST_RESULTS: 0
     volumes:
-      - ./zap:/zap/wrk
+      - ./allure-results:/app/allure-results
+      - ./allure-report:/app/allure-report
+
