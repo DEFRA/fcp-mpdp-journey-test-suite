@@ -8,7 +8,7 @@ export default defineConfig({
 
   use: {
     ...baseConfig.use,
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.BASE_URL || 'http://host.docker.internal:3000',
     headless: true,
     trace: 'on',
     video: 'on'
