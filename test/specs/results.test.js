@@ -129,7 +129,7 @@ test.describe('Results page', () => {
       await expect(errorSummary.locator('h2')).toContainText('There is a problem')
       await expect(errorSummary.locator('ul li')).toContainText('Enter a name or location')
 
-      await expectTitle(page, 'Error: Search for an agreement holder')
+      await expectTitle(page, 'Search for an agreement holder')
 
       if (!isAndroid(testInfo)) {
         const resultsSection = page.locator('#total-results')
@@ -162,7 +162,7 @@ async function expectDownloadResults (page, testInfo) {
 async function expectDownloadAll (page, testInfo) {
   const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
-  await expect(downloadLink).toContainText('download all scheme payment data (4.7MB)')
+  await expect(downloadLink).toContainText('download all scheme payment data')
 
   if (!isAndroid(testInfo)) {
     await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')

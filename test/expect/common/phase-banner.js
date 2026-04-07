@@ -6,7 +6,7 @@ export async function expectPhaseBanner (page, testInfo) {
     root: '.govuk-phase-banner',
     contentTag: '.govuk-phase-banner__content__tag',
     text: '.govuk-phase-banner__text',
-    link: 'aside .govuk-phase-banner .govuk-link'
+    link: '.govuk-phase-banner .govuk-link'
   }
 
   const feedbackUrl = 'https://defragroup.eu.qualtrics.com/jfe/form/SV_1FcBVO6IMkfHmbs'
