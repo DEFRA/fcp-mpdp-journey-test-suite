@@ -107,6 +107,8 @@ As such, some compromises have been made based on risk
 
 - Some Playwright locators fail to match accurately on Android devices.  These assertions have been skipped for Android devices.
 
+- The Playwright version must be one [listed as compatible with BrowserStack](https://www.browserstack.com/docs/automate/playwright/browsers-and-os?fw-lang=nodejs)
+
 ### Environment Variables
 
 Before running BrowserStack tests, you need to set up the following environment variables added to a `.env` file in the root of the project:

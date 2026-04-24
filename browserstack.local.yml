@@ -65,6 +65,5 @@ browserStackLocalOptions:
   onlyAutomate: true
 
 acceptSslCerts: true
-acceptInsecureCerts: true
 
 idleTimeout: 700
