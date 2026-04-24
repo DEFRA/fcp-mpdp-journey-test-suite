@@ -33,11 +33,11 @@
   },
   "dependencies": {
     "@axe-core/playwright": "4.10.2",
-    "@playwright/test": "1.59.1",
+    "@playwright/test": "1.57.0",
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
-    "browserstack-local": "1.5.12",
-    "browserstack-node-sdk": "1.50.10",
+    "browserstack-local": "1.5.13",
+    "browserstack-node-sdk": "1.52.0",
     "global-agent": "3.0.0",
     "undici": "8.0.2"
   },
