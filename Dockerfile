@@ -32,9 +32,7 @@ RUN npx playwright install --with-deps
 # Copy the rest of the test code
 COPY . .
 
-# ADD https://dnd2hcwqjlbad.cloudfront.net/binaries/release/latest_unzip/BrowserStackLocal-linux-x64 /root/.browserstack/BrowserStackLocal
-# RUN chmod +x /root/.browserstack/BrowserStackLocal
-
+# Install BrowserStack Local binary to avoid needing to download it at runtime through CDP proxy
 RUN mkdir -p /root/.browserstack \
  && curl -fsSL https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip -o /tmp/bs.zip \
  && unzip /tmp/bs.zip -d /root/.browserstack \
