@@ -137,8 +137,8 @@ test.describe('Results page', () => {
       }
     })
 
-    test('Should display the back link that navigates to search page', async ({ page }, testInfo) => {
-      await expectBackLink(page, testInfo, { expectedPath: '/search' })
+    test('Should display the back link that navigates to the previous page', async ({ page }, testInfo) => {
+      await expectBackLink(page, testInfo, { expectedPath: '/' })
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {

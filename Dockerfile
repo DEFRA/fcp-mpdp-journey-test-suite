@@ -2,7 +2,7 @@
 FROM ghcr.io/zaproxy/zaproxy:stable AS zap-source
 
 # Main build stage
-FROM node:24-slim
+FROM mcr.microsoft.com/playwright:v1.59.1
 
 ENV TZ="Europe/London"
 
@@ -25,9 +25,6 @@ WORKDIR /app
 # Copy package files first for better Docker layer caching
 COPY package*.json .
 RUN npm install
-
-# Install Playwright browsers after npm install to ensure version compatibility
-RUN npx playwright install --with-deps
 
 # Copy the rest of the test code
 COPY . .
