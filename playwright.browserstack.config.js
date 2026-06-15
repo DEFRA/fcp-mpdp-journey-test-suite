@@ -8,7 +8,7 @@ const dispatcher = new ProxyAgent({
 })
 setGlobalDispatcher(dispatcher)
 bootstrap()
-global.GLOBAL_AGENT.HTTP_PROXY = 'http://localhost:3128'
+globalThis.GLOBAL_AGENT.HTTP_PROXY = 'http://localhost:3128'
 
 export default defineConfig({
   ...baseConfig
