@@ -39,7 +39,7 @@
     "browserstack-local": "1.5.13",
     "browserstack-node-sdk": "1.56.1",
     "global-agent": "3.0.0",
-    "undici": "8.0.2"
+    "undici": "7.28.0"
   },
   "devDependencies": {
     "eslint": "9.31.0",
