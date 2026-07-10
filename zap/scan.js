@@ -2,7 +2,7 @@ import { allure } from 'allure-playwright'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const ZAP_BASE_URL = 'http://localhost:8080'
+export const ZAP_BASE_URL = 'http://localhost:8080'
 
 export async function startSpiderScan (url) {
   try {

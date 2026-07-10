@@ -1,3 +1,4 @@
-export function isAndroid (testInfo) {
-  return testInfo?.project?.name?.toLowerCase().includes('android')
+export function isMobileDevice (testInfo) {
+  const name = testInfo?.project?.name?.toLowerCase() || ''
+  return name.includes('android') || name.includes('ios')
 }

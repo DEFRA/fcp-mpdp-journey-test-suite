@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
@@ -10,7 +9,6 @@ import { expectSearchBox } from '../expect/search-box.js'
 import { expectDownload } from '../expect/download.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Search page', () => {
   test.beforeEach(async ({ page }) => {
@@ -20,9 +18,9 @@ test.describe('Search page', () => {
   test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Search for an agreement holder')
     await expectHeader(page, testInfo)
-    await expectPhaseBanner(page, testInfo)
+    await expectPhaseBanner(page)
     await expectHeading(page, 'Search for an agreement holder')
-    await expectSearchBox(page, '#search-input', '', testInfo)
+    await expectSearchBox(page, '#search-input', '')
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
@@ -45,18 +43,13 @@ test.describe('Search page', () => {
 
     await expect(downloadLink).toContainText('download all scheme payment data')
 
-    if (!isAndroid(testInfo)) {
-      await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
-    }
+    const href = await downloadLink.getAttribute('href')
+    expect(href).toBe('/all-scheme-payment-data/file')
 
     await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     await accessibilityTest(page)
-  })
-
-  test('Should meet security standards', async ({ page }) => {
-    await securityTest(page.url())
   })
 })

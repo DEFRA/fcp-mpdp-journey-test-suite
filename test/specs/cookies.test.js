@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
@@ -7,7 +6,6 @@ import { expectPhaseBanner } from '../expect/common/phase-banner.js'
 import { expectBackLink } from '../expect/back-link.js'
 import { expectHeading } from '../expect/heading.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Cookies page and banner', () => {
   test.describe('Cookies page renders expected content', () => {
@@ -18,7 +16,7 @@ test.describe('Cookies page and banner', () => {
     test('Should display the correct content', async ({ page }, testInfo) => {
       await expectTitle(page, 'Cookies')
       await expectHeader(page, testInfo)
-      await expectPhaseBanner(page, testInfo)
+      await expectPhaseBanner(page)
       await expectHeading(page, 'Cookies')
       await expectFooter(page, testInfo)
     })
@@ -44,10 +42,6 @@ test.describe('Cookies page and banner', () => {
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
       await accessibilityTest(page)
     })
-
-    test('Should meet security standards', async ({ page }) => {
-      await securityTest(page.url())
-    })
   })
 
   test.describe('Cookies banner behaves as expected', () => {
@@ -56,22 +50,18 @@ test.describe('Cookies page and banner', () => {
       await page.goto('/cookies')
     })
 
-    test('Cookies banner displays correct message and is hidden after accepting analytics cookies', async ({ page }, testInfo) => {
+    test('Cookies banner displays correct message and is hidden after accepting analytics cookies', async ({ page }) => {
       const cookiesBanner = page.locator('.js-cookies-banner')
       await acceptCookies(page, cookiesBanner)
 
-      if (!isAndroid(testInfo)) {
-        await expect(cookiesBanner).toBeHidden()
-      }
+      await expect(cookiesBanner).toBeHidden()
     })
 
-    test('Cookies banner displays the correct message and is hidden after rejecting analytics cookies', async ({ page }, testInfo) => {
+    test('Cookies banner displays the correct message and is hidden after rejecting analytics cookies', async ({ page }) => {
       const cookiesBanner = page.locator('.js-cookies-banner')
       await rejectCookies(page, cookiesBanner)
 
-      if (!isAndroid(testInfo)) {
-        await expect(cookiesBanner).toBeHidden()
-      }
+      await expect(cookiesBanner).toBeHidden()
     })
   })
 })

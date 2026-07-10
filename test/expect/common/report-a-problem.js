@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../../utils/devices.js'
 
-export async function expectReportAProblemSection (page, testInfo) {
+export async function expectReportAProblemSection (page) {
   const reportProblemToggle = page.locator('#report-problem')
   await reportProblemToggle.click()
 
@@ -27,9 +26,8 @@ export async function expectReportAProblemSection (page, testInfo) {
     await expect(page.locator(selector)).toContainText(text)
   }
 
-  if (!isAndroid(testInfo)) {
-    for (const { selector, href } of moreActionsLinks) {
-      await expect(page.locator(selector)).toHaveAttribute('href', href)
-    }
+  for (const { selector, href } of moreActionsLinks) {
+    const actual = await page.locator(selector).getAttribute('href')
+    expect(actual).toBe(href)
   }
 }

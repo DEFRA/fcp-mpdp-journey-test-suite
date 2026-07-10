@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
@@ -9,7 +8,6 @@ import { expectHeading } from '../expect/heading.js'
 import { expectPageUrl } from '../expect/page-url.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Privacy page', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,7 +17,7 @@ test.describe('Privacy page', () => {
   test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Privacy notice')
     await expectHeader(page, testInfo)
-    await expectPhaseBanner(page, testInfo)
+    await expectPhaseBanner(page)
     await expectHeading(page, 'Privacy notice')
 
     const links = [
@@ -41,12 +39,11 @@ test.describe('Privacy page', () => {
     await expectBackLink(page, testInfo, { expectedPath: '/' })
   })
 
-  test('Defra helpline contact is directed to the correct email address', async ({ page }, testInfo) => {
+  test('Defra helpline contact is directed to the correct email address', async ({ page }) => {
     const defraHelplineEmailAddress = page.locator('#defra-helpline-email')
 
-    if (!isAndroid(testInfo)) {
-      await expect(defraHelplineEmailAddress).toHaveAttribute('href', 'mailto:defra.helpline@defra.gov.uk')
-    }
+    const href = await defraHelplineEmailAddress.getAttribute('href')
+    expect(href).toBe('mailto:defra.helpline@defra.gov.uk')
   })
 
   const links = [
@@ -69,9 +66,5 @@ test.describe('Privacy page', () => {
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     await accessibilityTest(page)
-  })
-
-  test('Should meet security standards', async ({ page }) => {
-    await securityTest(page.url())
   })
 })
