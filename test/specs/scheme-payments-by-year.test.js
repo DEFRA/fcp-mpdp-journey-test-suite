@@ -37,7 +37,7 @@ test.describe('Scheme payments by year page', () => {
     })
   })
 
-  test('Download scheme payments by year link should download a .CSV file', async ({ page }, testInfo) => {
+  test('Download scheme payments by year link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-scheme-payments-by-year-link')
 
     await expect(downloadLink).toContainText('Download this data (.CSV)')
@@ -45,7 +45,7 @@ test.describe('Scheme payments by year page', () => {
     const href = await downloadLink.getAttribute('href')
     expect(href).toBe('/scheme-payments-by-year/file')
 
-    await expectDownload(page, downloadLink, 'ffc-payments-by-year.csv', testInfo)
+    await expectDownload(page, downloadLink, 'ffc-payments-by-year.csv')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {

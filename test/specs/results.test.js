@@ -38,8 +38,8 @@ test.describe('Results page', () => {
       await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
-    test('Download search results link should download a .CSV file', async ({ page }, testInfo) => {
-      await expectDownloadResults(page, testInfo)
+    test('Download search results link should download a .CSV file', async ({ page }) => {
+      await expectDownloadResults(page)
     })
 
     test.describe('Sort By dropdown functionality', () => {
@@ -100,8 +100,8 @@ test.describe('Results page', () => {
       await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
-    test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
-      await expectDownloadAll(page, testInfo)
+    test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
+      await expectDownloadAll(page)
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -139,7 +139,7 @@ test.describe('Results page', () => {
   })
 })
 
-async function expectDownloadResults (page, testInfo) {
+async function expectDownloadResults (page) {
   const downloadLink = page.locator('#download-results-link')
 
   await expect(downloadLink).toContainText(/Download \d+ results \(\.CSV\)/)
@@ -147,10 +147,10 @@ async function expectDownloadResults (page, testInfo) {
   const href = await downloadLink.getAttribute('href')
   expect(href).toBe('/results/file?searchString=Sons&sortBy=score')
 
-  await expectDownload(page, downloadLink, 'ffc-payment-results.csv', testInfo)
+  await expectDownload(page, downloadLink, 'ffc-payment-results.csv')
 }
 
-async function expectDownloadAll (page, testInfo) {
+async function expectDownloadAll (page) {
   const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
   await expect(downloadLink).toContainText('download all scheme payment data')
@@ -158,5 +158,5 @@ async function expectDownloadAll (page, testInfo) {
   const href = await downloadLink.getAttribute('href')
   expect(href).toBe('/all-scheme-payment-data/file')
 
-  await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
+  await expectDownload(page, downloadLink, 'ffc-payment-data.csv')
 }

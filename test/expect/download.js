@@ -1,14 +1,11 @@
 import { expect } from '@playwright/test'
-import { isMobileDevice } from '../../utils/devices.js'
 
-export async function expectDownload (page, link, expectedFilename, testInfo) {
-  if (!isMobileDevice(testInfo)) {
-    const downloadPromise = page.waitForEvent('download')
+export async function expectDownload (page, link, expectedFilename) {
+  const href = await link.getAttribute('href')
+  const response = await page.request.get(href)
 
-    await link.click()
-    const download = await downloadPromise
-    const filename = download.suggestedFilename()
+  expect(response.ok()).toBe(true)
 
-    expect(filename).toBe(expectedFilename)
-  }
+  const contentDisposition = response.headers()['content-disposition']
+  expect(contentDisposition).toContain(expectedFilename)
 }

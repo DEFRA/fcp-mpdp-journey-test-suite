@@ -49,7 +49,7 @@ test.describe('Details page', () => {
     })
   })
 
-  test('Download details link should download a .CSV file', async ({ page }, testInfo) => {
+  test('Download details link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-details-link')
 
     await expect(downloadLink).toContainText('Download this data (.CSV)')
@@ -57,7 +57,7 @@ test.describe('Details page', () => {
     const href = await downloadLink.getAttribute('href')
     expect(href).toBe('/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
 
-    await expectDownload(page, downloadLink, 'ffc-payment-details.csv', testInfo)
+    await expectDownload(page, downloadLink, 'ffc-payment-details.csv')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {

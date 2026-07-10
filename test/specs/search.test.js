@@ -38,7 +38,7 @@ test.describe('Search page', () => {
     await expectBackLink(page, testInfo, { expectedPath: '/' })
   })
 
-  test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
+  test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
     await expect(downloadLink).toContainText('download all scheme payment data')
@@ -46,7 +46,7 @@ test.describe('Search page', () => {
     const href = await downloadLink.getAttribute('href')
     expect(href).toBe('/all-scheme-payment-data/file')
 
-    await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
+    await expectDownload(page, downloadLink, 'ffc-payment-data.csv')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
