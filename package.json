@@ -17,11 +17,11 @@
   "scripts": {
     "create:folders": "mkdir -p allure-results && mkdir -p allure-report",
     "test": "playwright test",
-    "test:browserstack": "playwright test --config=playwright.browserstack.config.js",
-    "test:all": "playwright test && playwright test --config=playwright.browserstack.config.js",
+    "test:browserstack": "browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:all": "playwright test && npm run test:browserstack",
     "test:local": "playwright test --config=playwright.local.config.js",
     "test:local:debug": "playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "playwright test --config=playwright.local.browserstack.config.js",
+    "test:local:browserstack": "browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",
     "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
@@ -38,6 +38,7 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.13",
+    "browserstack-node-sdk": "1.56.1",
     "global-agent": "3.0.0",
     "undici": "7.28.0"
   },

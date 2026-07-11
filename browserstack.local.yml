@@ -1,0 +1,28 @@
+userName: ${BROWSERSTACK_USER}
+accessKey: ${BROWSERSTACK_KEY}
+
+projectName: FCP MPDP Journey Test Suite
+buildName: FCP MPDP Local
+buildIdentifier: '#${DATE_TIME}'
+
+platforms:
+  - deviceName: Samsung Galaxy S25
+    browserName: chrome
+    osVersion: 15
+    playwrightConfigOptions:
+      name: android:samsungGalaxyS25:chrome
+  - deviceName: Samsung Galaxy Tab S10 Plus
+    browserName: chrome
+    osVersion: 15
+    playwrightConfigOptions:
+      name: android:samsungTabS10Plus:chrome
+
+browserstackLocal: true
+browserStackLocalOptions:
+  forceLocal: false
+  binarypath: '/root/.browserstack/BrowserStackLocal'
+  onlyAutomate: true
+
+acceptSslCerts: true
+
+idleTimeout: 700

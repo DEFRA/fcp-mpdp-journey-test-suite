@@ -10,9 +10,9 @@ Playwright test suite for the Making Payment Data Public (MPDP) service.
 
 ## Architecture
 
-Desktop browsers (Chrome, Edge, Firefox, Safari) are tested natively by Playwright inside the container — no tunnel or remote infrastructure required. BrowserStack is used only for real mobile devices (Android and iOS) via a direct WebSocket connection to `wss://cdp.browserstack.com/playwright`.
+Desktop browsers (Chrome, Firefox, Safari/WebKit) are tested natively by Playwright inside the container. BrowserStack is used for real mobile devices (Android and iOS) via the `browserstack-node-sdk` which wraps Playwright and manages the remote device sessions.
 
-The BrowserStackLocal tunnel is managed explicitly in [`browserstack/global-setup.js`](./browserstack/global-setup.js) and [`browserstack/global-teardown.js`](./browserstack/global-teardown.js). The platform matrix is defined in [`browserstack/platforms.js`](./browserstack/platforms.js).
+The BrowserStackLocal tunnel binary is pre-installed in the Docker image to avoid runtime downloads. The SDK handles tunnel lifecycle automatically based on the YAML configuration.
 
 ## Requirements
 
@@ -52,13 +52,17 @@ Run journey tests using Docker with the [local Playwright configuration](./playw
 npm run docker:test:local
 ```
 
-### Running local tests with Playwright + BrowserStack
+This runs desktop browser tests (Chromium, Firefox, WebKit), security scanning (ZAP), and accessibility testing.
 
-Run journey tests using Docker with the [local BrowserStack configuration](./playwright.local.browserstack.config.js):
+### Running local tests with BrowserStack
+
+Run mobile device tests using Docker with the [local BrowserStack configuration](./playwright.local.browserstack.config.js):
 
 ```bash
 npm run docker:test:local:browserstack
 ```
+
+This requires BrowserStack credentials — see [Environment Variables](#environment-variables) below.
 
 ### Running tests without Docker
 
@@ -113,28 +117,37 @@ The results of the test run are made available in the portal.
 
 BrowserStack is used exclusively for real mobile device testing. Desktop browsers are handled natively by Playwright.
 
-The connection is made directly via WebSocket (`wss://cdp.browserstack.com/playwright`). The tunnel binary (`BrowserStackLocal`) is pre-installed in the Docker image and managed by the global setup/teardown scripts.
+The `browserstack-node-sdk` wraps the Playwright CLI and manages:
+- Remote device session creation
+- BrowserStackLocal tunnel lifecycle
+- Platform/device allocation from the YAML config
+
+The tunnel binary (`BrowserStackLocal`) is pre-installed in the Docker image at `/root/.browserstack/BrowserStackLocal`.
 
 ### Configuration
 
 | File | Purpose |
 |------|---------|
-| [`playwright.browserstack.config.js`](./playwright.browserstack.config.js) | CDP Portal BrowserStack execution (includes proxy support) |
-| [`playwright.local.browserstack.config.js`](./playwright.local.browserstack.config.js) | Local BrowserStack execution (no proxy) |
-| [`browserstack/platforms.js`](./browserstack/platforms.js) | Device/browser matrix |
-| [`browserstack/global-setup.js`](./browserstack/global-setup.js) | Tunnel establishment |
-| [`browserstack/global-teardown.js`](./browserstack/global-teardown.js) | Tunnel teardown |
+| [`browserstack.yml`](./browserstack.yml) | CDP Portal execution (includes proxy support) |
+| [`browserstack.local.yml`](./browserstack.local.yml) | Local execution (no proxy) |
+| [`playwright.browserstack.config.js`](./playwright.browserstack.config.js) | Playwright config for CDP (proxy for HTTP requests) |
+| [`playwright.local.browserstack.config.js`](./playwright.local.browserstack.config.js) | Playwright config for local (baseURL override) |
 
 ### Environment Variables
 
 Before running BrowserStack tests, add the following to a `.env` file in the root of the project:
 
 ```bash
-BROWSERSTACK_USER=<your_BROWSERSTACK_USER>
-BROWSERSTACK_KEY=<your_BROWSERSTACK_KEY>
+BROWSERSTACK_USER=<your_username>
+BROWSERSTACK_KEY=<your_access_key>
 ```
 
-On CDP, the `CDP_HTTP_PROXY` environment variable is automatically injected and used to route the BrowserStack tunnel through the platform proxy.
+On CDP, the following environment variables are injected to route the BrowserStack tunnel and Playwright HTTP requests through the platform proxy:
+
+```bash
+BROWSERSTACK_PROXY_HOST=localhost
+BROWSERSTACK_PROXY_PORT=3128
+```
 
 ### GOV.UK Browser Requirements Coverage
 
@@ -148,7 +161,7 @@ For the complete list of browsers that GOV.UK services should support, see: [GOV
 | **macOS** | Safari | ✅ | Native Playwright (WebKit) |
 | **macOS** | Chrome | ✅ | Native Playwright (Chromium) |
 | **macOS** | Firefox | ✅ | Native Playwright (Firefox) |
-| **iOS** | Safari | ✅ | BrowserStack (iPhone 16 Pro) |
+| **iOS** | Safari | ❌ | Unreliable on BrowserStack/Playwright |
 | **iOS** | Chrome | ❌ | Not supported by BrowserStack/Playwright |
 | **Android** | Chrome | ✅ | BrowserStack (Galaxy S25 + Tab S10 Plus) |
 | **Android** | Samsung Internet | ❌ | Not supported by BrowserStack/Playwright |
