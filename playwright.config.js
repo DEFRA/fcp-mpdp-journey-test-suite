@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineConfig, devices } from '@playwright/test'
 
 const isLocal = !process.env.ENVIRONMENT

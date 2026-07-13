@@ -16,10 +16,10 @@
   "license": "OGL-UK-3.0",
   "scripts": {
     "create:folders": "mkdir -p allure-results && mkdir -p allure-report",
-    "test": "node --env-file-if-exists=.env node_modules/.bin/playwright test",
-    "test:debug": "node --env-file-if-exists=.env node_modules/.bin/playwright test --debug",
-    "test:browserstack": "node --env-file-if-exists=.env node_modules/.bin/browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
-    "test:all": "npm run test && npm run test:browserstack",
+    "test": "playwright test",
+    "test:debug": "playwright test --debug",
+    "test:browserstack": "browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:all": "playwright test && npm run test:browserstack",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
@@ -36,6 +36,7 @@
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.13",
     "browserstack-node-sdk": "1.56.1",
+    "dotenv": "17.4.2",
     "global-agent": "3.0.0",
     "undici": "7.28.0"
   },
