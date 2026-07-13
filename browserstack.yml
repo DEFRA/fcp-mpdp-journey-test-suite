@@ -22,8 +22,8 @@ browserStackLocalOptions:
   forceLocal: false
   binarypath: '/root/.browserstack/BrowserStackLocal'
   onlyAutomate: true
-  proxyHost: ${BROWSERSTACK_PROXY_HOST}
-  proxyPort: ${BROWSERSTACK_PROXY_PORT}
+  proxyHost: localhost
+  proxyPort: 3128
 
 acceptSslCerts: true
 
