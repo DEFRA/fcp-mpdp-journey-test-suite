@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const isLocal = !!process.env.BASE_URL
+const isLocal = !process.env.ENVIRONMENT
 
 export default defineConfig({
   testDir: './test/specs',
