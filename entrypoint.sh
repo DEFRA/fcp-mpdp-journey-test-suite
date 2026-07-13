@@ -30,9 +30,9 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT + 1))
 done
 
-TEST_SCRIPT=${TEST_SCRIPT:-"all"}
+TEST_SCRIPT=${TEST_SCRIPT:-"test:all"}
 
-npm run test:$TEST_SCRIPT
+npm run $TEST_SCRIPT
 
 # if PUBLISH_TEST_RESULTS is not set, default to true
 PUBLISH_TEST_RESULTS=${PUBLISH_TEST_RESULTS:- 1}
