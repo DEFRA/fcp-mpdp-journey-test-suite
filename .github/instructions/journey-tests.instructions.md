@@ -18,15 +18,17 @@ cd ../fcp-mpdp-core
 ### Using Docker Compose (standalone)
 Requires the frontend running at `http://host.docker.internal:3000`:
 ```bash
-npm run docker:test:local                  # Playwright, headless
-npm run docker:test:local:browserstack     # BrowserStack (requires .env)
+npm run docker:test                        # Playwright, headless
+npm run docker:test:browserstack           # BrowserStack (requires .env)
 ```
 
 ### Without Docker
+Requires `BASE_URL` in `.env` or environment:
 ```bash
-npm run test:local                         # Against http://host.docker.internal:3000
-npm run test:local:debug                   # Interactive debug mode
-BASE_URL=http://localhost:3000 npm run test:local   # Custom URL
+npm run test                               # Desktop browsers
+npm run test:debug                         # Interactive debug mode
+npm run test -- --project=chromium         # Specific browser
+BASE_URL=http://localhost:3000 npm run test # Custom URL
 ```
 
 ### BrowserStack credentials (`.env` file)
@@ -35,7 +37,7 @@ Create `.env` in the repo root before running BrowserStack tests locally:
 BROWSERSTACK_USER=your_username
 BROWSERSTACK_KEY=your_api_key
 ```
-Local BrowserStack uses `browserstack.local.yml` with `buildName: FCP MPDP Local` and `acceptInsecureCerts: true`.
+BrowserStack build name is controlled by the `BROWSERSTACK_BUILD_NAME` env var (defaults to `FCP MPDP Local` in `compose.yml`).
 
 ## Running Tests in CDP
 
@@ -65,10 +67,8 @@ When the container starts, `entrypoint.sh`:
 
 | File | Used for | Base URL |
 |---|---|---|
-| `playwright.config.js` | CDP default | `https://fcp-mpdp-frontend.${ENVIRONMENT}.cdp-int.defra.cloud` |
-| `playwright.local.config.js` | Local Playwright | `http://host.docker.internal:3000` |
-| `playwright.browserstack.config.js` | CDP BrowserStack (with proxy) | CDP URL via local proxy |
-| `playwright.local.browserstack.config.js` | Local BrowserStack | `http://host.docker.internal:3000` |
+| `playwright.config.js` | All environments | `BASE_URL` env var, or `https://fcp-mpdp-frontend.${ENVIRONMENT}.cdp-int.defra.cloud` |
+| `playwright.browserstack.config.js` | BrowserStack mobile tests (adds conditional proxy for CDP) | Inherits from base config |
 
 ## Project Structure
 
@@ -167,7 +167,7 @@ expect(payeeNames).toEqual(sortedNames)
 | `testMatch` | `**/*.test.js` |
 | `fullyParallel` | `false` |
 | `workers` | `1` |
-| `retries` | `2` (CDP), `0` (local) |
+| `retries` | `2` (CDP), `0` (when `BASE_URL` is set) |
 | `timeout` | `600000ms` |
 | `expect.timeout` | `30000ms` |
 | Reporter | `allure-playwright` → `allure-results/` |

@@ -5,8 +5,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
+      BASE_URL: http://host.docker.internal:3000
       BROWSERSTACK_USER: ${BROWSERSTACK_USER}
       BROWSERSTACK_KEY: ${BROWSERSTACK_KEY}
+      BROWSERSTACK_BUILD_NAME: FCP MPDP Local
       PUBLISH_TEST_RESULTS: 0
     volumes:
       - ./allure-results:/app/allure-results

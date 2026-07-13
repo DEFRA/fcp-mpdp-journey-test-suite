@@ -4,7 +4,7 @@
   "type": "module",
   "description": "",
   "engines": {
-    "node": ">=22.13.1"
+    "node": ">=24"
   },
   "author": "Defra DDTS",
   "contributors": [
@@ -16,20 +16,18 @@
   "license": "OGL-UK-3.0",
   "scripts": {
     "create:folders": "mkdir -p allure-results && mkdir -p allure-report",
-    "test": "playwright test",
-    "test:browserstack": "browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
-    "test:all": "playwright test && npm run test:browserstack",
-    "test:local": "playwright test --config=playwright.local.config.js",
-    "test:local:debug": "playwright test --config=playwright.local.config.js --debug",
-    "test:local:browserstack": "browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",
+    "test": "node --env-file-if-exists=.env node_modules/.bin/playwright test",
+    "test:debug": "node --env-file-if-exists=.env node_modules/.bin/playwright test --debug",
+    "test:browserstack": "node --env-file-if-exists=.env node_modules/.bin/browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:all": "npm run test && npm run test:browserstack",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
     "report:open": "allure open allure-report",
     "report:publish": "npm run report; ./bin/publish-tests.sh",
     "zap:start": "/zap/zap.sh -daemon -host 0.0.0.0 -port 8080 -silent -nostdout -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true -config anticsrf.tokens.token.name=crumb",
-    "docker:test:local": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=local fcp-mpdp-journey-test-suite",
-    "docker:test:local:browserstack": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=local:browserstack fcp-mpdp-journey-test-suite"
+    "docker:test": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=test fcp-mpdp-journey-test-suite",
+    "docker:test:browserstack": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=browserstack fcp-mpdp-journey-test-suite"
   },
   "dependencies": {
     "@axe-core/playwright": "4.10.2",

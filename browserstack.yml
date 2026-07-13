@@ -2,7 +2,7 @@ userName: ${BROWSERSTACK_USER}
 accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
-buildName: FCP MPDP
+buildName: ${BROWSERSTACK_BUILD_NAME}
 buildIdentifier: '#${DATE_TIME}'
 
 platforms:
@@ -20,10 +20,7 @@ platforms:
 browserstackLocal: true
 browserStackLocalOptions:
   forceLocal: false
-  binarypath: '/root/.browserstack/BrowserStackLocal'
   onlyAutomate: true
-  proxyHost: ${BROWSERSTACK_PROXY_HOST}
-  proxyPort: ${BROWSERSTACK_PROXY_PORT}
 
 acceptSslCerts: true
 
