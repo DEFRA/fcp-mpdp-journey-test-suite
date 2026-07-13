@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../../utils/devices.js'
 
-export async function expectMoreActionsSection (page, testInfo) {
-  if (!isAndroid(testInfo)) {
-    await expect(page.locator('#new-search-link')).toHaveAttribute('href', '/search')
-    await expect(page.locator('#print-link')).toHaveAttribute('href', '#')
-  }
+export async function expectMoreActionsSection (page) {
+  const newSearchHref = await page.locator('#new-search-link').getAttribute('href')
+  expect(newSearchHref).toBe('/search')
+
+  const printHref = await page.locator('#print-link').getAttribute('href')
+  expect(printHref).toBe('#')
 }

@@ -4,7 +4,7 @@ export async function expectPageUrl (page, locator, url) {
   const link = page.locator(locator)
 
   await link.click()
-  await page.waitForURL(url)
+  await page.waitForURL(url, { waitUntil: 'commit' })
 
   expect(page.url()).toBe(url)
 }

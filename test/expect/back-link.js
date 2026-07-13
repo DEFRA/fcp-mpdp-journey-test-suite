@@ -1,5 +1,4 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../utils/devices.js'
 
 export async function expectBackLink (
   page,
@@ -15,12 +14,8 @@ export async function expectBackLink (
 
   await expect(backLink).toContainText(expectedText)
 
-  if (!isAndroid(testInfo)) {
-    await expect(backLink).toHaveAttribute(
-      'href',
-      expect.stringContaining(expectedPath)
-    )
-  }
+  const href = await backLink.getAttribute('href')
+  expect(href).toContain(expectedPath)
 
   if (assertRedirect) {
     await backLink.click()

@@ -18,6 +18,7 @@
     "create:folders": "mkdir -p allure-results && mkdir -p allure-report",
     "test": "playwright test",
     "test:browserstack": "browserstack-node-sdk playwright test --config=playwright.browserstack.config.js",
+    "test:all": "playwright test && npm run test:browserstack",
     "test:local": "playwright test --config=playwright.local.config.js",
     "test:local:debug": "playwright test --config=playwright.local.config.js --debug",
     "test:local:browserstack": "browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",

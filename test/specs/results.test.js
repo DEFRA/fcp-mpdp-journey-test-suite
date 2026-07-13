@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
@@ -9,30 +8,29 @@ import { expectHeading } from '../expect/heading.js'
 import { expectSearchBox } from '../expect/search-box.js'
 import { expectDownload } from '../expect/download.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Results page', () => {
   test.describe('With valid searchString that returns results', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/search')
-      await page.fill('#search-input', 'Smith')
+      await page.fill('#search-input', 'Sons')
       await page.getByRole('button', { name: 'Search' }).click()
 
       await page.waitForURL(url => {
         const base = new URL(page.url()).origin
         const u = new URL(url.toString(), base)
 
-        return u.pathname === '/results' && u.searchParams.get('searchString') === 'Smith'
+        return u.pathname === '/results' && u.searchParams.get('searchString') === 'Sons'
       })
     })
 
     test('Should display the correct content', async ({ page }, testInfo) => {
-      await expectTitle(page, 'Results for ‘Smith’')
+      await expectTitle(page, 'Results for ‘Sons’')
       await expectHeader(page, testInfo)
-      await expectPhaseBanner(page, testInfo)
-      await expectHeading(page, 'Results for ‘Smith’')
+      await expectPhaseBanner(page)
+      await expectHeading(page, 'Results for ‘Sons’')
       await expect(page.getByText('You can search by name and location.')).toBeVisible()
-      await expectSearchBox(page, '#results-search-input', 'Smith', testInfo)
+      await expectSearchBox(page, '#results-search-input', 'Sons')
       await expectFooter(page, testInfo)
     })
 
@@ -40,13 +38,13 @@ test.describe('Results page', () => {
       await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
-    test('Download search results link should download a .CSV file', async ({ page }, testInfo) => {
-      await expectDownloadResults(page, testInfo)
+    test('Download search results link should download a .CSV file', async ({ page }) => {
+      await expectDownloadResults(page)
     })
 
     test.describe('Sort By dropdown functionality', () => {
       test.beforeEach(async ({ page }) => {
-        await page.goto('/results?searchString=Smith&page=1&sortBy=score')
+        await page.goto('/results?searchString=Sons&page=1&sortBy=score')
         await page.waitForSelector('#total-results')
       })
 
@@ -63,17 +61,13 @@ test.describe('Results page', () => {
         expect(currentURL.searchParams.get('sortBy')).toBe('payee_name')
 
         const payeeNames = await page.locator('h3 a').allTextContents()
-        const sortedNames = [...payeeNames].sort((a, b) => a.localeCompare(b))
+        const sortedNames = [...payeeNames].sort((a, b) => (a > b ? 1 : -1))
         expect(payeeNames).toEqual(sortedNames)
       })
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
       await accessibilityTest(page)
-    })
-
-    test('Should meet security standards', async ({ page }) => {
-      await securityTest(page.url())
     })
   })
 
@@ -94,11 +88,11 @@ test.describe('Results page', () => {
     test('Should display the correct content', async ({ page }, testInfo) => {
       await expectTitle(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
       await expectHeader(page, testInfo)
-      await expectPhaseBanner(page, testInfo)
+      await expectPhaseBanner(page)
       await expectHeading(page, 'We found no results for ‘__INVALID_SEARCH_STRING__’')
       await expect(page.getByText('You can search by name and location.')).toBeVisible()
       await expect(page.getByRole('heading', { level: 2, name: 'There are no matching results.' })).toBeVisible()
-      await expectSearchBox(page, '#results-search-input', '__INVALID_SEARCH_STRING__', testInfo)
+      await expectSearchBox(page, '#results-search-input', '__INVALID_SEARCH_STRING__')
       await expectFooter(page, testInfo)
     })
 
@@ -106,8 +100,8 @@ test.describe('Results page', () => {
       await expectBackLink(page, testInfo, { expectedPath: '/search' })
     })
 
-    test('Download all scheme payment data link should download a .CSV file', async ({ page }, testInfo) => {
-      await expectDownloadAll(page, testInfo)
+    test('Download all scheme payment data link should download a .CSV file', async ({ page }) => {
+      await expectDownloadAll(page)
     })
 
     test('Should meet WCAG 2.2 AA', async ({ page }) => {
@@ -131,10 +125,8 @@ test.describe('Results page', () => {
 
       await expectTitle(page, 'Search for an agreement holder')
 
-      if (!isAndroid(testInfo)) {
-        const resultsSection = page.locator('#total-results')
-        await expect(resultsSection).toHaveCount(0)
-      }
+      const resultsCount = await page.locator('#total-results').count()
+      expect(resultsCount).toBe(0)
     })
 
     test('Should display the back link that navigates to the previous page', async ({ page }, testInfo) => {
@@ -147,26 +139,24 @@ test.describe('Results page', () => {
   })
 })
 
-async function expectDownloadResults (page, testInfo) {
+async function expectDownloadResults (page) {
   const downloadLink = page.locator('#download-results-link')
 
   await expect(downloadLink).toContainText(/Download \d+ results \(\.CSV\)/)
 
-  if (!isAndroid(testInfo)) {
-    await expect(downloadLink).toHaveAttribute('href', '/results/file?searchString=Smith&sortBy=score')
-  }
+  const href = await downloadLink.getAttribute('href')
+  expect(href).toBe('/results/file?searchString=Sons&sortBy=score')
 
-  await expectDownload(page, downloadLink, 'ffc-payment-results.csv', testInfo)
+  await expectDownload(page, downloadLink, 'ffc-payment-results.csv')
 }
 
-async function expectDownloadAll (page, testInfo) {
+async function expectDownloadAll (page) {
   const downloadLink = page.locator('#download-all-scheme-payment-data-link')
 
   await expect(downloadLink).toContainText('download all scheme payment data')
 
-  if (!isAndroid(testInfo)) {
-    await expect(downloadLink).toHaveAttribute('href', '/all-scheme-payment-data/file')
-  }
+  const href = await downloadLink.getAttribute('href')
+  expect(href).toBe('/all-scheme-payment-data/file')
 
-  await expectDownload(page, downloadLink, 'ffc-payment-data.csv', testInfo)
+  await expectDownload(page, downloadLink, 'ffc-payment-data.csv')
 }

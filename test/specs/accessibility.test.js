@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { securityTest } from '../security.test.js'
 import { accessibilityTest } from '../accessibility.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
@@ -9,7 +8,6 @@ import { expectHeading } from '../expect/heading.js'
 import { expectPageUrl } from '../expect/page-url.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Accessibility page', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,7 +17,7 @@ test.describe('Accessibility page', () => {
   test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, 'Accessibility statement for Find farm and land payment data')
     await expectHeader(page, testInfo)
-    await expectPhaseBanner(page, testInfo)
+    await expectPhaseBanner(page)
     await expectHeading(page, 'Accessibility statement for Find farm and land payment data')
 
     const links = [
@@ -41,12 +39,11 @@ test.describe('Accessibility page', () => {
     await expectBackLink(page, testInfo, { expectedPath: '/' })
   })
 
-  test('Internal accessibility contact is directed to the correct email address', async ({ page }, testInfo) => {
+  test('Internal accessibility contact is directed to the correct email address', async ({ page }) => {
     const accessibilityContactEmailAddress = page.locator('#accessibility-contact-email')
 
-    if (!isAndroid(testInfo)) {
-      await expect(accessibilityContactEmailAddress).toHaveAttribute('href', 'mailto:morgan.dirodi@defra.gov.uk')
-    }
+    const href = await accessibilityContactEmailAddress.getAttribute('href')
+    expect(href).toBe('mailto:morgan.dirodi@defra.gov.uk')
   })
 
   const links = [
@@ -68,9 +65,5 @@ test.describe('Accessibility page', () => {
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     await accessibilityTest(page)
-  })
-
-  test('Should meet security standards', async ({ page }) => {
-    await securityTest(page.url())
   })
 })

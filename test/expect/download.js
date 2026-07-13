@@ -1,15 +1,11 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../utils/devices.js'
 
-export async function expectDownload (page, link, expectedFilename, testInfo) {
-  // Android testing on BrowserStack supports file downloads, however, there is an unresolved issue verifying the filename.
-  if (!isAndroid(testInfo)) {
-    const downloadPromise = page.waitForEvent('download')
+export async function expectDownload (page, link, expectedFilename) {
+  const href = await link.getAttribute('href')
+  const response = await page.request.get(href)
 
-    await link.click()
-    const download = await downloadPromise
-    const filename = download.suggestedFilename()
+  expect(response.ok()).toBe(true)
 
-    expect(filename).toBe(expectedFilename)
-  }
+  const contentDisposition = response.headers()['content-disposition']
+  expect(contentDisposition).toContain(expectedFilename)
 }

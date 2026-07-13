@@ -3,9 +3,16 @@
 Playwright test suite for the Making Payment Data Public (MPDP) service.
 
 - user acceptance tests using [Playwright](https://playwright.dev/)
-- cross browser compatibility tests using [BrowserStack](https://www.browserstack.com/)
+- cross-browser desktop testing using native Playwright (Chromium, Firefox, WebKit)
+- cross-device mobile testing using [BrowserStack](https://www.browserstack.com/) (Android, iOS)
 - security testing using [ZAP](https://www.zaproxy.org/)
 - accessibility testing using [axe-core](https://www.deque.com/axe/)
+
+## Architecture
+
+Desktop browsers (Chrome, Firefox, Safari/WebKit) are tested natively by Playwright inside the container. BrowserStack is used for real mobile devices (Android and iOS) via the `browserstack-node-sdk` which wraps Playwright and manages the remote device sessions.
+
+The BrowserStackLocal tunnel binary is pre-installed in the Docker image to avoid runtime downloads. The SDK handles tunnel lifecycle automatically based on the YAML configuration.
 
 ## Requirements
 
@@ -19,7 +26,7 @@ In order to ensure this test suite passes when running locally and via CI/CD pip
 
 ## Local Development
 
-The MPDP service must be running on `localhost:3000` prior to the test run. 
+The MPDP service must be running on `localhost:3000` prior to the test run.
 
 As the tests are intended to run in a container, the base URL defaults to `http://host.docker.internal:3000` to allow the container to access the host machine. If you need to run the tests against a different URL, you can set the `BASE_URL` environment variable.
 
@@ -39,18 +46,36 @@ docker compose build
 
 ### Running local tests with Playwright
 
-Run journey tests using Docker using [local Playwright configuration](./playwright.local.config.js).
+Run journey tests using Docker with the [local Playwright configuration](./playwright.local.config.js):
 
 ```bash
 npm run docker:test:local
 ```
 
-### Running local tests with Playwright + BrowserStack
+This runs desktop browser tests (Chromium, Firefox, WebKit), security scanning (ZAP), and accessibility testing.
 
-Run journey tests using Docker with [BrowserStack configuration](./playwright.local.browserstack.config.js).
+### Running local tests with BrowserStack
+
+Run mobile device tests using Docker with the [local BrowserStack configuration](./playwright.local.browserstack.config.js):
 
 ```bash
 npm run docker:test:local:browserstack
+```
+
+This requires BrowserStack credentials — see [Environment Variables](#environment-variables) below.
+
+### Running tests without Docker
+
+Run desktop browser tests directly (requires Playwright browsers installed locally):
+
+```bash
+npm run test:local
+```
+
+Run with debug mode:
+
+```bash
+npm run test:local:debug
 ```
 
 ### Reporting
@@ -58,11 +83,11 @@ npm run docker:test:local:browserstack
 This test suite uses **Allure** for generating test reports that are compatible with the CDP Portal infrastructure. Allure provides:
 
 - CDP Portal integration
-- Historical test trends  
+- Historical test trends
 - S3 publishing pipeline
 - Enterprise reporting standards
 
-The test configuration generates Allure reports in `allure-results/` (raw data) and can optionally publish to `allure-report/`(HTML report).
+The test configuration generates Allure reports in `allure-results/` (raw data) and can optionally publish to `allure-report/` (HTML report).
 
 To publish the report run the following command after running the tests:
 
@@ -74,82 +99,78 @@ npm run report:publish
 
 ### Running the tests
 
-Tests are run from the CDP-Portal under the Test Suites section. Before any changes can be run, a new docker image must be built, this will happen automatically when a pull request is merged into the `main` branch.
-You can check the progress of the build under the actions section of this repository. Builds typically take around 1-2 minutes.
+Tests are run from the CDP Portal under the Test Suites section. Before any changes can be run, a new Docker image must be built — this happens automatically when a pull request is merged into `main`. You can check the progress of the build under the Actions section of this repository.
+
+The default test run (`test:all`) executes desktop browser tests first using native Playwright, then mobile device tests via BrowserStack.
 
 The results of the test run are made available in the portal.
 
-## Requirements of CDP Environment Tests
+### Requirements of CDP Environment Tests
 
-1. Your service builds as a docker container using the `.github/workflows/publish.yml`
-   The workflow tags the docker images allowing the CDP Portal to identify how the container should be run on the platform.
-   It also ensures its published to the correct docker repository.
+1. Your service builds as a Docker container using `.github/workflows/publish.yml`. The workflow tags the Docker images allowing the CDP Portal to identify how the container should be run on the platform.
 
-2. The Dockerfile's entrypoint script should return exit code of 0 if the test suite passes or 1/>0 if it fails
+2. The Dockerfile's entrypoint script should return exit code 0 if the test suite passes or 1/>0 if it fails.
 
-3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format
+3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format.
 
 ## BrowserStack
 
-Two Playwright configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`playwright.github.browserstack.config.js`) and from the CDP Portal (`playwright.browserstack.config.js`).
-They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHub runner).
-See the CDP Documentation for more details.
+BrowserStack is used exclusively for real mobile device testing. Desktop browsers are handled natively by Playwright.
 
-### Known Issues
+The `browserstack-node-sdk` wraps the Playwright CLI and manages:
+- Remote device session creation
+- BrowserStackLocal tunnel lifecycle
+- Platform/device allocation from the YAML config
 
-BrowserStack compatibility with Playwright is still evolving.
+The tunnel binary (`BrowserStackLocal`) is pre-installed in the Docker image at `/root/.browserstack/BrowserStackLocal`.
 
-As such, some compromises have been made based on risk 
+### Configuration
 
-- BrowserStack support for Playwright page assertions such as `toHaveUrl`, `toHaveText` and `toHaveTitle` is currently inconsistent across devices.  As a workaround, these assertions have been replaced with alternative matchers.
-
-- BrowserStack support for all required device and browser combinations is not yet available meaning some are not currently tested.  See the table below for details.
-
-- Some Playwright locators fail to match accurately on Android devices.  These assertions have been skipped for Android devices.
-
-- The Playwright version must be one [listed as compatible with BrowserStack](https://www.browserstack.com/docs/automate/playwright/browsers-and-os?fw-lang=nodejs)
+| File | Purpose |
+|------|---------|
+| [`browserstack.yml`](./browserstack.yml) | CDP Portal execution (includes proxy support) |
+| [`browserstack.local.yml`](./browserstack.local.yml) | Local execution (no proxy) |
+| [`playwright.browserstack.config.js`](./playwright.browserstack.config.js) | Playwright config for CDP (proxy for HTTP requests) |
+| [`playwright.local.browserstack.config.js`](./playwright.local.browserstack.config.js) | Playwright config for local (baseURL override) |
 
 ### Environment Variables
 
-Before running BrowserStack tests, you need to set up the following environment variables added to a `.env` file in the root of the project:
+Before running BrowserStack tests, add the following to a `.env` file in the root of the project:
 
 ```bash
-BROWSERSTACK_USER=<your_browserstack_username>
-BROWSERSTACK_KEY=<your_browserstack_access_key>
+BROWSERSTACK_USER=<your_username>
+BROWSERSTACK_KEY=<your_access_key>
+```
+
+On CDP, the following environment variables are injected to route the BrowserStack tunnel and Playwright HTTP requests through the platform proxy:
+
+```bash
+BROWSERSTACK_PROXY_HOST=localhost
+BROWSERSTACK_PROXY_PORT=3128
 ```
 
 ### GOV.UK Browser Requirements Coverage
 
 For the complete list of browsers that GOV.UK services should support, see: [GOV.UK Service Manual - Designing for different browsers and devices](https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices)
 
-The table below shows which required browsers are tested by our BrowserStack configuration:
-
-| Platform | Browser | BrowserStack Test | Notes |
-|----------|---------|-------------------|-------|
-| **Windows** | Chrome | ✅ |  |
-| **Windows** | Edge | ✅ |  |
-| **Windows** | Firefox | ✅ |  |
-| **macOS** | Safari | ✅ |  |
-| **macOS** | Chrome | ✅ |  |
-| **macOS** | Firefox | ✅ |  |
-| **iOS** | Safari | ⚠️ | In Beta |
-| **iOS** | Chrome | ❌ | Not supported |
-| **Android** | Chrome | ✅ | Not supported |
-| **Android** | Samsung Internet | ❌ | Not supported |
+| Platform | Browser | Tested | Method |
+|----------|---------|--------|--------|
+| **Windows** | Chrome | ✅ | Native Playwright (Chromium) |
+| **Windows** | Edge | ✅ | Native Playwright (Chromium) |
+| **Windows** | Firefox | ✅ | Native Playwright (Firefox) |
+| **macOS** | Safari | ✅ | Native Playwright (WebKit) |
+| **macOS** | Chrome | ✅ | Native Playwright (Chromium) |
+| **macOS** | Firefox | ✅ | Native Playwright (Firefox) |
+| **iOS** | Safari | ❌ | Unreliable on BrowserStack/Playwright |
+| **iOS** | Chrome | ❌ | Not supported by BrowserStack/Playwright |
+| **Android** | Chrome | ✅ | BrowserStack (Galaxy S25 + Tab S10 Plus) |
+| **Android** | Samsung Internet | ❌ | Not supported by BrowserStack/Playwright |
 
 ## Security Testing
 
-This test suite includes ZAP (Zed Attack Proxy) security testing integration. ZAP automatically scans for security vulnerabilities and integrates results with Allure reporting.
+Security testing uses ZAP (Zed Attack Proxy) running a single spider scan from the root URL. This is implemented as a dedicated test in [`test/specs/security.test.js`](./test/specs/security.test.js) which skips gracefully when ZAP is not available.
 
-### Requirements
-
-For local testing, ZAP must be running before tests execute:
-
-```bash
-docker compose up -d zap
-```
-
-The local test scripts (`npm run test:local`, `npm run test:local:debug` and `npm run test:local:browserstack`) automatically start ZAP before running tests.
+In the Docker container, ZAP is started automatically by the [`entrypoint.sh`](./entrypoint.sh) script before tests execute.
 
 ## Licence
 

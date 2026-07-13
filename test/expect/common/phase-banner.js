@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test'
-import { isAndroid } from '../../../utils/devices.js'
 
-export async function expectPhaseBanner (page, testInfo) {
+export async function expectPhaseBanner (page) {
   const phaseBannerSelectors = {
     root: '.govuk-phase-banner',
     contentTag: '.govuk-phase-banner__content__tag',
@@ -15,10 +14,8 @@ export async function expectPhaseBanner (page, testInfo) {
   await expect(page.locator(phaseBannerSelectors.contentTag)).toContainText('Beta')
   await expect(page.locator(phaseBannerSelectors.text)).toContainText('This is a new service. Help us improve it and give your feedback (opens in new tab).')
 
-  // skip this check on android as the locator doesn't match correctly on Android.
-  if (!isAndroid(testInfo)) {
-    await expect(page.locator(phaseBannerSelectors.link)).toHaveAttribute('href', feedbackUrl)
-  }
+  const href = await page.locator(phaseBannerSelectors.link).getAttribute('href')
+  expect(href).toBe(feedbackUrl)
 
   const pagePromise = page.context().waitForEvent('page')
 

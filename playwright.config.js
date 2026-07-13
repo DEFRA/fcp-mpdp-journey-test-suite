@@ -29,13 +29,25 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices['Desktop Chrome']
+      }
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox']
+      }
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari']
       }
     }
   ],
 
-  timeout: 600000,
+  timeout: 120000,
   expect: {
-    timeout: 30000
+    timeout: 10000
   }
 })

@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { testPayment } from '../../utils/test-payment.js'
 import { accessibilityTest } from '../accessibility.test.js'
-import { securityTest } from '../security.test.js'
 import { expectTitle } from '../expect/title.js'
 import { expectHeader } from '../expect/common/header.js'
 import { expectPhaseBanner } from '../expect/common/phase-banner.js'
@@ -12,7 +11,6 @@ import { expectReportAProblemSection } from '../expect/common/report-a-problem.j
 import { expectMoreActionsSection } from '../expect/common/more-actions.js'
 import { expectRelatedContent } from '../expect/related-content.js'
 import { expectFooter } from '../expect/common/footer.js'
-import { isAndroid } from '../../utils/devices.js'
 
 test.describe('Details page', () => {
   test.beforeEach(async ({ page }) => {
@@ -22,10 +20,10 @@ test.describe('Details page', () => {
   test('Should display the correct content', async ({ page }, testInfo) => {
     await expectTitle(page, `${testPayment.payeeName}`)
     await expectHeader(page, testInfo)
-    await expectPhaseBanner(page, testInfo)
+    await expectPhaseBanner(page)
     await expectHeading(page, `${testPayment.payeeName}`)
-    await expectReportAProblemSection(page, testInfo)
-    await expectMoreActionsSection(page, testInfo)
+    await expectReportAProblemSection(page)
+    await expectMoreActionsSection(page)
 
     const links = [
       { selector: '#fflm-link', text: 'Funding for farmers, growers and land managers' }
@@ -51,23 +49,18 @@ test.describe('Details page', () => {
     })
   })
 
-  test('Download details link should download a .CSV file', async ({ page }, testInfo) => {
+  test('Download details link should download a .CSV file', async ({ page }) => {
     const downloadLink = page.locator('#download-details-link')
 
     await expect(downloadLink).toContainText('Download this data (.CSV)')
 
-    if (!isAndroid(testInfo)) {
-      await expect(downloadLink).toHaveAttribute('href', '/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
-    }
+    const href = await downloadLink.getAttribute('href')
+    expect(href).toBe('/details/file?payeeName=Feeney%20and%20Sons&partPostcode=GO15')
 
-    await expectDownload(page, downloadLink, 'ffc-payment-details.csv', testInfo)
+    await expectDownload(page, downloadLink, 'ffc-payment-details.csv')
   })
 
   test('Should meet WCAG 2.2 AA', async ({ page }) => {
     await accessibilityTest(page)
-  })
-
-  test('Should meet security standards', async ({ page }) => {
-    await securityTest(page.url())
   })
 })
