@@ -1,10 +1,10 @@
 import { defineConfig } from '@playwright/test'
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
+import { bootstrap } from 'global-agent'
 import baseConfig from './playwright.config.js'
 
-if (process.env.BROWSERSTACK_PROXY_HOST) {
-  const proxyUrl = `http://${process.env.BROWSERSTACK_PROXY_HOST}:${process.env.BROWSERSTACK_PROXY_PORT}`
-  const { ProxyAgent, setGlobalDispatcher } = await import('undici')
-  const { bootstrap } = await import('global-agent')
+if (process.env.CDP_HTTP_PROXY) {
+  const proxyUrl = process.env.CDP_HTTP_PROXY
   setGlobalDispatcher(new ProxyAgent({ uri: proxyUrl }))
   bootstrap()
   globalThis.GLOBAL_AGENT.HTTP_PROXY = proxyUrl
