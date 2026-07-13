@@ -14,18 +14,8 @@ export async function expectPhaseBanner (page) {
   await expect(page.locator(phaseBannerSelectors.contentTag)).toContainText('Beta')
   await expect(page.locator(phaseBannerSelectors.text)).toContainText('This is a new service. Help us improve it and give your feedback (opens in new tab).')
 
-  const href = await page.locator(phaseBannerSelectors.link).getAttribute('href')
-  expect(href).toBe(feedbackUrl)
+  const link = page.locator(phaseBannerSelectors.link)
 
-  const pagePromise = page.context().waitForEvent('page')
-
-  await page.locator(phaseBannerSelectors.link).click()
-
-  const newPage = await pagePromise
-  const currentUrl = new URL(newPage.url())
-
-  const normalisedCurrentUrl = currentUrl.href.replace(/\/$/, '')
-  const normalisedFeedbackUrl = feedbackUrl.replace(/\/$/, '')
-
-  expect(normalisedCurrentUrl).toBe(normalisedFeedbackUrl)
+  await expect(link).toHaveAttribute('href', feedbackUrl)
+  await expect(link).toHaveAttribute('target', '_blank')
 }

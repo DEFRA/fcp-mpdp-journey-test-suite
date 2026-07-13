@@ -22,13 +22,7 @@ export default defineConfig({
   ],
   use: {
     baseURL: `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-    trace: 'on-first-retry',
-    ...(process.env.CDP_HTTP_PROXY && {
-      proxy: {
-        server: process.env.CDP_HTTP_PROXY,
-        bypass: '*.cdp-int.defra.cloud'
-      }
-    })
+    trace: 'on-first-retry'
   },
 
   projects: [
