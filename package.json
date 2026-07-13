@@ -22,7 +22,6 @@
     "test:local": "playwright test --config=playwright.local.config.js",
     "test:local:debug": "playwright test --config=playwright.local.config.js --debug",
     "test:local:browserstack": "browserstack-node-sdk playwright test --config=playwright.local.browserstack.config.js --browserstack.config=browserstack.local.yml",
-    "git:pre-commit-hook": "npm run lint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "report": "allure generate allure-results --single-file --clean -o allure-report",
@@ -44,7 +43,6 @@
   },
   "devDependencies": {
     "eslint": "9.31.0",
-    "husky": "9.1.7",
     "neostandard": "0.12.2"
   }
 }
