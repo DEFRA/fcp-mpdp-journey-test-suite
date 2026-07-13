@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export BROWSERSTACK_BUILD_NAME="${BROWSERSTACK_BUILD_NAME:-FCP MPDP}"
+
 echo "run_id: $RUN_ID"
 npm run zap:start &
 

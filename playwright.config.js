@@ -1,15 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
+const isLocal = !!process.env.BASE_URL
+
 export default defineConfig({
   testDir: './test/specs',
   testMatch: '**/*.test.js',
 
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: 2,
+  retries: isLocal ? 0 : 2,
   workers: 1,
 
   reporter: [
@@ -21,8 +20,11 @@ export default defineConfig({
     ]
   ],
   use: {
-    baseURL: `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-    trace: 'on-first-retry'
+    baseURL: process.env.BASE_URL ||
+      `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+    headless: true,
+    trace: isLocal ? 'on' : 'on-first-retry',
+    video: isLocal ? 'on' : 'off'
   },
 
   projects: [

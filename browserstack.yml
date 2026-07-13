@@ -2,7 +2,7 @@ userName: ${BROWSERSTACK_USER}
 accessKey: ${BROWSERSTACK_KEY}
 
 projectName: FCP MPDP Journey Test Suite
-buildName: FCP MPDP
+buildName: ${BROWSERSTACK_BUILD_NAME}
 buildIdentifier: '#${DATE_TIME}'
 
 platforms:

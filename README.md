@@ -16,9 +16,9 @@ The BrowserStackLocal tunnel binary is pre-installed in the Docker image to avoi
 
 ## Requirements
 
-This application is intended to be run in a Docker container to ensure consistency across environments.
-
-Docker can be installed from [Docker's official website](https://docs.docker.com/get-docker/).
+- Node.js >= 24
+- Docker (recommended, but tests can also run directly on the host)
+- The MPDP frontend running on `localhost:3000`
 
 ### Test data
 
@@ -26,57 +26,76 @@ In order to ensure this test suite passes when running locally and via CI/CD pip
 
 ## Local Development
 
-The MPDP service must be running on `localhost:3000` prior to the test run.
-
-As the tests are intended to run in a container, the base URL defaults to `http://host.docker.internal:3000` to allow the container to access the host machine. If you need to run the tests against a different URL, you can set the `BASE_URL` environment variable.
-
 ### Setup
 
-Install application dependencies:
+Install dependencies and create a `.env` file:
 
 ```bash
 npm install
+cp .env.example .env
 ```
 
-Build the Docker image:
+Edit `.env` with your BrowserStack credentials. `BASE_URL` is set to `http://localhost:3000` by default — Docker Compose overrides it with `http://host.docker.internal:3000` for container-to-host access.
+
+To run tests **with Docker**, build the image:
 
 ```bash
 docker compose build
 ```
 
-### Running local tests with Playwright
-
-Run journey tests using Docker with the [local Playwright configuration](./playwright.local.config.js):
+To run tests **without Docker**, install Playwright browsers:
 
 ```bash
-npm run docker:test:local
+npx playwright install
 ```
 
-This runs desktop browser tests (Chromium, Firefox, WebKit), security scanning (ZAP), and accessibility testing.
+ZAP security tests are skipped automatically when ZAP is not running, so no additional setup is needed outside Docker.
 
-### Running local tests with BrowserStack
+### Running tests
 
-Run mobile device tests using Docker with the [local BrowserStack configuration](./playwright.local.browserstack.config.js):
+| Script | Description |
+|--------|-------------|
+| `npm run docker:test` | Run all desktop browser tests in Docker (Chromium, Firefox, WebKit + ZAP + axe) |
+| `npm run docker:test:browserstack` | Run mobile device tests in Docker via BrowserStack |
+| `npm run test` | Run all desktop browser tests directly on the host |
+| `npm run test:debug` | Run tests with the Playwright inspector for step-through debugging |
+| `npm run test:browserstack` | Run BrowserStack mobile tests directly on the host |
+| `npm run test:all` | Run desktop + BrowserStack tests sequentially |
+
+### Running a specific project (browser)
+
+Playwright projects are defined in `playwright.config.js`. Pass `--project` to run a subset:
 
 ```bash
-npm run docker:test:local:browserstack
+npm run test -- --project=chromium
+npm run test -- --project=firefox
+npm run test -- --project=webkit
+npm run test -- --project="mobile:ios-safari"
+npm run test -- --project="mobile:android-samsung"
+npm run test -- --project="mobile:android-firefox"
 ```
 
-This requires BrowserStack credentials — see [Environment Variables](#environment-variables) below.
-
-### Running tests without Docker
-
-Run desktop browser tests directly (requires Playwright browsers installed locally):
+Multiple projects can be combined:
 
 ```bash
-npm run test:local
+npm run test -- --project=chromium --project=firefox
 ```
 
-Run with debug mode:
+This also works with Docker (pass args after the service name):
 
 ```bash
-npm run test:local:debug
+docker compose run --build --rm fcp-mpdp-journey-test-suite npx playwright test --project=chromium
 ```
+
+### Custom target URL
+
+Override `BASE_URL` to test against a different environment:
+
+```bash
+BASE_URL=https://fcp-mpdp-frontend.dev.cdp-int.defra.cloud npm run test
+```
+
+Or edit `BASE_URL` in your `.env` file.
 
 ### Reporting
 
@@ -113,6 +132,21 @@ The results of the test run are made available in the portal.
 
 3. Test reports should be published to S3 using the script in `./bin/publish-tests.sh` in Allure format.
 
+## Environment Variables
+
+The test scripts load `.env` automatically via Node's `--env-file-if-exists` flag. Create a `.env` file from the example (`cp .env.example .env`) and edit as needed.
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `BASE_URL` | Yes (for host runs) | Target URL. Enables local mode (retries=0, trace=on, video=on). Set in `.env.example` by default. Docker Compose overrides with `http://host.docker.internal:3000`. |
+| `BROWSERSTACK_USER` | For BrowserStack tests | BrowserStack username |
+| `BROWSERSTACK_KEY` | For BrowserStack tests | BrowserStack access key |
+| `BROWSERSTACK_BUILD_NAME` | No | Label shown in BrowserStack dashboard (defaults to `FCP MPDP Local`) |
+| `ENVIRONMENT` | CDP only | CDP environment name (injected by platform) |
+| `BROWSERSTACK_PROXY_HOST` | CDP only | Proxy host for BrowserStack tunnel (injected by platform) |
+| `BROWSERSTACK_PROXY_PORT` | CDP only | Proxy port for BrowserStack tunnel (injected by platform) |
+| `HTTP_PROXY` | CDP only | HTTP proxy URL for Playwright requests (injected by platform) |
+
 ## BrowserStack
 
 BrowserStack is used exclusively for real mobile device testing. Desktop browsers are handled natively by Playwright.
@@ -128,26 +162,8 @@ The tunnel binary (`BrowserStackLocal`) is pre-installed in the Docker image at 
 
 | File | Purpose |
 |------|---------|
-| [`browserstack.yml`](./browserstack.yml) | CDP Portal execution (includes proxy support) |
-| [`browserstack.local.yml`](./browserstack.local.yml) | Local execution (no proxy) |
-| [`playwright.browserstack.config.js`](./playwright.browserstack.config.js) | Playwright config for CDP (proxy for HTTP requests) |
-| [`playwright.local.browserstack.config.js`](./playwright.local.browserstack.config.js) | Playwright config for local (baseURL override) |
-
-### Environment Variables
-
-Before running BrowserStack tests, add the following to a `.env` file in the root of the project:
-
-```bash
-BROWSERSTACK_USER=<your_username>
-BROWSERSTACK_KEY=<your_access_key>
-```
-
-On CDP, the following environment variables are injected to route the BrowserStack tunnel and Playwright HTTP requests through the platform proxy:
-
-```bash
-BROWSERSTACK_PROXY_HOST=localhost
-BROWSERSTACK_PROXY_PORT=3128
-```
+| [`browserstack.yml`](./browserstack.yml) | Device platforms, tunnel settings, proxy (when on CDP) |
+| [`playwright.browserstack.config.js`](./playwright.browserstack.config.js) | Playwright config wrapping base config with conditional proxy support |
 
 ### GOV.UK Browser Requirements Coverage
 
