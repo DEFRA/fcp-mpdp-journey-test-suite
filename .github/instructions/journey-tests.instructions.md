@@ -58,7 +58,7 @@ Valid `ENVIRONMENT` values: `infra-dev`, `dev`, `test`, `perf-test`, `ext-test`,
 ### Entrypoint sequence (Docker)
 When the container starts, `entrypoint.sh`:
 1. Waits for the ZAP security proxy to be ready (30 attempts, 5s intervals)
-2. Runs `npm run test:$TEST_SCRIPT`
+2. Runs `npm run $TEST_SCRIPT`
 3. Generates the Allure report (`npm run report:publish`)
 4. Publishes results to `RESULTS_OUTPUT_S3_PATH`
 5. Exits `0` (pass) or `1+` (fail)
