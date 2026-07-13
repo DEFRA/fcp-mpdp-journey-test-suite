@@ -43,6 +43,27 @@ export default defineConfig({
       use: {
         ...devices['Desktop Safari']
       }
+    },
+
+    {
+      name: 'mobile:ios-safari',
+      use: {
+        ...devices['iPhone 15']
+      }
+    },
+    {
+      name: 'mobile:android-samsung',
+      use: {
+        ...devices['Galaxy S24']
+      }
+    },
+    {
+      name: 'mobile:android-firefox',
+      use: {
+        ...devices['Pixel 7'],
+        browserName: 'firefox',
+        isMobile: false
+      }
     }
   ],
 

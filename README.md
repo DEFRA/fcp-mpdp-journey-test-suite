@@ -155,16 +155,28 @@ For the complete list of browsers that GOV.UK services should support, see: [GOV
 
 | Platform | Browser | Tested | Method |
 |----------|---------|--------|--------|
-| **Windows** | Chrome | ✅ | Native Playwright (Chromium) |
-| **Windows** | Edge | ✅ | Native Playwright (Chromium) |
-| **Windows** | Firefox | ✅ | Native Playwright (Firefox) |
-| **macOS** | Safari | ✅ | Native Playwright (WebKit) |
-| **macOS** | Chrome | ✅ | Native Playwright (Chromium) |
-| **macOS** | Firefox | ✅ | Native Playwright (Firefox) |
-| **iOS** | Safari | ❌ | Unreliable on BrowserStack/Playwright |
-| **iOS** | Chrome | ❌ | Not supported by BrowserStack/Playwright |
-| **Android** | Chrome | ✅ | BrowserStack (Galaxy S25 + Tab S10 Plus) |
-| **Android** | Samsung Internet | ❌ | Not supported by BrowserStack/Playwright |
+| **Windows** | Chrome | ✅ | Playwright desktop (Chromium) |
+| **Windows** | Edge | ✅ | Playwright desktop (Chromium) |
+| **Windows** | Firefox | ✅ | Playwright desktop (Firefox) |
+| **macOS** | Safari | ✅ | Playwright desktop (WebKit) |
+| **macOS** | Chrome | ✅ | Playwright desktop (Chromium) |
+| **macOS** | Firefox | ✅ | Playwright desktop (Firefox) |
+| **iOS** | Safari | ✅ | Playwright mobile emulation (WebKit + iPhone 15) |
+| **iOS** | Chrome | ✅ | Playwright mobile emulation (WebKit + iPhone 15) |
+| **iOS** | Edge | ✅ | Playwright mobile emulation (WebKit + iPhone 15) |
+| **Android** | Chrome | ✅ | BrowserStack real device (Galaxy S25 + Tab S10 Plus) |
+| **Android** | Samsung Internet | ✅ | Playwright mobile emulation (Chromium + Galaxy S24) |
+| **Android** | Firefox | ✅ | Playwright mobile emulation (Firefox + Pixel 7) |
+
+#### Testing methods
+
+| Method | Description |
+|--------|-------------|
+| **Playwright desktop** | Native browser engines on desktop viewports. Runs in Docker container. |
+| **Playwright mobile emulation** | Native browser engines with mobile device profiles (viewport, user agent, touch, device scale factor). Runs in Docker container. |
+| **BrowserStack real device** | Real Android devices via BrowserStack Automate tunnel. |
+
+> **Note on mobile emulation:** All iOS browsers (Safari, Chrome, Edge) use the WebKit rendering engine — which is exactly what Playwright's WebKit provides. This makes iOS emulation particularly accurate. Samsung Internet is Chromium-based, so Playwright's Chromium engine is a close match. Emulation cannot replicate hardware-specific quirks or OS-level gesture handling, but it validates rendering, layout, and functionality at mobile viewports.
 
 ## Security Testing
 
