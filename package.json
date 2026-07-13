@@ -26,7 +26,7 @@
     "report:open": "allure open allure-report",
     "report:publish": "npm run report; ./bin/publish-tests.sh",
     "zap:start": "/zap/zap.sh -daemon -host 0.0.0.0 -port 8080 -silent -nostdout -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true -config anticsrf.tokens.token.name=crumb",
-    "docker:test": "npm run create:folders && docker compose run --build --rm fcp-mpdp-journey-test-suite",
+    "docker:test": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=test fcp-mpdp-journey-test-suite",
     "docker:test:browserstack": "npm run create:folders && docker compose run --build --rm -e TEST_SCRIPT=browserstack fcp-mpdp-journey-test-suite"
   },
   "dependencies": {

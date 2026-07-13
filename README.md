@@ -143,9 +143,7 @@ The test scripts load `.env` automatically via Node's `--env-file-if-exists` fla
 | `BROWSERSTACK_KEY` | For BrowserStack tests | BrowserStack access key |
 | `BROWSERSTACK_BUILD_NAME` | No | Label shown in BrowserStack dashboard (defaults to `FCP MPDP Local`) |
 | `ENVIRONMENT` | CDP only | CDP environment name (injected by platform) |
-| `BROWSERSTACK_PROXY_HOST` | CDP only | Proxy host for BrowserStack tunnel (injected by platform) |
-| `BROWSERSTACK_PROXY_PORT` | CDP only | Proxy port for BrowserStack tunnel (injected by platform) |
-| `HTTP_PROXY` | CDP only | HTTP proxy URL for Playwright requests (injected by platform) |
+| `HTTP_PROXY` | CDP only | HTTP proxy for Playwright and BrowserStack tunnel (injected by platform) |
 
 ## BrowserStack
 
