@@ -3,6 +3,16 @@ import { defineConfig, devices } from '@playwright/test'
 
 const isLocal = !process.env.ENVIRONMENT
 
+console.log({
+  ENVIRONMENT: process.env.ENVIRONMENT,
+  BASE_URL: process.env.BASE_URL,
+  CDP: `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+  isLocal,
+  resolvedBaseURL:
+    process.env.BASE_URL ||
+    `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`
+})
+
 export default defineConfig({
   testDir: './test/specs',
   testMatch: '**/*.test.js',
