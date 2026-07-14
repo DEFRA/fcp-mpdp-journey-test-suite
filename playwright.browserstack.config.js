@@ -11,5 +11,6 @@ if (proxyUrl) {
 }
 
 export default defineConfig({
-  ...baseConfig
+  ...baseConfig,
+  globalTimeout: 2_700_000
 })

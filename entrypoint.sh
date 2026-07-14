@@ -32,7 +32,10 @@ done
 
 TEST_SCRIPT=${TEST_SCRIPT:-"test:all"}
 
-npm run $TEST_SCRIPT
+# BrowserStack occasionally hangs indefinitely.
+# Run the test script with a timeout of 1 hour (3600 seconds). 
+# If the script does not finish within this time, it will be terminated.
+timeout --signal=TERM --kill-after=30 3600 npm run $TEST_SCRIPT
 
 # if PUBLISH_TEST_RESULTS is not set, default to true
 PUBLISH_TEST_RESULTS=${PUBLISH_TEST_RESULTS:- 1}

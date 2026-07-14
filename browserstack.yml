@@ -24,4 +24,8 @@ browserStackLocalOptions:
 
 acceptSslCerts: true
 
-idleTimeout: 700
+networkLogs: true
+networkLogsOptions:
+  captureContent: false
+
+idleTimeout: 300
