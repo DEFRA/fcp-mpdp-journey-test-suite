@@ -1,17 +1,6 @@
-import 'dotenv/config'
 import { defineConfig, devices } from '@playwright/test'
 
 const isLocal = !process.env.ENVIRONMENT
-
-console.log({
-  ENVIRONMENT: process.env.ENVIRONMENT,
-  BASE_URL: process.env.BASE_URL,
-  CDP: `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-  isLocal,
-  resolvedBaseURL:
-    process.env.BASE_URL ||
-    `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`
-})
 
 export default defineConfig({
   testDir: './test/specs',
@@ -31,8 +20,9 @@ export default defineConfig({
     ]
   ],
   use: {
-    baseURL: process.env.BASE_URL ||
-      `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+    baseURL: isLocal
+      ? (process.env.BASE_URL || 'http://localhost:3000')
+      : `https://fcp-mpdp-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
     headless: true,
     trace: isLocal ? 'on' : 'on-first-retry',
     video: isLocal ? 'on' : 'off'
