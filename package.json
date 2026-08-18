@@ -35,9 +35,9 @@
     "allure-commandline": "2.34.1",
     "allure-playwright": "3.3.2",
     "browserstack-local": "1.5.13",
-    "browserstack-node-sdk": "1.61.0",
+    "browserstack-node-sdk": "1.65.6",
     "global-agent": "3.0.0",
-    "undici": "7.28.0"
+    "undici": "7.29.0"
   },
   "devDependencies": {
     "eslint": "9.31.0",
