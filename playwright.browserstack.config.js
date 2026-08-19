@@ -12,5 +12,10 @@ if (proxyUrl) {
 
 export default defineConfig({
   ...baseConfig,
+  use: {
+    ...baseConfig.use,
+    // required to test Android downloads routed through the CDP proxy above, which the real device browser (acceptSslCerts) doesn't cover
+    ignoreHTTPSErrors: true
+  },
   globalTimeout: 2_700_000
 })
