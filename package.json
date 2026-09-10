@@ -42,5 +42,8 @@
   "devDependencies": {
     "eslint": "9.31.0",
     "neostandard": "0.12.2"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }
