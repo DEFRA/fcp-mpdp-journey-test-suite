@@ -1,6 +1,6 @@
 FROM ghcr.io/zaproxy/zaproxy:stable AS zap-source
 
-FROM mcr.microsoft.com/playwright:v1.59.1
+FROM mcr.microsoft.com/playwright:v1.64.1
 
 ENV TZ="Europe/London"
 
